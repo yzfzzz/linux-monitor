@@ -1,0 +1,4 @@
+/home/work/display_monitor/build/CMakeFiles/rebuild_cache.dir
+/home/work/display_monitor/build/CMakeFiles/display.dir
+/home/work/display_monitor/build/CMakeFiles/edit_cache.dir
+/home/work/display_monitor/build/CMakeFiles/display_autogen.dir

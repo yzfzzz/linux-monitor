@@ -3,6 +3,10 @@
 
 #include <vector>
 #include "monitor_inter.h"
+
+#include "monitor_info.grpc.pb.h"
+#include "monitor_info.pb.h"
+#include <QAbstractTableModel>
 using namespace std;
 namespace monitor {
 class CpuLoadModel : public MonitorInterModel

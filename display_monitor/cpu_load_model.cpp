@@ -43,7 +43,7 @@ QVariant CpuLoadModel::data(const QModelIndex &index, int role) const{
 }
 
 // 更新信息
-void CpuLoadModel::UpdateMonitorInfo(const monitor::proto::MonitoInfo& &monitor_info){
+void CpuLoadModel::UpdateMonitorInfo(const monitor::proto::MonitorInfo& monitor_info){
     beginResetModel();
     monitor_data_.clear();
     monitor_data_.push_back(insert_one_cou_load(monitor_info.cpu_load()));

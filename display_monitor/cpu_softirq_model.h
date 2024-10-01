@@ -1,6 +1,8 @@
 #ifndef CPU_SOFTIRQ_MODEL_H
 #define CPU_SOFTIRQ_MODEL_H
-
+#include "monitor_info.grpc.pb.h"
+#include "monitor_info.pb.h"
+#include <QAbstractTableModel>
 #include <vector>
 #include "monitor_inter.h"
 using namespace std;

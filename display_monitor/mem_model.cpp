@@ -1,78 +1,91 @@
 #include "mem_model.h"
 
-namespace monitor {
-MemModel::MemModel(QObject* parent) : MonitorInterModel(parent) {
-  header_ << tr("used_percent");
-  header_ << tr("total");
-  header_ << tr("free");
-  header_ << tr("avail");
-  header_ << tr("buffers");
-  header_ << tr("cached");
-  header_ << tr("swap_cached");
-  header_ << tr("active");
-  header_ << tr("in_active");
-  header_ << tr("active_anon");
-  header_ << tr("inactive_anon");
-  header_ << tr("active_file");
-  header_ << tr("inactive_file");
-  header_ << tr("dirty");
-  header_ << tr("writeback");
-  header_ << tr("anon_pages");
-  header_ << tr("mapped");
-  header_ << tr("kReclaimable");
-  header_ << tr("sReclaimable");
-  header_ << tr("sUnreclaim");
-}
-
-int MemModel::rowCount(const QModelIndex& parent) const {
-  return monitor_data_.size();
-}
-
-int MemModel::columnCount(const QModelIndex& parent) const {
-  return COLUMN_MAX;
-}
-
-QVariant MemModel::headerData(int section, Qt::Orientation orientation,
-                              int role) const {
-  if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
-    return header_[section];
+namespace monitor
+{
+  MemModel::MemModel(QObject *parent) : MonitorInterModel(parent)
+  {
+    header_ << tr("used_percent");
+    header_ << tr("total");
+    header_ << tr("free");
+    header_ << tr("avail");
+    header_ << tr("buffers");
+    header_ << tr("cached");
+    header_ << tr("swap_cached");
+    header_ << tr("active");
+    header_ << tr("in_active");
+    header_ << tr("active_anon");
+    header_ << tr("inactive_anon");
+    header_ << tr("active_file");
+    header_ << tr("inactive_file");
+    header_ << tr("dirty");
+    header_ << tr("writeback");
+    header_ << tr("anon_pages");
+    header_ << tr("mapped");
+    header_ << tr("kReclaimable");
+    header_ << tr("sReclaimable");
+    header_ << tr("sUnreclaim");
   }
 
-  return MonitorInterModel::headerData(section, orientation, role);
-}
+  int MemModel::rowCount(const QModelIndex &parent) const
+  {
+    return monitor_data_.size();
+  }
 
-QVariant MemModel::data(const QModelIndex& index, int role) const {
-  if (index.column() < 0 || index.column() >= COLUMN_MAX) {
+  int MemModel::columnCount(const QModelIndex &parent) const
+  {
+    return COLUMN_MAX;
+  }
+
+  QVariant MemModel::headerData(int section, Qt::Orientation orientation,
+                                int role) const
+  {
+    if (role == Qt::DisplayRole && orientation == Qt::Horizontal)
+    {
+      return header_[section];
+    }
+
+    return MonitorInterModel::headerData(section, orientation, role);
+  }
+
+  QVariant MemModel::data(const QModelIndex &index, int role) const
+  {
+    if (index.column() < 0 || index.column() >= COLUMN_MAX)
+    {
+      return QVariant();
+    }
+
+    if (role == Qt::DisplayRole)
+    {
+      if (index.row() < monitor_data_.size() && index.column() < COLUMN_MAX)
+        return monitor_data_[index.row()][index.column()];
+    }
     return QVariant();
   }
 
-  if (role == Qt::DisplayRole) {
-    if (index.row() < monitor_data_.size() && index.column() < COLUMN_MAX)
-      return monitor_data_[index.row()][index.column()];
+  void MemModel::UpdateMonitorInfo(
+      const monitor::proto::MonitorInfo &monitor_info)
+  {
+    beginResetModel();
+    monitor_data_.clear();
+
+    monitor_data_.push_back(insert_one_mem_info(monitor_info.mem_info()));
+    // QModelIndex leftTop = createIndex(0, 0);
+    // QModelIndex rightBottom = createIndex(monitor_data_.size(), COLUMN_MAX);
+    // emit dataChanged(leftTop, rightBottom, {});
+
+    endResetModel();
+
+    return;
   }
-  return QVariant();
-}
 
-void MemModel::UpdateMonitorInfo(
-    const monitor::proto::MonitorInfo& monitor_info) {
-  beginResetModel();
-  monitor_data_.clear();
-
-  monitor_data_.push_back(insert_one_mem_info(monitor_info.mem_info()));
-  // QModelIndex leftTop = createIndex(0, 0);
-  // QModelIndex rightBottom = createIndex(monitor_data_.size(), COLUMN_MAX);
-  // emit dataChanged(leftTop, rightBottom, {});
-
-  endResetModel();
-
-  return;
-}
-
-std::vector<QVariant> MemModel::insert_one_mem_info(
-    const monitor::proto::MemInfo& mem_info) {
-  std::vector<QVariant> mem_info_list;
-  for (int i = MemInfo::USED_PERCENT; i < COLUMN_MAX; i++) {
-    switch (i) {
+  std::vector<QVariant> MemModel::insert_one_mem_info(
+      const monitor::proto::MemInfo &mem_info)
+  {
+    std::vector<QVariant> mem_info_list;
+    for (int i = MemInfo::USED_PERCENT; i < COLUMN_MAX; i++)
+    {
+      switch (i)
+      {
       case MemInfo::USED_PERCENT:
         mem_info_list.push_back(QVariant(mem_info.used_percent()));
         break;
@@ -129,8 +142,8 @@ std::vector<QVariant> MemModel::insert_one_mem_info(
         break;
       default:
         break;
+      }
     }
+    return mem_info_list;
   }
-  return mem_info_list;
-}
-}  // namespace monitor
+} // namespace monitor

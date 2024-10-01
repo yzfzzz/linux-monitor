@@ -6,7 +6,7 @@
 
 #include "monitor_info.grpc.pb.h"
 #include "monitor_info.pb.h"
-
+#include <QAbstractTableModel>
 namespace monitor {
 
 class NetModel : public MonitorInterModel {

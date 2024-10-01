@@ -1,7 +1,7 @@
 #ifndef MONITOR_WIDGET_H
 #define MONITOR_WIDGET_H
 
-#include <QWidget>
+#include <QtWidgets>
 #include <thread>
 #include <string>
 #include <QStandardItemModel>
@@ -21,7 +21,7 @@ class MonitorWidget : public QWidget{
 
 public:
     explicit MonitorWidget(QWidget* parent = nullptr);
-    ~MonitorWidget();
+    ~MonitorWidget(){};
 
     QWidget* ShowAllMonitorWidget(const string& name);
     QWidget* InitCpuMonitorWidget();

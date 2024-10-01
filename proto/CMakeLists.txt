@@ -4,6 +4,12 @@
 或 config.cmake 的文件（对于 protobuf 库来说，就是 protobuf-config.cmake 文件），这些文件通常由库的安装
 过程生成，包含了库的头文件路径、库文件路径等信息
 ]]
+
+# 为set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 17)
+
+
+
 find_package(protobuf CONFIG REQUIRED)
 find_package(gRPC CONFIG REQUIRED)
 find_package(c-ares CONFIG)

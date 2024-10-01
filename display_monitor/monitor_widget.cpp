@@ -16,9 +16,9 @@ QWidget* MonitorWidget::ShowAllMonitorWidget(const string &name)
     // 将表格窗口加入到栈中
     stack_menu_->addWidget(InitCpuMonitorWidget());
     stack_menu_->addWidget(InitSoftIrqMonitorWidget());
-    stack_menu_->addWidget(InitNetMonitorWidget());
     stack_menu_->addWidget(InitMemMonitorWidget());
     stack_menu_->addWidget(InitNetMonitorWidget());
+
     // 初始化刚性布局，上面是按钮窗口，下面是表格窗口(使用栈来切换)
     QGridLayout* layout = new QGridLayout(this);
     layout->addWidget(InitButtonMenu(name),1,0);
