@@ -1,0 +1,3 @@
+/home/work/rpc_manager/server/build/CMakeFiles/rebuild_cache.dir
+/home/work/rpc_manager/server/build/CMakeFiles/server.dir
+/home/work/rpc_manager/server/build/CMakeFiles/edit_cache.dir

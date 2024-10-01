@@ -1,0 +1,3 @@
+/home/work/test_monitor/src/build/CMakeFiles/rebuild_cache.dir
+/home/work/test_monitor/src/build/CMakeFiles/monitor.dir
+/home/work/test_monitor/src/build/CMakeFiles/edit_cache.dir
