@@ -1,6 +1,7 @@
 
 #include <QApplication>
 #include <thread>
+
 #include "client/rpc_client.h"
 #include "monitor_widget.h"
 
@@ -16,7 +17,7 @@ int main(int argc, char* argv[]) {
   monitor::RpcClient rpc_client(server_address);
   monitor::proto::MonitorInfo monitor_info;
 
-  //get board name
+  // get board name
   rpc_client.GetMonitorInfo(&monitor_info);
   std::string name = monitor_info.name();
 
