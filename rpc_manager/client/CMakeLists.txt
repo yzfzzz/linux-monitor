@@ -1,7 +1,7 @@
 set(SOURCES rpc_client.cpp)
 
-link_directories(/home/work/proto/build)
-include_directories(/home/work/proto/build)
+link_directories(${PROJECT_SOURCE_DIR}/build/proto)
+include_directories(${PROJECT_SOURCE_DIR}/build/proto)
 
 
 add_library(client ${SOURCES})

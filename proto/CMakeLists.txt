@@ -5,10 +5,7 @@
 过程生成，包含了库的头文件路径、库文件路径等信息
 ]]
 
-# 为set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD 17)
-
-
+# 为什么 set(CMAKE_CXX_STANDARD 17) ?
 
 find_package(protobuf CONFIG REQUIRED)
 find_package(gRPC CONFIG REQUIRED)
@@ -36,7 +33,6 @@ target_link_libraries(monitor_proto
 # 指定库的头文件路径
 target_include_directories(monitor_proto PUBLIC
 ${PROTOBUF_INCLUDE_DIRS}
-
 # 这个感觉可以不加
 ${CMAKE_CURRENT_BINARY_DIR}
 )
