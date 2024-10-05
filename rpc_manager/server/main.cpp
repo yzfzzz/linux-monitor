@@ -1,13 +1,14 @@
-#include <iostream>
 #include <grpc/grpc.h>
 #include <grpcpp/server_builder.h>
+#include <iostream>
 #include "rpc_manager.h"
 
 constexpr char kServerPortInfo[] = "0.0.0.0:50051";
 
-void InitServer(){
+void InitServer() {
     grpc::ServerBuilder builder;
-    builder.AddListeningPort(kServerPortInfo, grpc::InsecureServerCredentials());
+    builder.AddListeningPort(kServerPortInfo,
+                             grpc::InsecureServerCredentials());
 
     monitor::GrpcManagerImpl grpc_server;
     builder.RegisterService(&grpc_server);
@@ -19,8 +20,7 @@ void InitServer(){
     return;
 }
 
-int main()
-{
+int main() {
     InitServer();
     return 0;
 }

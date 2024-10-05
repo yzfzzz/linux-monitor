@@ -2,15 +2,15 @@
 #include <string>
 #include <unordered_map>
 
-#include "monitor_inter.h"
 #include "monitor_info.grpc.pb.h"
 #include "monitor_info.pb.h"
+#include "monitor_inter.h"
 using namespace std;
-namespace monitor{
+namespace monitor {
 
-class CpuStatMonitor: public MonitorInter{
-public:
-    struct CpuStat{
+class CpuStatMonitor : public MonitorInter {
+   public:
+    struct CpuStat {
         string cpu_name;
         float user;
         float system;
@@ -28,8 +28,8 @@ public:
     void UpdateOnce(monitor::proto::MonitorInfo* monitor_info);
     void Stop() override {}
 
-private:
+   private:
     unordered_map<string, struct CpuStat> m_cpu_stat_map;
 };
 
-};
+};  // namespace monitor

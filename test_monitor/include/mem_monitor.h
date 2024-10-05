@@ -2,14 +2,14 @@
 #include <string>
 #include <unordered_map>
 
-#include "monitor_inter.h"
 #include "monitor_info.grpc.pb.h"
 #include "monitor_info.pb.h"
+#include "monitor_inter.h"
 
-namespace monitor{
-class MemMonitor: public MonitorInter{
-public:
-    struct MemInfo{
+namespace monitor {
+class MemMonitor : public MonitorInter {
+   public:
+    struct MemInfo {
         int64_t total;
         int64_t free;
         int64_t avail;
@@ -31,8 +31,8 @@ public:
         int64_t sUnreclaim;
     };
 
-    MemMonitor(){}
+    MemMonitor() {}
     void UpdateOnce(monitor::proto::MonitorInfo* monitor_info);
     void Stop() override {}
 };
-}
+}  // namespace monitor

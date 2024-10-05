@@ -1,25 +1,25 @@
 #ifndef MONITOR_WIDGET_H
 #define MONITOR_WIDGET_H
 
-#include <QtWidgets>
-#include <thread>
-#include <string>
-#include <QStandardItemModel>
 #include <QStackedLayout>
+#include <QStandardItemModel>
+#include <QtWidgets>
+#include <string>
+#include <thread>
 #include "cpu_load_model.h"
 #include "cpu_softirq_model.h"
 #include "cpu_stat_model.h"
 #include "mem_model.h"
 #include "net_model.h"
 
+
 using namespace std;
-namespace monitor{
+namespace monitor {
 
-class MonitorWidget : public QWidget{
-
+class MonitorWidget : public QWidget {
     Q_OBJECT
 
-public:
+   public:
     explicit MonitorWidget(QWidget* parent = nullptr);
     ~MonitorWidget(){};
 
@@ -32,13 +32,13 @@ public:
 
     void UpdateData(const monitor::proto::MonitorInfo& monitor_info);
 
-private slots:
+   private slots:
     void ClickCpuButton();
     void ClickSoftIrqButton();
     void ClickMemButton();
     void ClickNetButton();
 
-private:
+   private:
     QTableView* monitor_view_ = nullptr;
     QTableView* cpu_load_monitor_view_ = nullptr;
     QTableView* cpu_stat_monitor_view_ = nullptr;
@@ -54,5 +54,5 @@ private:
     QStackedLayout* stack_menu_ = nullptr;
 };
 
-}
-#endif // MONITOR_WIDGET_H
+}  // namespace monitor
+#endif  // MONITOR_WIDGET_H

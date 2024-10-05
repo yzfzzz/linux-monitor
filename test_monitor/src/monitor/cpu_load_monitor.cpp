@@ -1,10 +1,10 @@
 #include "cpu_load_monitor.h"
-#include "utils/read_file.h"
 #include "monitor_info.grpc.pb.h"
 #include "monitor_info.pb.h"
+#include "utils/read_file.h"
 
-void monitor::CpuLoadMonitor::UpdateOnce(monitor::proto::MonitorInfo* monitor_info)
-{
+void monitor::CpuLoadMonitor::UpdateOnce(
+    monitor::proto::MonitorInfo* monitor_info) {
     ReadFile cpu_load_file(string("/proc/loadavg"));
     vector<string> cpu_load;
     cpu_load_file.ReadLine(&cpu_load);

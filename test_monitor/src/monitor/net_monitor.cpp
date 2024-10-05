@@ -2,16 +2,14 @@
 #include "utils/read_file.h"
 #include "utils/utils.h"
 
-void monitor::NetMonitor::UpdateOnce(monitor::proto::MonitorInfo *monitor_info)
-{
+void monitor::NetMonitor::UpdateOnce(
+    monitor::proto::MonitorInfo *monitor_info) {
     ReadFile net_file(std::string("/proc/net/dev"));
     vector<string> net_datas;
-    while (net_file.ReadLine(&net_datas))
-    {
+    while (net_file.ReadLine(&net_datas)) {
         string name = net_datas[0];
         // 是eth0:、docker0:、lo:这三个就进入while循环中
-        if (name.find(':') == name.size() - 1 && net_datas.size() >= 10)
-        {
+        if (name.find(':') == name.size() - 1 && net_datas.size() >= 10) {
             struct NetInfo net_info;
             name.pop_back();
             net_info.name = name;
@@ -26,15 +24,14 @@ void monitor::NetMonitor::UpdateOnce(monitor::proto::MonitorInfo *monitor_info)
             net_info.timepoint = boost::chrono::steady_clock::now();
 
             auto iter = m_net_info.find(name);
-            if (iter != m_net_info.end())
-            {
+            if (iter != m_net_info.end()) {
                 struct NetInfo old = move(iter->second);
                 double period =
                     Utils::SteadyTimeSecond(net_info.timepoint, old.timepoint);
                 auto one_net_msg = monitor_info->add_net_info();
                 one_net_msg->set_name(net_info.name);
-                one_net_msg->set_send_rate((net_info.snd_bytes - old.snd_bytes) /
-                                           1024.0 / period);
+                one_net_msg->set_send_rate(
+                    (net_info.snd_bytes - old.snd_bytes) / 1024.0 / period);
                 one_net_msg->set_rcv_rate((net_info.rcv_bytes - old.rcv_bytes) /
                                           1024.0 / period);
                 one_net_msg->set_send_packets_rate(

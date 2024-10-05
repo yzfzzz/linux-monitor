@@ -1,11 +1,10 @@
 #pragma once
-#include "monitor_info.pb.h"
 #include <string>
-#include "rpc_client.h"
 #include "monitor_info.grpc.pb.h"
+#include "monitor_info.pb.h"
+#include "rpc_client.h"
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
     monitor::proto::MonitorInfo monitor_info;
     auto soft_irq = monitor_info.add_soft_irq();
     auto soft_irq->set_cpu("cpu1");

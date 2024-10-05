@@ -1,41 +1,35 @@
-#include "monitor_inter.h"
 #include <QColor>
 #include <QFont>
-namespace monitor
-{
+#include "monitor_inter.h"
 
-    QVariant MonitorInterModel::headerData(int section, Qt::Orientation orientation, int role) const
-    {
-        if (role == Qt::FontRole)
-        {
-            return QVariant::fromValue(QFont("Microsoft YaHei", 10, QFont::Bold));
-        }
-        if (role == Qt::BackgroundRole)
-        {
-            return QVariant::fromValue(QColor(Qt::lightGray));
-        }
+namespace monitor {
 
-        return QAbstractTableModel::headerData(section, orientation, role);
+QVariant MonitorInterModel::headerData(int section, Qt::Orientation orientation,
+                                       int role) const {
+    if (role == Qt::FontRole) {
+        return QVariant::fromValue(QFont("Microsoft YaHei", 10, QFont::Bold));
+    }
+    if (role == Qt::BackgroundRole) {
+        return QVariant::fromValue(QColor(Qt::lightGray));
     }
 
-    QVariant MonitorInterModel::data(const QModelIndex &index, int role) const
-    {
-        if (role == Qt::TextAlignmentRole)
-        {
-            return QVariant(Qt::AlignLeft | Qt::AlignCenter);
-        }
-
-        if (role == Qt::TextColorRole)
-        {
-            return QVariant::fromValue(QColor(Qt::black));
-        }
-
-        if (role == Qt::BackgroundRole)
-        {
-            return QVariant::fromValue(QColor(Qt::white));
-        }
-
-        return QVariant();
-    }
-
+    return QAbstractTableModel::headerData(section, orientation, role);
 }
+
+QVariant MonitorInterModel::data(const QModelIndex &index, int role) const {
+    if (role == Qt::TextAlignmentRole) {
+        return QVariant(Qt::AlignLeft | Qt::AlignCenter);
+    }
+
+    if (role == Qt::TextColorRole) {
+        return QVariant::fromValue(QColor(Qt::black));
+    }
+
+    if (role == Qt::BackgroundRole) {
+        return QVariant::fromValue(QColor(Qt::white));
+    }
+
+    return QVariant();
+}
+
+}  // namespace monitor

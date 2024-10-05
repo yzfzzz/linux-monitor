@@ -1,16 +1,16 @@
+#include <boost/chrono.hpp>
 #include <string>
 #include <unordered_map>
-#include <boost/chrono.hpp>
 
-#include "monitor_inter.h"
 #include "monitor_info.grpc.pb.h"
 #include "monitor_info.pb.h"
+#include "monitor_inter.h"
 using namespace std;
-namespace monitor{
+namespace monitor {
 
-class NetMonitor: public MonitorInter{
-public:
-    struct NetInfo{
+class NetMonitor : public MonitorInter {
+   public:
+    struct NetInfo {
         string name;
         int64_t rcv_bytes;
         int64_t rcv_packets;
@@ -23,13 +23,13 @@ public:
         boost::chrono::steady_clock::time_point timepoint;
     };
 
-public:
+   public:
     NetMonitor() {}
     void UpdateOnce(monitor::proto::MonitorInfo* monitor_info);
     void Stop() override {}
 
-private:
+   private:
     unordered_map<string, struct NetInfo> m_net_info;
 };
 
-}
+}  // namespace monitor

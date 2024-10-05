@@ -6,19 +6,18 @@
 #include "monitor_info.grpc.pb.h"
 #include "monitor_info.pb.h"
 
-namespace monitor{
+namespace monitor {
 
-class RpcClient{
-public:
+class RpcClient {
+   public:
     RpcClient(const std::string& server_address = "localhost:50051");
     ~RpcClient();
 
     void SetMonitorInfo(const monitor::proto::MonitorInfo& monitor_info);
     void GetMonitorInfo(monitor::proto::MonitorInfo* monitor_info);
 
-private:
-    std::unique_ptr<monitor::proto::GrpcManager::Stub>  stub_ptr_;
-
+   private:
+    std::unique_ptr<monitor::proto::GrpcManager::Stub> stub_ptr_;
 };
 
-}
+}  // namespace monitor
