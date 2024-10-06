@@ -4,6 +4,7 @@ find_package(Qt5
     REQUIRED COMPONENTS
     Core
     Widgets
+    Charts
     )
 
 find_package(Threads REQUIRED)
@@ -17,6 +18,8 @@ set(SOURCES
     cpu_stat_model.cpp
     mem_model.cpp
     net_model.cpp
+
+    mem_piechart.cpp
 )
 link_directories(${PROJECT_SOURCE_DIR}/build/rpc_manager/client ${PROJECT_SOURCE_DIR}/build/proto)
 
@@ -36,6 +39,7 @@ target_link_libraries(display
     monitor_proto
     Qt5::Widgets
     Qt5::Core
+    Qt5::Charts
     Threads::Threads
     # qwt-qt5
 )

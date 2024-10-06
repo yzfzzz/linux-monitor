@@ -11,7 +11,7 @@
 #include "cpu_stat_model.h"
 #include "mem_model.h"
 #include "net_model.h"
-
+#include "mem_piechart.h"
 
 using namespace std;
 namespace monitor {
@@ -50,6 +50,7 @@ class MonitorWidget : public QWidget {
     CpuStatModel* cpu_stat_model_ = nullptr;
     MemModel* mem_model_ = nullptr;
     NetModel* net_model_ = nullptr;
+    PieWidget* mem_pie = nullptr;
 
     QStackedLayout* stack_menu_ = nullptr;
 };

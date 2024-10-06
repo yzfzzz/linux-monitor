@@ -6,6 +6,7 @@
 #include <QString>
 #include "monitor_widget.h"
 
+
 namespace monitor {
 
 MonitorWidget::MonitorWidget(QWidget* parent) {}
@@ -144,13 +145,22 @@ QWidget* MonitorWidget::InitMemMonitorWidget() {
     mem_monitor_view_ = new QTableView;
     mem_model_ = new MemModel;
     mem_monitor_view_->setModel(mem_model_);
-    mem_monitor_view_->show();
+
+    mem_pie = new PieWidget();
 
     QGridLayout* layout = new QGridLayout();
 
+    mem_pie->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    mem_monitor_view_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
     layout->addWidget(mem_label, 1, 0);
     layout->addWidget(mem_monitor_view_, 2, 0, 1, 1);
+    layout->addWidget(mem_pie, 3, 0, 1, 1);
 
+    layout->setRowStretch(2, 1);
+    layout->setRowStretch(3, 2);
+
+    mem_monitor_view_->show();
     widget->setLayout(layout);
     return widget;
 }
@@ -184,6 +194,7 @@ void MonitorWidget::UpdateData(
     cpu_stat_model_->UpdateMonitorInfo(monitor_info);
     mem_model_->UpdateMonitorInfo(monitor_info);
     net_model_->UpdateMonitorInfo(monitor_info);
+    mem_pie->UpdateMemChart(monitor_info);
 }
 
 // 栈的切换
