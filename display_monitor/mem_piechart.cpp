@@ -6,6 +6,10 @@ static const QStringList list_pie_color = {
     "#6480D6","#A1DC85","#FFAD25","#FF7777","#84D1EF","#4CB383",
 };
 
+static const QStringList list_pie_state = {
+"Free", "Used",
+};
+
 PieWidget::PieWidget(QWidget *parent)
     : QWidget(parent)
     
@@ -17,7 +21,7 @@ PieWidget::PieWidget(QWidget *parent)
         QPieSlice* pie_slice = new QPieSlice(this);
         pie_slice->setLabelVisible(true);
         pie_slice->setValue(data[i]);
-        pie_slice->setLabel(QString::number(data[i]));
+        pie_slice->setLabel(list_pie_state[i]);
         pie_slice->setColor(list_pie_color[i]);
         pie_slice->setLabelColor(list_pie_color[i]);
         pie_slice->setBorderColor(list_pie_color[i]);
@@ -25,7 +29,7 @@ PieWidget::PieWidget(QWidget *parent)
     }
 
     chart = new QChart();           // 获取QChartView中默认的QChart
-    chart->setTitle("used percent");                      // 设置图表标题
+    chart->setTitle("Memory Usage");                      // 设置图表标题
     chart->setTheme(QChart::ChartThemeDark);        //设置暗黑主题
     chart->addSeries(series);                        // 将创建好的饼图对象添加进QChart
 
@@ -45,15 +49,14 @@ PieWidget::PieWidget(QWidget *parent)
 void PieWidget::UpdateMemChart(const monitor::proto::MonitorInfo& monitor_info)
 {
     QVector<qreal> data;
-    // data.push_back(monitor_info.mem_info().used_percent());
-    // data.push_back(100-monitor_info.mem_info().used_percent());
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_real_distribution<float> dis(0.0, 100.0); // 生成 0 到 100 之间的随机浮点数
-
-    float randomNumber = dis(gen);
-    data.push_back(randomNumber);
-    data.push_back(100-randomNumber);
+    data.push_back(monitor_info.mem_info().used_percent());
+    data.push_back(100-monitor_info.mem_info().used_percent());
+    // std::random_device rd;
+    // std::mt19937 gen(rd());
+    // std::uniform_real_distribution<float> dis(0.0, 100.0); // 生成 0 到 100 之间的随机浮点数
+    // float randomNumber = dis(gen);
+    // data.push_back(randomNumber);
+    // data.push_back(100-randomNumber);
     for(int i = 0; i < data.size(); i++)
     {
         series->slices().at(i)->setValue(data[i]);
