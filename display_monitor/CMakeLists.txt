@@ -20,6 +20,7 @@ set(SOURCES
     net_model.cpp
 
     mem_piechart.cpp
+    cpu_load_barchart.cpp
 )
 link_directories(${PROJECT_SOURCE_DIR}/build/rpc_manager/client ${PROJECT_SOURCE_DIR}/build/proto)
 

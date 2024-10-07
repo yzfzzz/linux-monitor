@@ -93,13 +93,19 @@ QWidget* MonitorWidget::InitCpuMonitorWidget() {
     cpu_stat_monitor_view_->setModel(cpu_stat_model_);
     cpu_stat_monitor_view_->show();
 
+    // 创建柱状图
+    cpu_load_bar = new CPUlaod_BarWidget();
+    QWidget* cpu_load_bar_w = cpu_load_bar->CPUlaod_BarInit();
+
     // 设置刚性布局
     QGridLayout* layout = new QGridLayout();
-    layout->addWidget(cpu_stat_label, 1, 0, 1, 1);
+
+    layout->addWidget(cpu_stat_label, 0, 0);
     // 后面的1、2表示窗口大小
-    layout->addWidget(cpu_stat_monitor_view_, 2, 0, 1, 2);
-    layout->addWidget(cpu_load_label, 3, 0);
-    layout->addWidget(cpu_load_monitor_view_, 4, 0, 2, 2);
+    layout->addWidget(cpu_stat_monitor_view_, 1, 0,1,1);
+    layout->addWidget(cpu_load_label, 2, 0);
+    layout->addWidget(cpu_load_monitor_view_, 3, 0,1,1);
+    layout->addWidget(cpu_load_bar_w, 0, 1, 4, 1);
 
     widget->setLayout(layout);
     return widget;
@@ -150,15 +156,15 @@ QWidget* MonitorWidget::InitMemMonitorWidget() {
 
     QGridLayout* layout = new QGridLayout();
 
-    mem_pie->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    mem_monitor_view_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    // mem_pie->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    // mem_monitor_view_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    layout->addWidget(mem_label, 1, 0);
-    layout->addWidget(mem_monitor_view_, 2, 0, 1, 1);
-    layout->addWidget(mem_pie, 3, 0, 1, 1);
+    layout->addWidget(mem_label, 0, 0);
+    layout->addWidget(mem_monitor_view_, 1, 0, 1,1);
+    layout->addWidget(mem_pie, 2, 0, 2, 1);
 
-    layout->setRowStretch(2, 1);
-    layout->setRowStretch(3, 2);
+    layout->setRowStretch(1, 1);
+    layout->setRowStretch(2, 2);
 
     mem_monitor_view_->show();
     widget->setLayout(layout);
