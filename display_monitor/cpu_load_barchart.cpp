@@ -11,17 +11,17 @@ QWidget* CPUlaod_BarWidget::CPUlaod_BarInit()
     // QBarSeries 类将一系列数据显示为按类别分组的垂直条。
     series = new QBarSeries();
        // QBarSet 类表示条形图中的一组条形
-    QBarSet* set0 = new QBarSet("AVG_1");
-    QBarSet* set1 = new QBarSet("AVG_3");
-    QBarSet* set2 = new QBarSet("AVG_15");
+    set1 = new QBarSet("AVG_1");
+    set3 = new QBarSet("AVG_3");
+    set15 = new QBarSet("AVG_15");
 
-    *set0 << 0.1;
-    *set1 << 0.3;
-    *set2 << 0.8;
+    *set1 << 0.1;
+    *set3 << 0.3;
+    *set15 << 0.8;
 
-    series->append(set0);
     series->append(set1);
-    series->append(set2);
+    series->append(set3);
+    series->append(set15);
 
 
     chart = new QChart();           // 获取QChartView中默认的QChart
@@ -49,6 +49,20 @@ QWidget* CPUlaod_BarWidget::CPUlaod_BarInit()
     widget->setLayout(layout);
     return widget;
 }
+
+void CPUlaod_BarWidget::UpdateCPUloadChart(const monitor::proto::MonitorInfo& monitor_info)
+{
+    set1->replace(0, monitor_info.cpu_load().load_avg_1());
+    set3->replace(0, monitor_info.cpu_load().load_avg_3());
+    set15->replace(0, monitor_info.cpu_load().load_avg_15());
+    series->clear();
+    series->append(set1);
+    series->append(set3);
+    series->append(set15);
+
+    // chart->update();  // 刷新图表
+}
+
 
 
 

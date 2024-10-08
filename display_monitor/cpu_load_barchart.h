@@ -13,12 +13,16 @@ class CPUlaod_BarWidget : public QWidget
 
 public:
     QWidget* CPUlaod_BarInit();
-    void UpdateCPUloadChart(const monitor::proto::MonitorInfo& monitor_info){};
+    void UpdateCPUloadChart(const monitor::proto::MonitorInfo& monitor_info);
 
     QBarSeries* series;
     QChart* chart;
     QChartView *chartView;
     QVBoxLayout *layout;
+
+    QBarSet* set1 = nullptr;
+    QBarSet* set3 = nullptr;
+    QBarSet* set15 = nullptr;
 
 };
 

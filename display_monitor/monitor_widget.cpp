@@ -6,7 +6,6 @@
 #include <QString>
 #include "monitor_widget.h"
 
-
 namespace monitor {
 
 MonitorWidget::MonitorWidget(QWidget* parent) {}
@@ -102,9 +101,9 @@ QWidget* MonitorWidget::InitCpuMonitorWidget() {
 
     layout->addWidget(cpu_stat_label, 0, 0);
     // 后面的1、2表示窗口大小
-    layout->addWidget(cpu_stat_monitor_view_, 1, 0,1,1);
+    layout->addWidget(cpu_stat_monitor_view_, 1, 0, 1, 1);
     layout->addWidget(cpu_load_label, 2, 0);
-    layout->addWidget(cpu_load_monitor_view_, 3, 0,1,1);
+    layout->addWidget(cpu_load_monitor_view_, 3, 0, 1, 1);
     layout->addWidget(cpu_load_bar_w, 0, 1, 4, 1);
 
     widget->setLayout(layout);
@@ -157,10 +156,11 @@ QWidget* MonitorWidget::InitMemMonitorWidget() {
     QGridLayout* layout = new QGridLayout();
 
     // mem_pie->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    // mem_monitor_view_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    // mem_monitor_view_->setSizePolicy(QSizePolicy::Expanding,
+    // QSizePolicy::Expanding);
 
     layout->addWidget(mem_label, 0, 0);
-    layout->addWidget(mem_monitor_view_, 1, 0, 1,1);
+    layout->addWidget(mem_monitor_view_, 1, 0, 1, 1);
     layout->addWidget(mem_pie, 2, 0, 2, 1);
 
     layout->setRowStretch(1, 1);
@@ -201,6 +201,9 @@ void MonitorWidget::UpdateData(
     mem_model_->UpdateMonitorInfo(monitor_info);
     net_model_->UpdateMonitorInfo(monitor_info);
     mem_pie->UpdateMemChart(monitor_info);
+
+    // !有bug, C++中类的动态内存分配与释放
+    // cpu_load_bar->UpdateCPUloadChart(monitor_info);
 }
 
 // 栈的切换
