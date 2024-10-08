@@ -1290,12 +1290,10 @@ display_monitor/CMakeFiles/display.dir/cpu_stat_model.cpp.o: proto/monitor_info.
 display_monitor/CMakeFiles/display.dir/cpu_stat_model.cpp.o: proto/monitor_info.pb.h
 display_monitor/CMakeFiles/display.dir/cpu_stat_model.cpp.o: proto/net_info.pb.h
 
-display_monitor/CMakeFiles/display.dir/display_autogen/mocs_compilation.cpp.o: display_monitor/display_autogen/EWIEGA46WW/moc_cpu_load_barchart.cpp
 display_monitor/CMakeFiles/display.dir/display_autogen/mocs_compilation.cpp.o: display_monitor/display_autogen/EWIEGA46WW/moc_cpu_load_model.cpp
 display_monitor/CMakeFiles/display.dir/display_autogen/mocs_compilation.cpp.o: display_monitor/display_autogen/EWIEGA46WW/moc_cpu_softirq_model.cpp
 display_monitor/CMakeFiles/display.dir/display_autogen/mocs_compilation.cpp.o: display_monitor/display_autogen/EWIEGA46WW/moc_cpu_stat_model.cpp
 display_monitor/CMakeFiles/display.dir/display_autogen/mocs_compilation.cpp.o: display_monitor/display_autogen/EWIEGA46WW/moc_mem_model.cpp
-display_monitor/CMakeFiles/display.dir/display_autogen/mocs_compilation.cpp.o: display_monitor/display_autogen/EWIEGA46WW/moc_mem_piechart.cpp
 display_monitor/CMakeFiles/display.dir/display_autogen/mocs_compilation.cpp.o: display_monitor/display_autogen/EWIEGA46WW/moc_monitor_inter.cpp
 display_monitor/CMakeFiles/display.dir/display_autogen/mocs_compilation.cpp.o: display_monitor/display_autogen/EWIEGA46WW/moc_monitor_widget.cpp
 display_monitor/CMakeFiles/display.dir/display_autogen/mocs_compilation.cpp.o: display_monitor/display_autogen/EWIEGA46WW/moc_net_model.cpp

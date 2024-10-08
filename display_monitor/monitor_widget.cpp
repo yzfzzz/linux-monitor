@@ -93,7 +93,7 @@ QWidget* MonitorWidget::InitCpuMonitorWidget() {
     cpu_stat_monitor_view_->show();
 
     // 创建柱状图
-    cpu_load_bar = new CPUlaod_BarWidget();
+    cpu_load_bar = new CPUlaodBar();
     QWidget* cpu_load_bar_w = cpu_load_bar->CPUlaod_BarInit();
 
     // 设置刚性布局
@@ -143,30 +143,31 @@ QWidget* MonitorWidget::InitSoftIrqMonitorWidget() {
 QWidget* MonitorWidget::InitMemMonitorWidget() {
     QWidget* widget = new QWidget();
 
-    QLabel* mem_label = new QLabel(this);
+    QLabel* mem_label = new QLabel();
     mem_label->setText(tr("Monitor mem:"));
     mem_label->setFont(QFont("Microsoft YaHei", 10, 40));
 
     mem_monitor_view_ = new QTableView;
     mem_model_ = new MemModel;
     mem_monitor_view_->setModel(mem_model_);
+    mem_monitor_view_->show();
 
-    mem_pie = new PieWidget();
+    mem_pie = new MemPie();
+    QWidget* mem_pie_w = mem_pie->MemPie_Init();
 
     QGridLayout* layout = new QGridLayout();
 
+
     // mem_pie->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    // mem_monitor_view_->setSizePolicy(QSizePolicy::Expanding,
-    // QSizePolicy::Expanding);
+    mem_monitor_view_->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
     layout->addWidget(mem_label, 0, 0);
     layout->addWidget(mem_monitor_view_, 1, 0, 1, 1);
-    layout->addWidget(mem_pie, 2, 0, 2, 1);
+    layout->addWidget(mem_pie_w, 1, 1, 1, 2);
 
-    layout->setRowStretch(1, 1);
-    layout->setRowStretch(2, 2);
+    // layout->setRowStretch(1, 1);
+    // layout->setRowStretch(2, 2);
 
-    mem_monitor_view_->show();
     widget->setLayout(layout);
     return widget;
 }
@@ -203,7 +204,7 @@ void MonitorWidget::UpdateData(
     mem_pie->UpdateMemChart(monitor_info);
 
     // !有bug, C++中类的动态内存分配与释放
-    // cpu_load_bar->UpdateCPUloadChart(monitor_info);
+    cpu_load_bar->UpdateCPUloadBar(monitor_info);
 }
 
 // 栈的切换

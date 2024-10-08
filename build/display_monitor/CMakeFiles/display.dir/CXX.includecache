@@ -18,14 +18,6 @@ monitor_info.grpc.pb.h
 monitor_info.pb.h
 ../rpc_manager/client/monitor_info.pb.h
 
-/home/work/build/display_monitor/display_autogen/EWIEGA46WW/moc_cpu_load_barchart.cpp
-../../../../display_monitor/cpu_load_barchart.h
-/home/work/display_monitor/cpu_load_barchart.h
-QtCore/qbytearray.h
--
-QtCore/qmetatype.h
--
-
 /home/work/build/display_monitor/display_autogen/EWIEGA46WW/moc_cpu_load_model.cpp
 ../../../../display_monitor/cpu_load_model.h
 /home/work/display_monitor/cpu_load_model.h
@@ -66,14 +58,6 @@ QtCore/qmetatype.h
 QtCore/QVector
 -
 
-/home/work/build/display_monitor/display_autogen/EWIEGA46WW/moc_mem_piechart.cpp
-../../../../display_monitor/mem_piechart.h
-/home/work/display_monitor/mem_piechart.h
-QtCore/qbytearray.h
--
-QtCore/qmetatype.h
--
-
 /home/work/build/display_monitor/display_autogen/EWIEGA46WW/moc_monitor_inter.cpp
 ../../../../display_monitor/monitor_inter.h
 /home/work/display_monitor/monitor_inter.h
@@ -101,8 +85,6 @@ QtCore/QVector
 -
 
 /home/work/build/display_monitor/display_autogen/mocs_compilation.cpp
-EWIEGA46WW/moc_cpu_load_barchart.cpp
-/home/work/build/display_monitor/display_autogen/EWIEGA46WW/moc_cpu_load_barchart.cpp
 EWIEGA46WW/moc_cpu_load_model.cpp
 /home/work/build/display_monitor/display_autogen/EWIEGA46WW/moc_cpu_load_model.cpp
 EWIEGA46WW/moc_cpu_softirq_model.cpp
@@ -111,8 +93,6 @@ EWIEGA46WW/moc_cpu_stat_model.cpp
 /home/work/build/display_monitor/display_autogen/EWIEGA46WW/moc_cpu_stat_model.cpp
 EWIEGA46WW/moc_mem_model.cpp
 /home/work/build/display_monitor/display_autogen/EWIEGA46WW/moc_mem_model.cpp
-EWIEGA46WW/moc_mem_piechart.cpp
-/home/work/build/display_monitor/display_autogen/EWIEGA46WW/moc_mem_piechart.cpp
 EWIEGA46WW/moc_monitor_inter.cpp
 /home/work/build/display_monitor/display_autogen/EWIEGA46WW/moc_monitor_inter.cpp
 EWIEGA46WW/moc_monitor_widget.cpp
@@ -121,10 +101,10 @@ EWIEGA46WW/moc_net_model.cpp
 /home/work/build/display_monitor/display_autogen/EWIEGA46WW/moc_net_model.cpp
 
 /home/work/display_monitor/cpu_load_barchart.cpp
-cpu_load_barchart.h
-/home/work/display_monitor/cpu_load_barchart.h
 random
 -
+cpu_load_barchart.h
+/home/work/display_monitor/cpu_load_barchart.h
 
 /home/work/display_monitor/cpu_load_barchart.h
 QWidget

@@ -51,8 +51,8 @@ class MonitorWidget : public QWidget {
     CpuStatModel* cpu_stat_model_ = nullptr;
     MemModel* mem_model_ = nullptr;
     NetModel* net_model_ = nullptr;
-    PieWidget* mem_pie = nullptr;
-    CPUlaod_BarWidget* cpu_load_bar = nullptr;
+    MemPie* mem_pie = nullptr;
+    CPUlaodBar* cpu_load_bar = nullptr;
 
     QStackedLayout* stack_menu_ = nullptr;
 };

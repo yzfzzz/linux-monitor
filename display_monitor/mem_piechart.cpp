@@ -11,14 +11,13 @@ static const QStringList list_pie_state = {
     "Used",
 };
 
-PieWidget::PieWidget(QWidget* parent)
-    : QWidget(parent)
-
+QWidget* MemPie::MemPie_Init()
 {
+    QWidget* widget = new QWidget();
     QVector<qreal> data(2, 50);
-    series = new QPieSeries(this);  // 创建一个饼图对象（设置孔径就是圆环）
+    series = new QPieSeries();  // 创建一个饼图对象（设置孔径就是圆环）
     for (int i = 0; i < data.size(); i++) {
-        QPieSlice* pie_slice = new QPieSlice(this);
+        QPieSlice* pie_slice = new QPieSlice();
         pie_slice->setLabelVisible(true);
         pie_slice->setValue(data[i]);
         pie_slice->setLabel(list_pie_state[i]);
@@ -40,18 +39,22 @@ PieWidget::PieWidget(QWidget* parent)
     chartView = new QChartView(chart);
     chartView->setRenderHint(QPainter::Antialiasing);  // 设置抗锯齿渲染提示
 
-    layout = new QVBoxLayout(this);
+    layout = new QVBoxLayout();
     layout->addWidget(chartView);  // 将QChartView添加到布局中
+
+    widget->setLayout(layout);
+    return widget;
 }
 
-void PieWidget::UpdateMemChart(
+void MemPie::UpdateMemChart(
     const monitor::proto::MonitorInfo& monitor_info) {
     QVector<qreal> data;
     data.push_back(monitor_info.mem_info().used_percent());
     data.push_back(100 - monitor_info.mem_info().used_percent());
     // std::random_device rd;
     // std::mt19937 gen(rd());
-    // std::uniform_real_distribution<float> dis(0.0, 100.0); // 生成 0 到 100之间的随机浮点数 float randomNumber = dis(gen);
+    // std::uniform_real_distribution<float> dis(0.0, 100.0); // 生成 0 到 100之间的随机浮点数 
+    // float randomNumber = dis(gen);
     // data.push_back(randomNumber);
     // data.push_back(100-randomNumber);
     for (int i = 0; i < data.size(); i++) {
