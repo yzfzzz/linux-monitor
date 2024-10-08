@@ -7,22 +7,17 @@ QT_CHARTS_USE_NAMESPACE
 #include "monitor_info.grpc.pb.h"
 #include "monitor_info.pb.h"
 
-class CPUlaod_BarWidget : public QWidget
-{
-    Q_OBJECT
-
-public:
-    QWidget* CPUlaod_BarInit();
-    void UpdateCPUloadChart(const monitor::proto::MonitorInfo& monitor_info);
-
+class CPUlaodBar {
+   public:
     QBarSeries* series;
     QChart* chart;
-    QChartView *chartView;
-    QVBoxLayout *layout;
+    QChartView* chartView;
+    QVBoxLayout* layout;
 
     QBarSet* set1 = nullptr;
     QBarSet* set3 = nullptr;
     QBarSet* set15 = nullptr;
 
+    QWidget* CPUlaod_BarInit();
+    void UpdateCPUloadBar(const monitor::proto::MonitorInfo& monito_info);
 };
-
