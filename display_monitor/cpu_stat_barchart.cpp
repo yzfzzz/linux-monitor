@@ -41,7 +41,7 @@ QWidget* CPUstatBar::CPUstat_BarInit() {
     this->chart->addAxis(axisX, Qt::AlignBottom);  // 将X轴放在图表的底部
     this->series->attachAxis(axisX);
     QValueAxis* axisY = new QValueAxis();  // 创建Y轴
-    axisY->setRange(0, 10);                // 设置Y轴范围
+    axisY->setRange(0, 100);                // 设置Y轴范围
     // axisY->setTitleText("load ratio");   // 设置Y轴标题
     this->chart->addAxis(axisY, Qt::AlignLeft);  // Y轴左对齐
     this->series->attachAxis(axisY);
