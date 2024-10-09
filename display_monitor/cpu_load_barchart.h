@@ -9,7 +9,7 @@ QT_CHARTS_USE_NAMESPACE
 
 class CPUlaodBar {
    public:
-    QBarSeries* series;
+    QHorizontalBarSeries* series;
     QChart* chart;
     QChartView* chartView;
     QVBoxLayout* layout;

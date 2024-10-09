@@ -3,7 +3,7 @@
 
 //定义各扇形切片的颜色
 static const QStringList list_pie_color = {
-    "#6480D6", "#A1DC85", "#FFAD25", "#FF7777", "#84D1EF", "#4CB383",
+    "#A1DC85","#FF7777","#6480D6",  "#FFAD25",  "#84D1EF", "#4CB383",
 };
 
 static const QStringList list_pie_state = {
