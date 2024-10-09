@@ -29,17 +29,23 @@ QWidget* MonitorWidget::ShowAllMonitorWidget(const string& name) {
 
 QWidget* MonitorWidget::InitButtonMenu(const string& name) {
     // 创建按键
-    QPushButton* cpu_button =
-        new QPushButton(QString::fromStdString(name) + "_cpu", this);
+    QPushButton* cpu_button = new QPushButton(QString::fromStdString(name) + "-cpu", this);
     QPushButton* soft_irq_button =
-        new QPushButton(QString::fromStdString(name) + "_soft_irq", this);
-    QPushButton* mem_button =
-        new QPushButton(QString::fromStdString(name) + "_mem", this);
-    QPushButton* net_button =
-        new QPushButton(QString::fromStdString(name) + "_net", this);
+        new QPushButton(QString::fromStdString(name) + "-soft irq", this);
+    QPushButton* mem_button = new QPushButton(QString::fromStdString(name) + "-mem", this);
+    QPushButton* net_button = new QPushButton(QString::fromStdString(name) + "-net", this);
 
+    QString button_style =
+        "QPushButton{background-color:white;color: black; border-radius: 10px; border: 2px groove "
+        "gray;border-style: outset;}"
+        "QPushButton:pressed{background-color:rgb(85, 170, 255);border-style: inset; }";
+
+    cpu_button->setStyleSheet(button_style);
+    soft_irq_button->setStyleSheet(button_style);
+    mem_button->setStyleSheet(button_style);
+    net_button->setStyleSheet(button_style);
     // 设置字体
-    QFont* font = new QFont("Microsoft YaHei", 15, 40);
+    QFont* font = new QFont("Meiryo", 15, 40);
     cpu_button->setFont(*font);
     soft_irq_button->setFont(*font);
     mem_button->setFont(*font);
@@ -58,8 +64,7 @@ QWidget* MonitorWidget::InitButtonMenu(const string& name) {
 
     // 设置槽函数
     connect(cpu_button, SIGNAL(clicked()), this, SLOT(ClickCpuButton()));
-    connect(soft_irq_button, SIGNAL(clicked()), this,
-            SLOT(ClickSoftIrqButton()));
+    connect(soft_irq_button, SIGNAL(clicked()), this, SLOT(ClickSoftIrqButton()));
     connect(mem_button, SIGNAL(clicked()), this, SLOT(ClickMemButton()));
     connect(net_button, SIGNAL(clicked()), this, SLOT(ClickNetButton()));
 
@@ -160,7 +165,6 @@ QWidget* MonitorWidget::InitMemMonitorWidget() {
 
     QGridLayout* layout = new QGridLayout();
 
-
     layout->addWidget(mem_label, 0, 0);
     layout->addWidget(mem_monitor_view_, 1, 0, 1, 1);
     layout->addWidget(mem_pie_w, 1, 1, 1, 1);
@@ -194,8 +198,7 @@ QWidget* MonitorWidget::InitNetMonitorWidget() {
 }
 
 // 更新数据
-void MonitorWidget::UpdateData(
-    const monitor::proto::MonitorInfo& monitor_info) {
+void MonitorWidget::UpdateData(const monitor::proto::MonitorInfo& monitor_info) {
     monitor_model_->UpdateMonitorInfo(monitor_info);
     cpu_load_model_->UpdateMonitorInfo(monitor_info);
     cpu_stat_model_->UpdateMonitorInfo(monitor_info);
