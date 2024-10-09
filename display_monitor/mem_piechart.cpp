@@ -51,10 +51,7 @@ void MemPie::UpdateMemChart(
     QVector<qreal> data;
     data.push_back(monitor_info.mem_info().used_percent());
     data.push_back(100 - monitor_info.mem_info().used_percent());
-    // std::random_device rd;
-    // std::mt19937 gen(rd());
-    // std::uniform_real_distribution<float> dis(0.0, 100.0); // 生成 0 到 100之间的随机浮点数 
-    // float randomNumber = dis(gen);
+
     // data.push_back(randomNumber);
     // data.push_back(100-randomNumber);
     for (int i = 0; i < data.size(); i++) {
