@@ -95,16 +95,19 @@ QWidget* MonitorWidget::InitCpuMonitorWidget() {
     // 创建柱状图
     cpu_load_bar = new CPUlaodBar();
     QWidget* cpu_load_bar_w = cpu_load_bar->CPUlaod_BarInit();
+    cpu_stat_bar = new CPUstatBar();
+    QWidget* cpu_stat_bar_w = cpu_stat_bar->CPUstat_BarInit();
 
     // 设置刚性布局
     QGridLayout* layout = new QGridLayout();
 
-    layout->addWidget(cpu_stat_label, 0, 0);
     // 后面的1、2表示窗口大小
+    layout->addWidget(cpu_stat_label, 0, 0);
     layout->addWidget(cpu_stat_monitor_view_, 1, 0, 1, 1);
     layout->addWidget(cpu_load_label, 2, 0);
     layout->addWidget(cpu_load_monitor_view_, 3, 0, 1, 1);
-    layout->addWidget(cpu_load_bar_w, 0, 1, 4, 1);
+    layout->addWidget(cpu_stat_bar_w, 0, 1, 2, 1);
+    layout->addWidget(cpu_load_bar_w, 2, 1, 2, 1);
 
     widget->setLayout(layout);
     return widget;
@@ -203,8 +206,8 @@ void MonitorWidget::UpdateData(
     net_model_->UpdateMonitorInfo(monitor_info);
     mem_pie->UpdateMemChart(monitor_info);
 
-    // !有bug, C++中类的动态内存分配与释放
     cpu_load_bar->UpdateCPUloadBar(monitor_info);
+    cpu_stat_bar->UpdateCPUstatBar(monitor_info);
 }
 
 // 栈的切换
