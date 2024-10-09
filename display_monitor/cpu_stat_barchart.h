@@ -15,7 +15,6 @@ class CPUstatBar {
     QChartView* chartView;
     QVBoxLayout* layout;
 
-
     QBarSet* cpu_percent_set = nullptr;
     QBarSet* user_set = nullptr;
     QBarSet* sys_set = nullptr;

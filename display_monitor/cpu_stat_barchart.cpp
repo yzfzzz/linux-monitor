@@ -29,19 +29,25 @@ QWidget* CPUstatBar::CPUstat_BarInit() {
     // this->chart->setTitle("cpu current load rate");               // 设置标题
     this->chart->setAnimationOptions(QChart::SeriesAnimations);  // 设置图表变化时的动画效果
 
-    QStringList x_label;                                // X轴分类，一般与QBarSet中添加的数据个数相同，如果少了则会显示不全,多了不影响，但是不能重复
-    x_label << "cpu" << "cpu0"  << "cpu1";  // 星期天当然是休息了...
+    QStringList
+        x_label;  // X轴分类，一般与QBarSet中添加的数据个数相同，如果少了则会显示不全,多了不影响，但是不能重复
+    x_label << "cpu"
+            << "cpu0"
+            << "cpu1";  
 
     QBarCategoryAxis* axisX = new QBarCategoryAxis();  // QBarCategoryAxis类向图表的轴添加类别。
     axisX->append(x_label);
-    
+
     this->chart->addAxis(axisX, Qt::AlignBottom);  // 将X轴放在图表的底部
     this->series->attachAxis(axisX);
     QValueAxis* axisY = new QValueAxis();  // 创建Y轴
-    axisY->setRange(0, 10);                 // 设置Y轴范围
+    axisY->setRange(0, 10);                // 设置Y轴范围
     // axisY->setTitleText("load ratio");   // 设置Y轴标题
     this->chart->addAxis(axisY, Qt::AlignLeft);  // Y轴左对齐
     this->series->attachAxis(axisY);
+
+    this->chart->setTheme(QChart::ChartThemeBlueCerulean);
+    this->chart->legend()->setAlignment(Qt::AlignRight);
 
     this->chartView = new QChartView(this->chart);
     this->chartView->setRenderHint(QPainter::Antialiasing);  // 设置抗锯齿渲染提示
@@ -54,13 +60,11 @@ QWidget* CPUstatBar::CPUstat_BarInit() {
     return widget;
 }
 
-void CPUstatBar::UpdateCPUstatBar(const monitor::proto::MonitorInfo& monito_info) {
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_real_distribution<float> dis(0.0, 7.0); // 生成 0 到 100之间的随机浮点数 
-    
-    float randomNumber = dis(gen);
-    this->cpu_percent_set->replace(0, randomNumber);
-    this->user_set->replace(1, randomNumber+2);
-    this->sys_set->replace(2, 10-randomNumber);
+void CPUstatBar::UpdateCPUstatBar(const monitor::proto::MonitorInfo& monitor_info) {
+    for (int i = 0; i < monitor_info.cpu_stat_size(); i++) {
+        const monitor::proto::CpuStat cpu_stat = monitor_info.cpu_stat(i);
+        this->cpu_percent_set->replace(i, cpu_stat.cpu_percent());
+        this->user_set->replace(i, cpu_stat.usr_percent());
+        this->sys_set->replace(i, cpu_stat.system_percent());
+    }
 }

@@ -161,12 +161,9 @@ QWidget* MonitorWidget::InitMemMonitorWidget() {
     QGridLayout* layout = new QGridLayout();
 
 
-    // mem_pie->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    mem_monitor_view_->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-
     layout->addWidget(mem_label, 0, 0);
     layout->addWidget(mem_monitor_view_, 1, 0, 1, 1);
-    layout->addWidget(mem_pie_w, 1, 1, 1, 2);
+    layout->addWidget(mem_pie_w, 1, 1, 1, 1);
 
     // layout->setRowStretch(1, 1);
     // layout->setRowStretch(2, 2);

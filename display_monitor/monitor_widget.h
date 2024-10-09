@@ -13,6 +13,7 @@
 #include "net_model.h"
 #include "mem_piechart.h"
 #include "cpu_load_barchart.h"
+#include "cpu_stat_barchart.h"
 
 using namespace std;
 namespace monitor {
@@ -53,6 +54,7 @@ class MonitorWidget : public QWidget {
     NetModel* net_model_ = nullptr;
     MemPie* mem_pie = nullptr;
     CPUlaodBar* cpu_load_bar = nullptr;
+    CPUstatBar* cpu_stat_bar = nullptr;
 
     QStackedLayout* stack_menu_ = nullptr;
 };
