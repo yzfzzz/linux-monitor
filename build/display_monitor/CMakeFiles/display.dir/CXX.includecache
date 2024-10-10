@@ -150,6 +150,24 @@ monitor_info.pb.h
 monitor_inter.h
 /home/work/display_monitor/monitor_inter.h
 
+/home/work/display_monitor/cpu_stat_barchart.cpp
+random
+-
+cpu_stat_barchart.h
+/home/work/display_monitor/cpu_stat_barchart.h
+
+/home/work/display_monitor/cpu_stat_barchart.h
+QWidget
+-
+QtCharts
+-
+QtWidgets/QVBoxLayout
+-
+monitor_info.grpc.pb.h
+/home/work/display_monitor/monitor_info.grpc.pb.h
+monitor_info.pb.h
+/home/work/display_monitor/monitor_info.pb.h
+
 /home/work/display_monitor/cpu_stat_model.cpp
 cpu_stat_model.h
 /home/work/display_monitor/cpu_stat_model.h
@@ -267,6 +285,8 @@ mem_piechart.h
 /home/work/display_monitor/mem_piechart.h
 cpu_load_barchart.h
 /home/work/display_monitor/cpu_load_barchart.h
+cpu_stat_barchart.h
+/home/work/display_monitor/cpu_stat_barchart.h
 
 /home/work/display_monitor/net_model.cpp
 net_model.h

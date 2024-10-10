@@ -221,6 +221,33 @@ cpu_softirq_model.cpp.s:
 	cd /home/work/build && $(MAKE) -f display_monitor/CMakeFiles/display.dir/build.make display_monitor/CMakeFiles/display.dir/cpu_softirq_model.cpp.s
 .PHONY : cpu_softirq_model.cpp.s
 
+cpu_stat_barchart.o: cpu_stat_barchart.cpp.o
+
+.PHONY : cpu_stat_barchart.o
+
+# target to build an object file
+cpu_stat_barchart.cpp.o:
+	cd /home/work/build && $(MAKE) -f display_monitor/CMakeFiles/display.dir/build.make display_monitor/CMakeFiles/display.dir/cpu_stat_barchart.cpp.o
+.PHONY : cpu_stat_barchart.cpp.o
+
+cpu_stat_barchart.i: cpu_stat_barchart.cpp.i
+
+.PHONY : cpu_stat_barchart.i
+
+# target to preprocess a source file
+cpu_stat_barchart.cpp.i:
+	cd /home/work/build && $(MAKE) -f display_monitor/CMakeFiles/display.dir/build.make display_monitor/CMakeFiles/display.dir/cpu_stat_barchart.cpp.i
+.PHONY : cpu_stat_barchart.cpp.i
+
+cpu_stat_barchart.s: cpu_stat_barchart.cpp.s
+
+.PHONY : cpu_stat_barchart.s
+
+# target to generate assembly for a file
+cpu_stat_barchart.cpp.s:
+	cd /home/work/build && $(MAKE) -f display_monitor/CMakeFiles/display.dir/build.make display_monitor/CMakeFiles/display.dir/cpu_stat_barchart.cpp.s
+.PHONY : cpu_stat_barchart.cpp.s
+
 cpu_stat_model.o: cpu_stat_model.cpp.o
 
 .PHONY : cpu_stat_model.o
@@ -456,6 +483,9 @@ help:
 	@echo "... cpu_softirq_model.o"
 	@echo "... cpu_softirq_model.i"
 	@echo "... cpu_softirq_model.s"
+	@echo "... cpu_stat_barchart.o"
+	@echo "... cpu_stat_barchart.i"
+	@echo "... cpu_stat_barchart.s"
 	@echo "... cpu_stat_model.o"
 	@echo "... cpu_stat_model.i"
 	@echo "... cpu_stat_model.s"

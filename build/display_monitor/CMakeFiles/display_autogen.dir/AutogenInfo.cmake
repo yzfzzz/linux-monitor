@@ -7,7 +7,7 @@ set(AM_CMAKE_CURRENT_SOURCE_DIR "/home/work/display_monitor/")
 set(AM_CMAKE_CURRENT_BINARY_DIR "/home/work/build/display_monitor/")
 set(AM_CMAKE_INCLUDE_DIRECTORIES_PROJECT_BEFORE "")
 set(AM_BUILD_DIR "/home/work/build/display_monitor/display_autogen")
-set(AM_SOURCES "/home/work/display_monitor/cpu_load_barchart.cpp;/home/work/display_monitor/cpu_load_model.cpp;/home/work/display_monitor/cpu_softirq_model.cpp;/home/work/display_monitor/cpu_stat_model.cpp;/home/work/display_monitor/main.cpp;/home/work/display_monitor/mem_model.cpp;/home/work/display_monitor/mem_piechart.cpp;/home/work/display_monitor/monitor_inter.cpp;/home/work/display_monitor/monitor_widget.cpp;/home/work/display_monitor/net_model.cpp")
+set(AM_SOURCES "/home/work/display_monitor/cpu_load_barchart.cpp;/home/work/display_monitor/cpu_load_model.cpp;/home/work/display_monitor/cpu_softirq_model.cpp;/home/work/display_monitor/cpu_stat_barchart.cpp;/home/work/display_monitor/cpu_stat_model.cpp;/home/work/display_monitor/main.cpp;/home/work/display_monitor/mem_model.cpp;/home/work/display_monitor/mem_piechart.cpp;/home/work/display_monitor/monitor_inter.cpp;/home/work/display_monitor/monitor_widget.cpp;/home/work/display_monitor/net_model.cpp")
 set(AM_HEADERS "")
 # Qt environment
 set(AM_QT_VERSION_MAJOR "5")

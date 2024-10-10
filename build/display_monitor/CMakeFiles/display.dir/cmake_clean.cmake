@@ -11,6 +11,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/display.dir/net_model.cpp.o"
   "CMakeFiles/display.dir/mem_piechart.cpp.o"
   "CMakeFiles/display.dir/cpu_load_barchart.cpp.o"
+  "CMakeFiles/display.dir/cpu_stat_barchart.cpp.o"
   "CMakeFiles/display.dir/display_autogen/mocs_compilation.cpp.o"
   "display.pdb"
   "display"

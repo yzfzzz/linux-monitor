@@ -7,6 +7,7 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/home/work/display_monitor/cpu_load_barchart.cpp" "/home/work/build/display_monitor/CMakeFiles/display.dir/cpu_load_barchart.cpp.o"
   "/home/work/display_monitor/cpu_load_model.cpp" "/home/work/build/display_monitor/CMakeFiles/display.dir/cpu_load_model.cpp.o"
   "/home/work/display_monitor/cpu_softirq_model.cpp" "/home/work/build/display_monitor/CMakeFiles/display.dir/cpu_softirq_model.cpp.o"
+  "/home/work/display_monitor/cpu_stat_barchart.cpp" "/home/work/build/display_monitor/CMakeFiles/display.dir/cpu_stat_barchart.cpp.o"
   "/home/work/display_monitor/cpu_stat_model.cpp" "/home/work/build/display_monitor/CMakeFiles/display.dir/cpu_stat_model.cpp.o"
   "/home/work/build/display_monitor/display_autogen/mocs_compilation.cpp" "/home/work/build/display_monitor/CMakeFiles/display.dir/display_autogen/mocs_compilation.cpp.o"
   "/home/work/display_monitor/main.cpp" "/home/work/build/display_monitor/CMakeFiles/display.dir/main.cpp.o"

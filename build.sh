@@ -10,4 +10,4 @@ fi
 mkdir build/display_monitor
 cd build
 cmake ..
-make
+make -j2

@@ -297,9 +297,33 @@ display_monitor/CMakeFiles/display.dir/cpu_load_barchart.cpp.o.provides: display
 display_monitor/CMakeFiles/display.dir/cpu_load_barchart.cpp.o.provides.build: display_monitor/CMakeFiles/display.dir/cpu_load_barchart.cpp.o
 
 
+display_monitor/CMakeFiles/display.dir/cpu_stat_barchart.cpp.o: display_monitor/CMakeFiles/display.dir/flags.make
+display_monitor/CMakeFiles/display.dir/cpu_stat_barchart.cpp.o: ../display_monitor/cpu_stat_barchart.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/work/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object display_monitor/CMakeFiles/display.dir/cpu_stat_barchart.cpp.o"
+	cd /home/work/build/display_monitor && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/display.dir/cpu_stat_barchart.cpp.o -c /home/work/display_monitor/cpu_stat_barchart.cpp
+
+display_monitor/CMakeFiles/display.dir/cpu_stat_barchart.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/display.dir/cpu_stat_barchart.cpp.i"
+	cd /home/work/build/display_monitor && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/work/display_monitor/cpu_stat_barchart.cpp > CMakeFiles/display.dir/cpu_stat_barchart.cpp.i
+
+display_monitor/CMakeFiles/display.dir/cpu_stat_barchart.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/display.dir/cpu_stat_barchart.cpp.s"
+	cd /home/work/build/display_monitor && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/work/display_monitor/cpu_stat_barchart.cpp -o CMakeFiles/display.dir/cpu_stat_barchart.cpp.s
+
+display_monitor/CMakeFiles/display.dir/cpu_stat_barchart.cpp.o.requires:
+
+.PHONY : display_monitor/CMakeFiles/display.dir/cpu_stat_barchart.cpp.o.requires
+
+display_monitor/CMakeFiles/display.dir/cpu_stat_barchart.cpp.o.provides: display_monitor/CMakeFiles/display.dir/cpu_stat_barchart.cpp.o.requires
+	$(MAKE) -f display_monitor/CMakeFiles/display.dir/build.make display_monitor/CMakeFiles/display.dir/cpu_stat_barchart.cpp.o.provides.build
+.PHONY : display_monitor/CMakeFiles/display.dir/cpu_stat_barchart.cpp.o.provides
+
+display_monitor/CMakeFiles/display.dir/cpu_stat_barchart.cpp.o.provides.build: display_monitor/CMakeFiles/display.dir/cpu_stat_barchart.cpp.o
+
+
 display_monitor/CMakeFiles/display.dir/display_autogen/mocs_compilation.cpp.o: display_monitor/CMakeFiles/display.dir/flags.make
 display_monitor/CMakeFiles/display.dir/display_autogen/mocs_compilation.cpp.o: display_monitor/display_autogen/mocs_compilation.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/work/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object display_monitor/CMakeFiles/display.dir/display_autogen/mocs_compilation.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/work/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object display_monitor/CMakeFiles/display.dir/display_autogen/mocs_compilation.cpp.o"
 	cd /home/work/build/display_monitor && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/display.dir/display_autogen/mocs_compilation.cpp.o -c /home/work/build/display_monitor/display_autogen/mocs_compilation.cpp
 
 display_monitor/CMakeFiles/display.dir/display_autogen/mocs_compilation.cpp.i: cmake_force
@@ -333,6 +357,7 @@ display_OBJECTS = \
 "CMakeFiles/display.dir/net_model.cpp.o" \
 "CMakeFiles/display.dir/mem_piechart.cpp.o" \
 "CMakeFiles/display.dir/cpu_load_barchart.cpp.o" \
+"CMakeFiles/display.dir/cpu_stat_barchart.cpp.o" \
 "CMakeFiles/display.dir/display_autogen/mocs_compilation.cpp.o"
 
 # External object files for target display
@@ -348,6 +373,7 @@ display_monitor/display: display_monitor/CMakeFiles/display.dir/mem_model.cpp.o
 display_monitor/display: display_monitor/CMakeFiles/display.dir/net_model.cpp.o
 display_monitor/display: display_monitor/CMakeFiles/display.dir/mem_piechart.cpp.o
 display_monitor/display: display_monitor/CMakeFiles/display.dir/cpu_load_barchart.cpp.o
+display_monitor/display: display_monitor/CMakeFiles/display.dir/cpu_stat_barchart.cpp.o
 display_monitor/display: display_monitor/CMakeFiles/display.dir/display_autogen/mocs_compilation.cpp.o
 display_monitor/display: display_monitor/CMakeFiles/display.dir/build.make
 display_monitor/display: /usr/lib/x86_64-linux-gnu/libQt5Charts.so.5.9.5
@@ -379,7 +405,7 @@ display_monitor/display: /usr/lib/x86_64-linux-gnu/libQt5Widgets.so.5.9.5
 display_monitor/display: /usr/lib/x86_64-linux-gnu/libQt5Gui.so.5.9.5
 display_monitor/display: /usr/lib/x86_64-linux-gnu/libQt5Core.so.5.9.5
 display_monitor/display: display_monitor/CMakeFiles/display.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/work/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Linking CXX executable display"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/work/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Linking CXX executable display"
 	cd /home/work/build/display_monitor && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/display.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -397,6 +423,7 @@ display_monitor/CMakeFiles/display.dir/requires: display_monitor/CMakeFiles/disp
 display_monitor/CMakeFiles/display.dir/requires: display_monitor/CMakeFiles/display.dir/net_model.cpp.o.requires
 display_monitor/CMakeFiles/display.dir/requires: display_monitor/CMakeFiles/display.dir/mem_piechart.cpp.o.requires
 display_monitor/CMakeFiles/display.dir/requires: display_monitor/CMakeFiles/display.dir/cpu_load_barchart.cpp.o.requires
+display_monitor/CMakeFiles/display.dir/requires: display_monitor/CMakeFiles/display.dir/cpu_stat_barchart.cpp.o.requires
 display_monitor/CMakeFiles/display.dir/requires: display_monitor/CMakeFiles/display.dir/display_autogen/mocs_compilation.cpp.o.requires
 
 .PHONY : display_monitor/CMakeFiles/display.dir/requires
