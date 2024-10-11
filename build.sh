@@ -1,5 +1,5 @@
 #!/bin/bash
-
+cd ..
 if [ -d "build" ]; then
     echo "Build directory already exists."
     rm -r build
@@ -9,5 +9,5 @@ fi
 
 mkdir build
 cd build
-cmake ..
+cmake ../serverMoni
 make -j2
