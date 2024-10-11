@@ -1,4 +1,5 @@
 #!/bin/bash
+cd ..
 
 if [ -d "build" ]; then
     echo "Build directory already exists."
@@ -9,5 +10,5 @@ fi
 
 mkdir build
 cd build
-cmake ..
-make
+cmake ../work
+make -j2
