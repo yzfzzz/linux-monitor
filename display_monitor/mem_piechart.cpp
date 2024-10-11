@@ -49,8 +49,8 @@ QWidget* MemPie::MemPie_Init()
 void MemPie::UpdateMemChart(
     const monitor::proto::MonitorInfo& monitor_info) {
     QVector<qreal> data;
-    data.push_back(monitor_info.mem_info().used_percent());
     data.push_back(100 - monitor_info.mem_info().used_percent());
+    data.push_back(monitor_info.mem_info().used_percent());
 
     // data.push_back(randomNumber);
     // data.push_back(100-randomNumber);
