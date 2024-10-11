@@ -1,13 +1,13 @@
 #!/bin/bash
 
-if [ -d "build/display_monitor" ]; then
+if [ -d "build" ]; then
     echo "Build directory already exists."
-    rm -r build/display_monitor
+    rm -r build
 else
     echo "Created build directory."
 fi
 
-mkdir build/display_monitor
+mkdir build
 cd build
 cmake ..
 make -j2

@@ -43,8 +43,5 @@ target_link_libraries(display
     Qt5::Core
     Qt5::Charts
     Threads::Threads
-    protobuf::libprotobuf
-    gRPC::grpc
-    gRPC::grpc++
     # qwt-qt5
 )
