@@ -1,26 +1,17 @@
-#include <grpc/grpc.h>
-#include <grpcpp/server_builder.h>
 #include <iostream>
+#include <string>
+#include <vector>
 #include "rpc_manager.h"
 
-constexpr char kServerPortInfo[] = "0.0.0.0:50051";
+int main(int argv, char** argc) {
+    // 调用框架的初始化操作
+    MprpcApplication::Init(argv, argc);
 
-void InitServer() {
-    grpc::ServerBuilder builder;
-    builder.AddListeningPort(kServerPortInfo,
-                             grpc::InsecureServerCredentials());
+    RpcProvider provider;
+    provider.NotifyService(new monitor::ServerManagerImpl());
 
-    monitor::GrpcManagerImpl grpc_server;
-    builder.RegisterService(&grpc_server);
+    // 启动一个rpc服务发布节点, Run以后进程进入阻塞状态，等待远程的rpc调用请求
+    provider.Run();
 
-    std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
-
-    server->Wait();
-
-    return;
-}
-
-int main() {
-    InitServer();
     return 0;
 }
