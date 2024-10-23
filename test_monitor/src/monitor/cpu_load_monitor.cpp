@@ -1,5 +1,5 @@
 #include "cpu_load_monitor.h"
-#include "monitor_info.grpc.pb.h"
+#include "monitor_info.pb.h"
 #include "monitor_info.pb.h"
 #include "utils/read_file.h"
 

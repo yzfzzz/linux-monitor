@@ -1,38 +1,45 @@
 #include "rpc_client.h"
+#include "mprpcapplication.h"
 
 namespace monitor {
 RpcClient::RpcClient(const std::string& server_address) {
-    auto channel =
-        grpc::CreateChannel(server_address, grpc::InsecureChannelCredentials());
-    stub_ptr_ = monitor::proto::GrpcManager::NewStub(channel);
+    monitor::proto::MonitorManager_Stub stub(new MprpcChannel());
+    std::unique_ptr<monitor::proto::MonitorManager_Stub> pTemp(&stub);
+    stub_ptr_ = std::move(pTemp);
+
 }
 RpcClient::~RpcClient() {}
 
 void RpcClient::SetMonitorInfo(const monitor::proto::MonitorInfo& monito_info) {
-    ::grpc::ClientContext context;
+    monitor::proto::MonitorInfo request;
     ::google::protobuf::Empty response;
-    ::grpc::Status status =
-        stub_ptr_->SetMonitorInfo(&context, monito_info, &response);
-    if (status.ok()) {
-    } else {
-        std::cout << status.error_details() << std::endl;
-        std::cout << "status.error_message: " << status.error_message()
-                  << std::endl;
-        std::cout << "falied to connect !!!" << std::endl;
-    }
+    MprpcController controller;
+    stub_ptr_->SetMonitorInfo(&controller, &request, &response, nullptr);
+    
 }
 
 void RpcClient::GetMonitorInfo(monitor::proto::MonitorInfo* monito_info) {
-    ::grpc::ClientContext context;
+    MprpcController controller;
+    monitor::proto::MonitorInfo response;
     ::google::protobuf::Empty request;
-    ::grpc::Status status =
-        stub_ptr_->GetMonitorInfo(&context, request, monito_info);
-    if (status.ok()) {
-    } else {
-        std::cout << status.error_details() << std::endl;
-        std::cout << "status.error_message: " << status.error_message()
-                  << std::endl;
-        std::cout << "falied to connect !!!" << std::endl;
+    stub_ptr_->GetMonitorInfo(&controller, &request, &response, nullptr);
+    
+    // 一次rpc调用完成, 读调用结果
+    if(!controller.Failed())
+    {
+        if (response.result().errcode() == 0) {
+            // 调用正确
+            std::cout << "rpc GetFriendsList response success!" << std::endl;
+        } else {
+            // 调用失败
+            std::cout << "rpc GetFriendsList response error:" << response.result().errmsg()
+                    << std::endl;
+        }
     }
+    else
+    {
+        std::cout << controller.ErrorText() << std::endl;
+    }
+    
 }
 }  // namespace monitor

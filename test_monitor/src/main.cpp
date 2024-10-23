@@ -2,7 +2,7 @@
 #include <memory>
 #include <thread>
 #include <vector>
-
+#include "mprpcapplication.h"
 #include "client/rpc_client.h"
 #include "cpu_load_monitor.h"
 #include "cpu_softirq_monitor.h"
@@ -11,10 +11,11 @@
 #include "monitor_inter.h"
 #include "net_monitor.h"
 
-#include "monitor_info.grpc.pb.h"
+#include "monitor_info.pb.h"
 #include "monitor_info.pb.h"
 
-int main() {
+int main(int argc, char** argv) {
+    MprpcApplication::Init(argc, argv);
     std::vector<std::shared_ptr<monitor::MonitorInter>> runners_;
     runners_.emplace_back(new monitor::CpuSoftIrqMonitor());
     runners_.emplace_back(new monitor::CpuLoadMonitor());

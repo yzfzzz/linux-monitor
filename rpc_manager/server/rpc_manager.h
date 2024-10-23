@@ -5,7 +5,7 @@
 #include "monitor_info.pb.h"
 
 namespace monitor {
-class ServerManagerImpl : public monitor::proto::GrpcManager {
+class ServerManagerImpl : public monitor::proto::MonitorManager {
    public:
     ServerManagerImpl();
     virtual ~ServerManagerImpl();

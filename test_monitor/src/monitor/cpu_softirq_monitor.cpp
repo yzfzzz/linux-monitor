@@ -1,6 +1,6 @@
 #include "cpu_softirq_monitor.h"
 
-#include "monitor_info.grpc.pb.h"
+#include "monitor_info.pb.h"
 #include "monitor_info.pb.h"
 #include "utils/read_file.h"
 #include "utils/utils.h"

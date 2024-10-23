@@ -75,7 +75,11 @@ option cc_generic_services = true;
 
 
 
-
+message ResultCode {
+  int32 errcode = 1;
+  bytes errmsg = 2;
+  bool success = 3;
+}
 
 message MonitorInfo{
   string name = 1;
@@ -84,9 +88,11 @@ message MonitorInfo{
   repeated CpuStat cpu_stat = 6;
   MemInfo mem_info = 7;
   repeated NetInfo net_info = 8;
+
+  ResultCode result = 9;
 }
 
-service GrpcManager {
+service MonitorManager {
   rpc SetMonitorInfo(MonitorInfo) returns (google.protobuf.Empty) {
   }
 
