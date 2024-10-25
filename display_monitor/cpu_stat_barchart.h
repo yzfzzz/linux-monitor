@@ -4,7 +4,6 @@
 #include <QtCharts>
 QT_CHARTS_USE_NAMESPACE
 #include <QtWidgets/QVBoxLayout>
-#include "monitor_info.grpc.pb.h"
 #include "monitor_info.pb.h"
 // 0-100
 

@@ -1,12 +1,13 @@
 
 #include <QApplication>
 #include <thread>
-
+#include "mprpcapplication.h"
 #include "client/rpc_client.h"
 #include "monitor_widget.h"
 
-int main(int argc, char* argv[]) {
+int main(int argc, char** argv) {
     QApplication app(argc, argv);
+    MprpcApplication::Init(argc, argv);
 
     std::string server_address = "localhost:50051";
     if (argc > 1) {

@@ -1,3 +1,4 @@
+# 指定基础镜像, 在该镜像上构建代码
 FROM  ubuntu:18.04
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -21,10 +22,16 @@ RUN apt-get update  && apt-get upgrade -y  && \
     qtbase5-dev \
     qtchooser \
     qt5-qmake \
+    libqt5charts5 \
+    libqt5charts5-dev \
+    libgoogle-glog-dev \
+    openjdk-11-jdk \
     qtbase5-dev-tools \
     libboost-all-dev \
     net-tools \
     vim \
+    zip \
+    gdb \
     stress 
 
 RUN apt-get install -y libc-ares-dev  libssl-dev gcc g++ make 
@@ -41,6 +48,11 @@ RUN apt-get install -y python-dev \
     python-pip \
     python-all-dev 
 
+COPY install/muduo /tmp/install/muduo
+RUN /tmp/install/muduo/install_muduo.sh
+
+COPY install/zookeeper /tmp/install/zookeeper
+RUN /tmp/install/zookeeper/install_zookeeper.sh
 
 COPY install/protobuf /tmp/install/protobuf
 RUN /tmp/install/protobuf/install_protobuf.sh

@@ -1,23 +1,24 @@
 #pragma once
-
-#include <grpcpp/support/status.h>
+#include "mprpcapplication.h"
+#include "rpcprovider.h"
 #include <unordered_map>
-#include "monitor_info.grpc.pb.h"
 #include "monitor_info.pb.h"
 
 namespace monitor {
-class GrpcManagerImpl : public monitor::proto::GrpcManager::Service {
+class ServerManagerImpl : public monitor::proto::MonitorManager {
    public:
-    GrpcManagerImpl();
-    virtual ~GrpcManagerImpl();
+    ServerManagerImpl();
+    virtual ~ServerManagerImpl();
 
-    ::grpc::Status SetMonitorInfo(::grpc::ServerContext* context,
-                                  const ::monitor::proto::MonitorInfo* request,
-                                  ::google::protobuf::Empty* response);
+    void SetMonitorInfo(::google::protobuf::RpcController* controller,
+                       const ::monitor::proto::MonitorInfo* request,
+                       ::google::protobuf::Empty* response,
+                       ::google::protobuf::Closure* done);
 
-    ::grpc::Status GetMonitorInfo(::grpc::ServerContext* context,
-                                  const ::google::protobuf::Empty* request,
-                                  ::monitor::proto::MonitorInfo* response);
+    void GetMonitorInfo(::google::protobuf::RpcController* controller,
+                       const ::google::protobuf::Empty* request,
+                       ::monitor::proto::MonitorInfo* response,
+                       ::google::protobuf::Closure* done);
 
    private:
     monitor::proto::MonitorInfo monitor_infos_;

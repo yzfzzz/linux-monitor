@@ -3,7 +3,6 @@
 
 #include <QAbstractTableModel>
 #include <vector>
-#include "monitor_info.grpc.pb.h"
 #include "monitor_info.pb.h"
 #include "monitor_inter.h"
 
