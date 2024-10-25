@@ -13,7 +13,7 @@ class RpcClient {
     void SetMonitorInfo(const monitor::proto::MonitorInfo& monitor_info);
     void GetMonitorInfo(monitor::proto::MonitorInfo* monitor_info);
 
-   private:
+   public:
     std::unique_ptr<monitor::proto::MonitorManager_Stub> stub_ptr_;
 };
 

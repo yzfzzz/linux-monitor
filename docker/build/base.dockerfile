@@ -31,6 +31,7 @@ RUN apt-get update  && apt-get upgrade -y  && \
     net-tools \
     vim \
     zip \
+    gdb \
     stress 
 
 RUN apt-get install -y libc-ares-dev  libssl-dev gcc g++ make 
