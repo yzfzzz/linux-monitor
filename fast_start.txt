@@ -1,8 +1,0 @@
-服务器模块:
-. docker/scripts/monitor_docker_into.sh
-./home/build/rpc_manager/server/server
-
-
-监控模块:
-. docker/scripts/monitor_docker_into.sh
-./home/build/test_monitor/src/monitor
