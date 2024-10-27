@@ -7,6 +7,8 @@ import "mem_info.proto";
 import "cpu_stat.proto";
 import "cpu_softirq.proto";
 import "cpu_load.proto";
+import "gpu_info.proto";
+
 // 定义下面选项, 表示生成service服务类和rpc方法描述, 默认不生成
 option cc_generic_services = true;
 // message MemInfo {
@@ -63,8 +65,6 @@ option cc_generic_services = true;
 //   float load_avg_15 = 3;
 // }
 
-
-
 // message NetInfo {
 //   string name = 1;
 //   int64 send_rate = 2;
@@ -73,29 +73,27 @@ option cc_generic_services = true;
 //   int64 rcv_packets_rate = 5;
 // }
 
-
-
 message ResultCode {
-  int32 errcode = 1;
-  bytes errmsg = 2;
-  bool success = 3;
+    int32 errcode = 1;
+    bytes errmsg = 2;
+    bool success = 3;
 }
 
-message MonitorInfo{
-  string name = 1;
-  repeated SoftIrq soft_irq = 4;
-  CpuLoad cpu_load = 5;
-  repeated CpuStat cpu_stat = 6;
-  MemInfo mem_info = 7;
-  repeated NetInfo net_info = 8;
+message MonitorInfo {
+    string name = 1;
+    repeated SoftIrq soft_irq = 4;
+    CpuLoad cpu_load = 5;
+    repeated CpuStat cpu_stat = 6;
+    MemInfo mem_info = 7;
+    repeated NetInfo net_info = 8;
 
-  ResultCode result = 9;
+    repeated GpuInfo gpu_info = 10;
+
+    ResultCode result = 9;
 }
 
 service MonitorManager {
-  rpc SetMonitorInfo(MonitorInfo) returns (google.protobuf.Empty) {
-  }
+    rpc SetMonitorInfo(MonitorInfo) returns(google.protobuf.Empty) {}
 
-  rpc GetMonitorInfo(google.protobuf.Empty) returns (MonitorInfo) {
-  }
+    rpc GetMonitorInfo(google.protobuf.Empty) returns(MonitorInfo) {}
 }

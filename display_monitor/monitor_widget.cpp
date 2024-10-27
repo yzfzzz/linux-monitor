@@ -18,6 +18,7 @@ QWidget* MonitorWidget::ShowAllMonitorWidget(const string& name) {
     stack_menu_->addWidget(InitSoftIrqMonitorWidget());
     stack_menu_->addWidget(InitMemMonitorWidget());
     stack_menu_->addWidget(InitNetMonitorWidget());
+    stack_menu_->addWidget(InitGpuMonitorWidget());
 
     // 初始化刚性布局，上面是按钮窗口，下面是表格窗口(使用栈来切换)
     QGridLayout* layout = new QGridLayout(this);
@@ -34,6 +35,7 @@ QWidget* MonitorWidget::InitButtonMenu(const string& name) {
         new QPushButton(QString::fromStdString(name) + "-soft irq", this);
     QPushButton* mem_button = new QPushButton(QString::fromStdString(name) + "-mem", this);
     QPushButton* net_button = new QPushButton(QString::fromStdString(name) + "-net", this);
+    QPushButton* gpu_button = new QPushButton(QString::fromStdString(name) + "-gpu", this);
 
     QString button_style =
         "QPushButton{background-color:white;color: black; border-radius: 10px; border: 2px groove "
@@ -44,12 +46,14 @@ QWidget* MonitorWidget::InitButtonMenu(const string& name) {
     soft_irq_button->setStyleSheet(button_style);
     mem_button->setStyleSheet(button_style);
     net_button->setStyleSheet(button_style);
+    gpu_button->setStyleSheet(button_style);
     // 设置字体
     QFont* font = new QFont("Meiryo", 15, 40);
     cpu_button->setFont(*font);
     soft_irq_button->setFont(*font);
     mem_button->setFont(*font);
     net_button->setFont(*font);
+    gpu_button->setFont(*font);
 
     // 使用水平排布
     QHBoxLayout* layout = new QHBoxLayout();
@@ -57,6 +61,7 @@ QWidget* MonitorWidget::InitButtonMenu(const string& name) {
     layout->addWidget(soft_irq_button);
     layout->addWidget(mem_button);
     layout->addWidget(net_button);
+    layout->addWidget(gpu_button);
 
     // 存到窗口中
     QWidget* widget = new QWidget();
@@ -67,7 +72,7 @@ QWidget* MonitorWidget::InitButtonMenu(const string& name) {
     connect(soft_irq_button, SIGNAL(clicked()), this, SLOT(ClickSoftIrqButton()));
     connect(mem_button, SIGNAL(clicked()), this, SLOT(ClickMemButton()));
     connect(net_button, SIGNAL(clicked()), this, SLOT(ClickNetButton()));
-
+    connect(gpu_button, SIGNAL(clicked()), this, SLOT(ClickGpuButton()));
     return widget;
 }
 
@@ -113,6 +118,31 @@ QWidget* MonitorWidget::InitCpuMonitorWidget() {
     layout->addWidget(cpu_load_monitor_view_, 3, 0, 1, 1);
     layout->addWidget(cpu_stat_bar_w, 0, 1, 2, 1);
     layout->addWidget(cpu_load_bar_w, 2, 1, 2, 1);
+
+    widget->setLayout(layout);
+    return widget;
+}
+
+QWidget* MonitorWidget::InitGpuMonitorWidget() {
+    QWidget* widget = new QWidget();
+    // 设置标签
+    QLabel* gpu_info_label = new QLabel(this);
+    gpu_info_label->setText(tr("Monitor Gpu_Info:"));
+    gpu_info_label->setFont(QFont("Microsoft YaHei", 10, 40));
+
+    // 设置表格
+    gpu_monitor_view_ = new QTableView;
+    // 关联表格模型
+    gpu_model_ = new GpuInfoModel;
+    gpu_monitor_view_->setModel(gpu_model_);
+    gpu_monitor_view_->show();
+
+    // 设置刚性布局
+    QGridLayout* layout = new QGridLayout();
+
+    // 后面的1、2表示窗口大小
+    layout->addWidget(gpu_info_label, 0, 0);
+    layout->addWidget(gpu_monitor_view_, 1, 0);
 
     widget->setLayout(layout);
     return widget;
@@ -204,6 +234,7 @@ void MonitorWidget::UpdateData(const monitor::proto::MonitorInfo& monitor_info) 
     cpu_stat_model_->UpdateMonitorInfo(monitor_info);
     mem_model_->UpdateMonitorInfo(monitor_info);
     net_model_->UpdateMonitorInfo(monitor_info);
+    gpu_model_->UpdateMonitorInfo(monitor_info);
     mem_pie->UpdateMemChart(monitor_info);
 
     cpu_load_bar->UpdateCPUloadBar(monitor_info);
@@ -215,5 +246,6 @@ void MonitorWidget::ClickCpuButton() { stack_menu_->setCurrentIndex(0); }
 void MonitorWidget::ClickSoftIrqButton() { stack_menu_->setCurrentIndex(1); }
 void MonitorWidget::ClickMemButton() { stack_menu_->setCurrentIndex(2); }
 void MonitorWidget::ClickNetButton() { stack_menu_->setCurrentIndex(3); }
+void MonitorWidget::ClickGpuButton() { stack_menu_->setCurrentIndex(4); }
 
 }  // namespace monitor

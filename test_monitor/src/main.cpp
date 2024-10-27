@@ -10,11 +10,13 @@
 #include "mem_monitor.h"
 #include "monitor_inter.h"
 #include "net_monitor.h"
+#include "gpu_monitor.h"
 
 #include "monitor_info.pb.h"
 #include "monitor_info.pb.h"
 
 int main(int argc, char** argv) {
+    char* fifo_path = "py_cpp_pipe.fifo";
     MprpcApplication::Init(argc, argv);
     std::vector<std::shared_ptr<monitor::MonitorInter>> runners_;
     runners_.emplace_back(new monitor::CpuSoftIrqMonitor());
@@ -22,6 +24,7 @@ int main(int argc, char** argv) {
     runners_.emplace_back(new monitor::CpuStatMonitor());
     runners_.emplace_back(new monitor::MemMonitor());
     runners_.emplace_back(new monitor::NetMonitor());
+    runners_.emplace_back(new monitor::GpuMonitor(fifo_path));
 
     monitor::RpcClient rpc_client_;
     char* name = getenv("USER");

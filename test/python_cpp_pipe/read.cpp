@@ -56,32 +56,36 @@ int main()
         }
         if (attempt_count == max_attempts)
         {
-            std::cout << "Error reading from pipe." << std::endl;
+            std::cout << "Timeout! Program ending!" << std::endl;
             return 1;
         }
 
         buffer[bytesRead] = '\0';
         // ½âÎö JSON Êý¾Ý
-        json data = json::parse(buffer);
+        json data_list = json::parse(buffer);
+        for(auto data: data_list)
+        {
+            std::string ID = data["ID"];
+            std::string DeviceName = data["DeviceName"];
+            int MemoryTotal = data["MemoryTotal"];
+            int MemoryFree = data["MemoryFree"];
+            int MemoryUsed = data["MemoryUsed"];
+            int MemoryUtilization = data["MemoryUtilization"];
+            int GPUUtilization = data["GPUUtilization"];
+            int Temperature = data["Temperature"];
+            int FanSpeed = data["FanSpeed"];
+            int PowerStstus = data["PowerStstus"];
 
-        std::string DeviceName = data["DeviceName"];
-        long long MemoryTotal = data["MemoryTotal"];
-        long long MemoryFree = data["MemoryFree"];
-        long long MemoryUsed = data["MemoryUsed"];
-        int MemoryUtilization = data["MemoryUtilization"];
-        int GPUUtilization = data["GPUUtilization"];
-        int Temperature = data["Temperature"];
-        int FanSpeed = data["FanSpeed"];
-        int PowerStstus = data["PowerStstus"];
+            std::cout << "ID" << ID << std::endl
+                    << "Received DeviceName: " << DeviceName << std::endl
+                    << "MemoryTotal" << MemoryTotal << std::endl
+                    << "MemoryFree" << MemoryFree << std::endl
+                    << "GPUUtilization" << GPUUtilization << std::endl
+                    << "Temperature" << Temperature << std::endl
+                    << "FanSpeed" << FanSpeed << std::endl;
 
-        std::cout << "Received DeviceName: " << DeviceName << std::endl
-                  << "MemoryTotal" << MemoryTotal << std::endl
-                  << "MemoryFree" << MemoryFree << std::endl
-                  << "GPUUtilization" << GPUUtilization << std::endl
-                  << "Temperature" << Temperature << std::endl
-                  << "FanSpeed" << FanSpeed << std::endl;
-
-        std::cout << "--------------------" << std::endl;
+            std::cout << "--------------------" << std::endl;
+        }
 
         memset(buffer, 0, sizeof(buffer));
         // Ë¯Ãß 3 ÃëÖÓ

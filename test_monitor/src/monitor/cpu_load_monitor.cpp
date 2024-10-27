@@ -1,7 +1,7 @@
 #include "cpu_load_monitor.h"
 #include "monitor_info.pb.h"
-#include "monitor_info.pb.h"
 #include "utils/read_file.h"
+
 
 void monitor::CpuLoadMonitor::UpdateOnce(
     monitor::proto::MonitorInfo* monitor_info) {

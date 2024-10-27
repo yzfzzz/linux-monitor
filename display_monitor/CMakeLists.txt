@@ -18,11 +18,12 @@ set(SOURCES
     cpu_stat_model.cpp
     mem_model.cpp
     net_model.cpp
-
+    gpu_model.cpp
     mem_piechart.cpp
     cpu_load_barchart.cpp
     cpu_stat_barchart.cpp
 )
+
 link_directories(${PROJECT_SOURCE_DIR}/build/rpc_manager/client 
                  ${PROJECT_SOURCE_DIR}/build/proto
                  ${PROJECT_SOURCE_DIR}/mprpc/lib)
@@ -35,17 +36,17 @@ target_include_directories(display PUBLIC
     ${PROJECT_SOURCE_DIR}/build/proto
     ${PROJECT_SOURCE_DIR}/rpc_manager
     ${PROJECT_SOURCE_DIR}/mprpc/src/include
-    ${PROTOBUF_INCLUDE_DIRS} 
+    ${PROTOBUF_INCLUDE_DIRS}
 )
 
 target_link_libraries(display
     PUBLIC
     client
-    monitor_proto
-    mprpc
     Qt5::Widgets
     Qt5::Core
     Qt5::Charts
     Threads::Threads
+    monitor_proto
+    mprpc
     # qwt-qt5
 )
