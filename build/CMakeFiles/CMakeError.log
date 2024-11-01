@@ -1,0 +1,35 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/work/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_8730b/fast"
+/usr/bin/make -f CMakeFiles/cmTC_8730b.dir/build.make CMakeFiles/cmTC_8730b.dir/build
+make[1]: Entering directory '/home/work/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_8730b.dir/CheckSymbolExists.cxx.o
+/usr/bin/c++    -std=gnu++1z -o CMakeFiles/cmTC_8730b.dir/CheckSymbolExists.cxx.o -c /home/work/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx
+Linking CXX executable cmTC_8730b
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_8730b.dir/link.txt --verbose=1
+/usr/bin/c++       CMakeFiles/cmTC_8730b.dir/CheckSymbolExists.cxx.o  -o cmTC_8730b 
+CMakeFiles/cmTC_8730b.dir/CheckSymbolExists.cxx.o: In function `main':
+CheckSymbolExists.cxx:(.text+0x1b): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_8730b.dir/build.make:97: recipe for target 'cmTC_8730b' failed
+make[1]: *** [cmTC_8730b] Error 1
+make[1]: Leaving directory '/home/work/build/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_8730b/fast' failed
+make: *** [cmTC_8730b/fast] Error 2
+
+File /home/work/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+

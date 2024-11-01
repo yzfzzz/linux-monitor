@@ -1,0 +1,20 @@
+set(SOURCES
+    main.cpp
+    rpc_manager.cpp
+)
+
+# 添加静态库、头文件路径
+link_directories(${PROJECT_SOURCE_DIR}/build/proto ${PROJECT_SOURCE_DIR}/mprpc/lib)
+include_directories(${PROJECT_SOURCE_DIR}/build/proto ${PROJECT_SOURCE_DIR}/mprpc/src/include)
+
+add_executable(server ${SOURCES})
+
+target_link_libraries(server
+    PUBLIC
+    mprpc
+    monitor_proto
+)
+
+
+
+
