@@ -9,6 +9,7 @@
 #include "gpu_monitor.h"
 #include "json.hpp"
 #include "monitor_info.pb.h"
+#include <string>
 
 using json = nlohmann::json;
 
@@ -16,7 +17,7 @@ monitor::GpuMonitor::GpuMonitor(char* pipeName) {
     // 判断读管道是否存在，不存在则创建
     int ret = access(pipeName, F_OK);
     if (ret == -1) {
-        printf("pipe isn't exit, create...\n");
+        LOG(INFO) << "pipe isn't exit, create...";
         ret = mkfifo(pipeName, 0664);
         if (ret == -1) {
             perror("mkfifo");
@@ -26,32 +27,40 @@ monitor::GpuMonitor::GpuMonitor(char* pipeName) {
     // 打开有名管道进行读取
     this->fd = open(pipeName, O_RDONLY);
     if (fd == -1) {
-        std::cerr << "Error opening pipe." << std::endl;
+        LOG(ERROR) << "Error opening pipe";
         return;
     }
 }
 
 void monitor::GpuMonitor::UpdateOnce(monitor::proto::MonitorInfo* monitor_info) {
-    char buffer[1024];
+    char raw_buffer[1024];
     int bytesRead = 0;
     int max_attempts = 3;
     int attempt_count = 0;
     while (attempt_count < max_attempts) {
-        bytesRead = read(this->fd, buffer, sizeof(buffer) - 1);
+        bytesRead = read(this->fd, raw_buffer, sizeof(raw_buffer) - 1);
         if (bytesRead > 0) {
             break;
         } else if (bytesRead == 0) {
-            std::cout << "Accidentally disconnected!" << std::endl;
+            LOG(WARNING) << "Accidentally disconnected!" ;
             attempt_count += 1;
             std::this_thread::sleep_for(std::chrono::seconds(2 * attempt_count));
         }
     }
     if (attempt_count == max_attempts) {
-        std::cout << "Error reading from pipe." << std::endl;
+        LOG(ERROR) << "Error reading from pipe";
         return;
     }
 
-    buffer[bytesRead] = '\0';
+    std::string str(raw_buffer);
+    char buffer[1024];
+    int first_index = str.find('[');
+    int last_index = str.find(']');
+    std::copy(str.begin()+first_index, str.begin()+last_index+1, buffer);
+    buffer[last_index-first_index+1] = '\0';
+
+
+    LOG(INFO) << "Json Buffer: " <<buffer;
     // 解析 JSON 数据
     json data_list = json::parse(buffer);
     for (auto data : data_list) {

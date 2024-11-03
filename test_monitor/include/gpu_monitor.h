@@ -2,6 +2,7 @@
 #include <string>
 #include <unordered_map>
 #include "monitor_inter.h"
+#include "log.h"
 // TODO: 将py文件的mem部分值优化一下
 namespace monitor {
 class GpuMonitor : public MonitorInter {
