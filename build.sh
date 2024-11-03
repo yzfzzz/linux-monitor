@@ -13,7 +13,7 @@
 # cmake ../work
 # make -j2
 
-# ÔÚworkÄ¿Â¼ÀïÃæ±àÒë
+# ï¿½ï¿½workÄ¿Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 #!/bin/bash
 
 if [ -d "build" ]; then
@@ -26,4 +26,4 @@ fi
 mkdir build
 cd build
 cmake ..
-make -j2
+make -j8

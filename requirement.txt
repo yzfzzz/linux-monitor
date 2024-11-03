@@ -1,1 +1,3 @@
-pip install nvidia-ml-py3
+1. pip install nvidia-ml-py3
+2. . /tmp/install/zookeeper/zookeeper-3.4.10/bin/zkServer.sh start
+3. 替换python版本
