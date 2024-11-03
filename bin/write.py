@@ -1,4 +1,5 @@
 #-- coding:GBK --
+#!/usr/bin/python3
 import json
 import os
 import time
@@ -36,12 +37,13 @@ while(True):
         })
 
     json_data = json.dumps(data)
-    print(json_data)
+    # print(json_data)
     max_attempts = 3
     attempt_count = 0
     while attempt_count < max_attempts:
         try:
-            os.write(pipe, json_data.encode("utf-8"))
+            if os.path.getsize(pipe) == 0:
+                os.write(pipe, json_data.encode("utf-8"))
             time.sleep(3)
             break
         except BrokenPipeError as e:
