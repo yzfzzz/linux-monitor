@@ -9,7 +9,7 @@ int main(int argc, char** argv) {
     QApplication app(argc, argv);
     MprpcApplication::Init(argc, argv);
 
-    std::string server_address = "localhost.236:50051";
+    std::string server_address = "localhost:50051";
     if (argc > 1) {
         server_address = argv[1];
     }
@@ -32,6 +32,8 @@ int main(int argc, char** argv) {
             rpc_client.GetMonitorInfo(&monitor_info);
 
             moitor_widget.UpdateData(monitor_info);
+
+            // 这里会出现段错误
             std::this_thread::sleep_for(std::chrono::seconds(2));
         }
     });
