@@ -63,6 +63,8 @@ RUN /tmp/install/abseil/install_abseil.sh
 COPY install/grpc /tmp/install/grpc
 RUN /tmp/install/grpc/install_grpc.sh
 
+RUN install/start.sh
+
 # COPY install/cmake /tmp/install/cmake
 # RUN /tmp/install/cmake/install_cmake.sh
 
