@@ -1,9 +1,0 @@
-# Hashes of file build rules.
-9bf9992ea532bba0de5a8cfdbc7d3150 display_monitor/CMakeFiles/display_autogen
-434373b94b49bcb928c2a77f17a06f79 proto/cpu_load.pb.h
-74f0d9b60db1a03bcb45e3dc983ddaec proto/cpu_softirq.pb.h
-a57d249c8c57b4d8a1d698a1c60e74e3 proto/cpu_stat.pb.h
-1b7cb93e9fcf07f3d47cd6f1f8c1568b proto/gpu_info.pb.h
-8e1fb92ac0f3d2d58e135e98757fd8a4 proto/mem_info.pb.h
-77fbc12c5fe75c06d2205282da69731f proto/monitor_info.pb.h
-46f33e66d57728be2e0c5bd2764eb919 proto/net_info.pb.h
