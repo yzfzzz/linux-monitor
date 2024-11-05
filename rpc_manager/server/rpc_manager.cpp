@@ -1,6 +1,8 @@
 #include <iostream>
 #include "rpc_manager.h"
 using namespace std;
+#include <mutex>
+mutex mtx;
 namespace monitor {
 
 ServerManagerImpl::ServerManagerImpl() {}
@@ -21,11 +23,13 @@ void ServerManagerImpl::SetMonitorInfo(::google::protobuf::RpcController* contro
                                        const ::monitor::proto::MonitorInfo* request,
                                        ::google::protobuf::Empty* response,
                                        ::google::protobuf::Closure* done) {
+    mtx.lock();
     monitor_infos_.Clear();
     monitor_infos_ = *request;
 
     cout << "jinru" << request->soft_irq_size() << endl;
     done->Run();
+    mtx.unlock();
 }
 
 // ::grpc::Status ServerManagerImpl::GetMonitorInfo(
@@ -39,8 +43,10 @@ void ServerManagerImpl::GetMonitorInfo(::google::protobuf::RpcController* contro
                                        const ::google::protobuf::Empty* request,
                                        ::monitor::proto::MonitorInfo* response,
                                        ::google::protobuf::Closure* done) {
+    mtx.lock();
     *response = monitor_infos_;
     done->Run();
+    mtx.unlock();
 }
 
 }  // namespace monitor

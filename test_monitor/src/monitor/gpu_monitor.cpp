@@ -9,7 +9,7 @@
 #include "gpu_monitor.h"
 #include "json.hpp"
 #include "monitor_info.pb.h"
-
+#include <string>
 using json = nlohmann::json;
 
 monitor::GpuMonitor::GpuMonitor(char* pipeName) {
@@ -32,12 +32,12 @@ monitor::GpuMonitor::GpuMonitor(char* pipeName) {
 }
 
 void monitor::GpuMonitor::UpdateOnce(monitor::proto::MonitorInfo* monitor_info) {
-    char buffer[1024];
+    char raw_buffer[1024];
     int bytesRead = 0;
     int max_attempts = 3;
     int attempt_count = 0;
     while (attempt_count < max_attempts) {
-        bytesRead = read(this->fd, buffer, sizeof(buffer) - 1);
+        bytesRead = read(this->fd, raw_buffer, sizeof(raw_buffer) - 1);
         if (bytesRead > 0) {
             break;
         } else if (bytesRead == 0) {
@@ -51,7 +51,15 @@ void monitor::GpuMonitor::UpdateOnce(monitor::proto::MonitorInfo* monitor_info) 
         return;
     }
 
-    buffer[bytesRead] = '\0';
+    std::string str(raw_buffer);
+    char buffer[1024];
+    int first_index = str.find('[');
+    int last_index = str.find(']');
+    std::copy(str.begin()+first_index, str.begin()+last_index+1, buffer);
+    buffer[last_index-first_index+1] = '\0';
+
+
+    LOG(INFO) << "Json Buffer: " <<buffer;
     // ½âÎö JSON Êý¾Ý
     json data_list = json::parse(buffer);
     for (auto data : data_list) {

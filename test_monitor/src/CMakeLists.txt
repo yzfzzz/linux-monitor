@@ -20,6 +20,7 @@ target_include_directories(monitor PUBLIC
   ${PROJECT_SOURCE_DIR}/rpc_manager
   ${PROJECT_SOURCE_DIR}/build/proto
   ${PROJECT_SOURCE_DIR}/mprpc/src/include
+  ${PROJECT_SOURCE_DIR}/tool
 )
 
 target_link_libraries(monitor
@@ -29,4 +30,5 @@ target_link_libraries(monitor
     boost_system
     boost_chrono
     mprpc
+    glog
 )
