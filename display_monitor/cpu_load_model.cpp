@@ -16,7 +16,7 @@ int CpuLoadModel::columnCount(const QModelIndex &parent) const {
     return COLUMN_MAX;
 }
 
-// è·å–è¡¨å¤´çš„åç§°
+// »ñÈ¡±íÍ·µÄÃû³Æ
 QVariant CpuLoadModel::headerData(int section, Qt::Orientation orientation,
                                   int role) const {
     if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
@@ -25,7 +25,7 @@ QVariant CpuLoadModel::headerData(int section, Qt::Orientation orientation,
     return MonitorInterModel::headerData(section, orientation, role);
 }
 
-// è·å–index=(x,y)çš„æ•°æ®
+// »ñÈ¡index=(x,y)µÄÊı¾İ
 QVariant CpuLoadModel::data(const QModelIndex &index, int role) const {
     if (index.column() < 0 || index.column() >= COLUMN_MAX) {
         return QVariant();
@@ -39,7 +39,7 @@ QVariant CpuLoadModel::data(const QModelIndex &index, int role) const {
     return QVariant();
 }
 
-// æ›´æ–°ä¿¡æ¯
+// ¸üĞÂĞÅÏ¢
 void CpuLoadModel::UpdateMonitorInfo(
     const monitor::proto::MonitorInfo &monitor_info) {
     beginResetModel();

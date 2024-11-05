@@ -13,14 +13,14 @@ MonitorWidget::MonitorWidget(QWidget* parent) {}
 QWidget* MonitorWidget::ShowAllMonitorWidget(const string& name) {
     QWidget* widget = new QWidget();
     stack_menu_ = new QStackedLayout();
-    // å°†è¡¨æ ¼çª—å£åŠ å…¥åˆ°æ ˆä¸­
+    // ½«±í¸ñ´°¿Ú¼ÓÈëµ½Õ»ÖĞ
     stack_menu_->addWidget(InitCpuMonitorWidget());
     stack_menu_->addWidget(InitSoftIrqMonitorWidget());
     stack_menu_->addWidget(InitMemMonitorWidget());
     stack_menu_->addWidget(InitNetMonitorWidget());
     stack_menu_->addWidget(InitGpuMonitorWidget());
 
-    // åˆå§‹åŒ–åˆšæ€§å¸ƒå±€ï¼Œä¸Šé¢æ˜¯æŒ‰é’®çª—å£ï¼Œä¸‹é¢æ˜¯è¡¨æ ¼çª—å£(ä½¿ç”¨æ ˆæ¥åˆ‡æ¢)
+    // ³õÊ¼»¯¸ÕĞÔ²¼¾Ö£¬ÉÏÃæÊÇ°´Å¥´°¿Ú£¬ÏÂÃæÊÇ±í¸ñ´°¿Ú(Ê¹ÓÃÕ»À´ÇĞ»»)
     QGridLayout* layout = new QGridLayout(this);
     layout->addWidget(InitButtonMenu(name), 1, 0);
     layout->addLayout(stack_menu_, 2, 0);
@@ -29,7 +29,7 @@ QWidget* MonitorWidget::ShowAllMonitorWidget(const string& name) {
 }
 
 QWidget* MonitorWidget::InitButtonMenu(const string& name) {
-    // åˆ›å»ºæŒ‰é”®
+    // ´´½¨°´¼ü
     QPushButton* cpu_button = new QPushButton(QString::fromStdString(name) + "-cpu", this);
     QPushButton* soft_irq_button =
         new QPushButton(QString::fromStdString(name) + "-soft irq", this);
@@ -47,7 +47,7 @@ QWidget* MonitorWidget::InitButtonMenu(const string& name) {
     mem_button->setStyleSheet(button_style);
     net_button->setStyleSheet(button_style);
     gpu_button->setStyleSheet(button_style);
-    // è®¾ç½®å­—ä½“
+    // ÉèÖÃ×ÖÌå
     QFont* font = new QFont("Meiryo", 15, 40);
     cpu_button->setFont(*font);
     soft_irq_button->setFont(*font);
@@ -55,7 +55,7 @@ QWidget* MonitorWidget::InitButtonMenu(const string& name) {
     net_button->setFont(*font);
     gpu_button->setFont(*font);
 
-    // ä½¿ç”¨æ°´å¹³æ’å¸ƒ
+    // Ê¹ÓÃË®Æ½ÅÅ²¼
     QHBoxLayout* layout = new QHBoxLayout();
     layout->addWidget(cpu_button);
     layout->addWidget(soft_irq_button);
@@ -63,11 +63,11 @@ QWidget* MonitorWidget::InitButtonMenu(const string& name) {
     layout->addWidget(net_button);
     layout->addWidget(gpu_button);
 
-    // å­˜åˆ°çª—å£ä¸­
+    // ´æµ½´°¿ÚÖĞ
     QWidget* widget = new QWidget();
     widget->setLayout(layout);
 
-    // è®¾ç½®æ§½å‡½æ•°
+    // ÉèÖÃ²Ûº¯Êı
     connect(cpu_button, SIGNAL(clicked()), this, SLOT(ClickCpuButton()));
     connect(soft_irq_button, SIGNAL(clicked()), this, SLOT(ClickSoftIrqButton()));
     connect(mem_button, SIGNAL(clicked()), this, SLOT(ClickMemButton()));
@@ -78,40 +78,40 @@ QWidget* MonitorWidget::InitButtonMenu(const string& name) {
 
 QWidget* MonitorWidget::InitCpuMonitorWidget() {
     QWidget* widget = new QWidget();
-    // è®¾ç½®æ ‡ç­¾
+    // ÉèÖÃ±êÇ©
     QLabel* cpu_load_label = new QLabel(this);
     cpu_load_label->setText(tr("Monitor CpuLoad:"));
     cpu_load_label->setFont(QFont("Microsoft YaHei", 10, 40));
 
-    // è®¾ç½®è¡¨æ ¼
+    // ÉèÖÃ±í¸ñ
     cpu_load_monitor_view_ = new QTableView;
-    // å…³è”è¡¨æ ¼æ¨¡å‹
+    // ¹ØÁª±í¸ñÄ£ĞÍ
     cpu_load_model_ = new CpuLoadModel;
     cpu_load_monitor_view_->setModel(cpu_load_model_);
     cpu_load_monitor_view_->show();
 
-    // è®¾ç½®æ ‡ç­¾
+    // ÉèÖÃ±êÇ©
     QLabel* cpu_stat_label = new QLabel(this);
     cpu_stat_label->setText(tr("Monitor CpuStat:"));
     cpu_stat_label->setFont(QFont("Microsoft YaHei", 10, 40));
 
-    // è®¾ç½®è¡¨æ ¼
+    // ÉèÖÃ±í¸ñ
     cpu_stat_monitor_view_ = new QTableView;
-    // å…³è”è¡¨æ ¼æ¨¡å‹
+    // ¹ØÁª±í¸ñÄ£ĞÍ
     cpu_stat_model_ = new CpuStatModel;
     cpu_stat_monitor_view_->setModel(cpu_stat_model_);
     cpu_stat_monitor_view_->show();
 
-    // åˆ›å»ºæŸ±çŠ¶å›¾
+    // ´´½¨Öù×´Í¼
     cpu_load_bar = new CPUlaodBar();
     QWidget* cpu_load_bar_w = cpu_load_bar->CPUlaod_BarInit();
     cpu_stat_bar = new CPUstatBar();
     QWidget* cpu_stat_bar_w = cpu_stat_bar->CPUstat_BarInit();
 
-    // è®¾ç½®åˆšæ€§å¸ƒå±€
+    // ÉèÖÃ¸ÕĞÔ²¼¾Ö
     QGridLayout* layout = new QGridLayout();
 
-    // åé¢çš„1ã€2è¡¨ç¤ºçª—å£å¤§å°
+    // ºóÃæµÄ1¡¢2±íÊ¾´°¿Ú´óĞ¡
     layout->addWidget(cpu_stat_label, 0, 0);
     layout->addWidget(cpu_stat_monitor_view_, 1, 0, 1, 1);
     layout->addWidget(cpu_load_label, 2, 0);
@@ -125,24 +125,23 @@ QWidget* MonitorWidget::InitCpuMonitorWidget() {
 
 QWidget* MonitorWidget::InitGpuMonitorWidget() {
     QWidget* widget = new QWidget();
-    // è®¾ç½®æ ‡ç­¾
+    // ÉèÖÃ±êÇ©
     QLabel* gpu_info_label = new QLabel(this);
     gpu_info_label->setText(tr("Monitor Gpu_Info:"));
     gpu_info_label->setFont(QFont("Microsoft YaHei", 10, 40));
 
-    // è®¾ç½®è¡¨æ ¼
+    // ÉèÖÃ±í¸ñ
     gpu_monitor_view_ = new QTableView;
-    // å…³è”è¡¨æ ¼æ¨¡å‹
+    // ¹ØÁª±í¸ñÄ£ĞÍ
     gpu_model_ = new GpuInfoModel;
 
-    // !è¿™é‡Œæœ‰ä¸ªbug
     gpu_monitor_view_->setModel(gpu_model_);
     gpu_monitor_view_->show();
 
-    // è®¾ç½®åˆšæ€§å¸ƒå±€
+    // ÉèÖÃ¸ÕĞÔ²¼¾Ö
     QGridLayout* layout = new QGridLayout();
 
-    // åé¢çš„1ã€2è¡¨ç¤ºçª—å£å¤§å°
+    // ºóÃæµÄ1¡¢2±íÊ¾´°¿Ú´óĞ¡
     layout->addWidget(gpu_info_label, 0, 0);
     layout->addWidget(gpu_monitor_view_, 1, 0);
 
@@ -151,27 +150,27 @@ QWidget* MonitorWidget::InitGpuMonitorWidget() {
 }
 
 QWidget* MonitorWidget::InitSoftIrqMonitorWidget() {
-    // æ–°å»ºä¸€ä¸ªçª—å£
+    // ĞÂ½¨Ò»¸ö´°¿Ú
     QWidget* widget = new QWidget();
-    // è®¾ç½®æ ‡ç­¾
+    // ÉèÖÃ±êÇ©
     QLabel* monitor_label = new QLabel(this);
     monitor_label->setText(tr("Monitor softirq:"));
     monitor_label->setFont(QFont("Microsoft YaHei", 10, 40));
 
-    // è®¾ç½®è¡¨æ ¼
+    // ÉèÖÃ±í¸ñ
     monitor_view_ = new QTableView;
     monitor_model_ = new MonitorBaseModel;
-    // sort_proxyæ¨¡å‹å¯ä»¥å¯¹æ•°æ®è¿›è¡Œæ’åºå’Œè¿‡æ»¤
+    // sort_proxyÄ£ĞÍ¿ÉÒÔ¶ÔÊı¾İ½øĞĞÅÅĞòºÍ¹ıÂË
     QSortFilterProxyModel* sort_proxy = new QSortFilterProxyModel(this);
-    // ä½¿æ¨¡å‹å…·æœ‰è‡ªåŠ¨æ’åºçš„åŠŸèƒ½
+    // Ê¹Ä£ĞÍ¾ßÓĞ×Ô¶¯ÅÅĞòµÄ¹¦ÄÜ
     sort_proxy->setSourceModel(monitor_model_);
-    // å…³è”è¡¨æ ¼ä¸æ•°æ®æ¨¡å‹
+    // ¹ØÁª±í¸ñÓëÊı¾İÄ£ĞÍ
     monitor_view_->setModel(sort_proxy);
-    // å¼€å¯è‡ªåŠ¨æ’åºåŠŸèƒ½
+    // ¿ªÆô×Ô¶¯ÅÅĞò¹¦ÄÜ
     monitor_view_->setSortingEnabled(true);
     monitor_view_->show();
 
-    // åŠ å…¥åˆ°åˆšæ€§å¸ƒå±€ä¸­
+    // ¼ÓÈëµ½¸ÕĞÔ²¼¾ÖÖĞ
     QGridLayout* layout = new QGridLayout();
     layout->addWidget(monitor_label, 1, 0);
     layout->addWidget(monitor_view_, 2, 0, 1, 2);
@@ -229,13 +228,17 @@ QWidget* MonitorWidget::InitNetMonitorWidget() {
     return widget;
 }
 
-// æ›´æ–°æ•°æ®
+// ¸üĞÂÊı¾İ
 void MonitorWidget::UpdateData(const monitor::proto::MonitorInfo& monitor_info) {
     monitor_model_->UpdateMonitorInfo(monitor_info);
     cpu_load_model_->UpdateMonitorInfo(monitor_info);
+    
+    // Õâ¾ä´úÂë³öÏÖ¶Î´íÎó
     cpu_stat_model_->UpdateMonitorInfo(monitor_info);
+
     mem_model_->UpdateMonitorInfo(monitor_info);
     net_model_->UpdateMonitorInfo(monitor_info);
+
     gpu_model_->UpdateMonitorInfo(monitor_info);
     mem_pie->UpdateMemChart(monitor_info);
 
@@ -243,7 +246,7 @@ void MonitorWidget::UpdateData(const monitor::proto::MonitorInfo& monitor_info) 
     cpu_stat_bar->UpdateCPUstatBar(monitor_info);
 }
 
-// æ ˆçš„åˆ‡æ¢
+// Õ»µÄÇĞ»»
 void MonitorWidget::ClickCpuButton() { stack_menu_->setCurrentIndex(0); }
 void MonitorWidget::ClickSoftIrqButton() { stack_menu_->setCurrentIndex(1); }
 void MonitorWidget::ClickMemButton() { stack_menu_->setCurrentIndex(2); }

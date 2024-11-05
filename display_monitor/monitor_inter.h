@@ -6,17 +6,17 @@
 
 namespace monitor {
 class MonitorInterModel : public QAbstractTableModel {
-    //    ç±»å®šä¹‰ä¸­æ·»åŠ Q_OBJECTå®ï¼Œè¿™ä¸ªç±»æ‰èƒ½ä½¿ç”¨ä¿¡å·ä¸æ§½æœºåˆ¶
+    //    Àà¶¨ÒåÖĞÌí¼ÓQ_OBJECTºê£¬Õâ¸öÀà²ÅÄÜÊ¹ÓÃĞÅºÅÓë²Û»úÖÆ
     Q_OBJECT;
 
    public:
     explicit MonitorInterModel(QObject* parent = nullptr)
         : QAbstractTableModel(parent) {}
-    //ä½¿ç”¨äº†overrideæè¿°ç¬¦ï¼Œé‚£ä¹ˆè¯¥å‡½æ•°å¿…é¡»é‡è½½å…¶åŸºç±»ä¸­çš„åŒåå‡½æ•°
-    // è·å–indexç´¢å¼•çš„æ•°æ®
+    //Ê¹ÓÃÁËoverrideÃèÊö·û£¬ÄÇÃ´¸Ãº¯Êı±ØĞëÖØÔØÆä»ùÀàÖĞµÄÍ¬Ãûº¯Êı
+    // »ñÈ¡indexË÷ÒıµÄÊı¾İ
     QVariant data(const QModelIndex& index,
                   int role = Qt::DisplayRole) const override;
-    // è·å–è¡¨å¤´æ•°æ®
+    // »ñÈ¡±íÍ·Êı¾İ
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role) const override;
 
