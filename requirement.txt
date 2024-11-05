@@ -1,3 +1,11 @@
+开始前运行:
+./docker/install/start.sh
+
+-----------已废弃--------------------
 1. pip install nvidia-ml-py3
 2. . /tmp/install/zookeeper/zookeeper-3.4.10/bin/zkServer.sh start
-3. 鏇挎崲python鐗堟湰
+3. 替换python版本
+4. 产生core:
+    /etc/profile中加入以下一行，这将允许生成coredump文件
+    ulimit-c unlimited
+    建立一个 /bin/coredump 文件夹, echo /home/work/bin/coredump/core.%e.%p> /proc/sys/kernel/core_pattern
