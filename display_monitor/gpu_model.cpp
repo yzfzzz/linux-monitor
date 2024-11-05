@@ -6,9 +6,9 @@ GpuInfoModel::GpuInfoModel(QObject *parent) : MonitorInterModel(parent) {
     header_ << tr("name");
     header_ << tr("mem_total");
     header_ << tr("mem_free");
-
     header_ << tr("mem_used");
     header_ << tr("mem_utilize");
+    header_ << tr("gpu_utilize");
     header_ << tr("tem");
     header_ << tr("fan");
     header_ << tr("power");
