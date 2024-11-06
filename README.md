@@ -1,57 +1,57 @@
-# GPU·şÎñÆ÷¼¯Èº¼à¿ØÏµÍ³
+# GPUæœåŠ¡å™¨é›†ç¾¤ç›‘æ§ç³»ç»Ÿ
 
-## ?ÏîÄ¿ÒâÒå
+## ğŸ‰é¡¹ç›®æ„ä¹‰
 
-¿ÎÌâ×éÊÇ×öÉî¶ÈÑ§Ï°µÄ£¬ÏÖÓĞ3Ì¨·şÎñÆ÷10¼¸ÕÅÏÔ¿¨£¬µ«ÓÉÓÚ¹ÜÀí²»ÉÆ£¬¾­³£ÒâÍâ¹Ø»úµÈ¡£Òò´Ë£¬ĞèÒªÒ»Ì×¼à¿ØÏµÍ³£¬Í¬Ê±¼à¿Ø¶àÌ¨·şÎñÆ÷µÄcpu/gpuĞÅÏ¢£¬°ïÖú¶¨Î»ÎÊÌâ£¬¼õÉÙå´»ú
+è¯¾é¢˜ç»„æ˜¯åšæ·±åº¦å­¦ä¹ çš„ï¼Œç°æœ‰3å°æœåŠ¡å™¨10å‡ å¼ æ˜¾å¡ï¼Œä½†ç”±äºç®¡ç†ä¸å–„ï¼Œç»å¸¸æ„å¤–å…³æœºç­‰ã€‚å› æ­¤ï¼Œéœ€è¦ä¸€å¥—ç›‘æ§ç³»ç»Ÿï¼ŒåŒæ—¶ç›‘æ§å¤šå°æœåŠ¡å™¨çš„cpu/gpuä¿¡æ¯ï¼Œå¸®åŠ©å®šä½é—®é¢˜ï¼Œå‡å°‘å®•æœº
 
 
 
-## ?¹¦ÄÜ
+## âš™åŠŸèƒ½
 
-- [x] ¿Í»§¶ËGUI½çÃæ
-- [x] Ö§³Ö¼à¿Øcpu¡¢´æ´¢¡¢gpu¡¢ÍøÂçµÈĞÅÏ¢
-- [x] Ö§³ÖÍ¬Ê±¼à¿Ø¶àÌ¨·şÎñÆ÷
-- [x] Ö§³ÖÈÕÖ¾¼ÇÔØÔËĞĞ¼ÇÂ¼
-- [ ] mysqlÊı¾İ¿â±£´æÀúÊ·Êı¾İ
-- [ ] ¿Í»§¶Ë½çÃæÃÀ»¯
+- [x] å®¢æˆ·ç«¯GUIç•Œé¢
+- [x] æ”¯æŒç›‘æ§cpuã€å­˜å‚¨ã€gpuã€ç½‘ç»œç­‰ä¿¡æ¯
+- [x] æ”¯æŒåŒæ—¶ç›‘æ§å¤šå°æœåŠ¡å™¨
+- [x] æ”¯æŒæ—¥å¿—è®°è½½è¿è¡Œè®°å½•
+- [ ] mysqlæ•°æ®åº“ä¿å­˜å†å²æ•°æ®
+- [ ] å®¢æˆ·ç«¯ç•Œé¢ç¾åŒ–
 
 .......
 
 
 
-## ?ÌØÉ«
+## âœ¨ç‰¹è‰²
 
-1. ²ÉÓÃSOA¼Ü¹¹£¬¼à¿Ø¶Ë¡¢·şÎñ¶Ë¡¢¿Í»§¶Ë»¥²»Ó°Ïì
-2. ²ÉÓÃ×ÔÖÆµÄ [mprpc](https://github.com/yzfzzz/mprpc) Î¢·şÎñ¼Ü¹¹£¬²»ÒÀÀµµÚÈı·½rpc¿ò¼Ü£¨Èçgrpc¡¢brpcµÈ£©
-3. dockerÒ»¼ü²¿Êğ£¬ÃâÈ¥¸´ÔÓµÄ»·¾³ÅäÖÃ
-4. Ö§³ÖÍ¬Ê±¼à¿Ø·şÎñÆ÷¼¯Èº
-5. °²È«£¬²»±©Â¶±¾µØ¶Ë¿Ú
+1. é‡‡ç”¨SOAæ¶æ„ï¼Œç›‘æ§ç«¯ã€æœåŠ¡ç«¯ã€å®¢æˆ·ç«¯äº’ä¸å½±å“
+2. é‡‡ç”¨è‡ªåˆ¶çš„ [mprpc](https://github.com/yzfzzz/mprpc) å¾®æœåŠ¡æ¶æ„ï¼Œä¸ä¾èµ–ç¬¬ä¸‰æ–¹rpcæ¡†æ¶ï¼ˆå¦‚grpcã€brpcç­‰ï¼‰
+3. dockerä¸€é”®éƒ¨ç½²ï¼Œå…å»å¤æ‚çš„ç¯å¢ƒé…ç½®
+4. æ”¯æŒåŒæ—¶ç›‘æ§æœåŠ¡å™¨é›†ç¾¤
+5. å®‰å…¨ï¼Œä¸æš´éœ²æœ¬åœ°ç«¯å£
 
 
 
-## ?ÎÄ¼ş
+## ğŸ—‚æ–‡ä»¶
 
-| ÎÄ¼şÃû                                                       | ËµÃ÷              |
+| æ–‡ä»¶å                                                       | è¯´æ˜              |
 | ------------------------------------------------------------ | ----------------- |
-| [bin](https://github.com/yzfzzz/linux-monitor/tree/main/bin) | ¿ÉÖ´ĞĞÎÄ¼ş        |
-| [display_monitor](https://github.com/yzfzzz/linux-monitor/tree/main/display_monitor) | ¿Í»§¶Ë            |
-| [docker](https://github.com/yzfzzz/linux-monitor/tree/main/docker) | »·¾³ÅäÖÃ          |
-| [mprpc](https://github.com/yzfzzz/linux-monitor/tree/main/mprpc) | ×ÔÖÆµÄrpc¿ò¼Ü     |
-| [proto](https://github.com/yzfzzz/linux-monitor/tree/main/proto) | Êı¾İ´«Êä¸ñÊ½      |
-| [rpc_manager](https://github.com/yzfzzz/linux-monitor/tree/main/rpc_manager) | rpc¿Í»§¶Ë¡¢·şÎñ¶Ë |
-| [test/python_cpp_pipe](https://github.com/yzfzzz/linux-monitor/tree/main/test/python_cpp_pipe) | ¹¦ÄÜ¿ª·¢²âÊÔ      |
-| [test_monitor](https://github.com/yzfzzz/linux-monitor/tree/main/test_monitor) | ¼à¿Ø¶Ë            |
-| [tool](https://github.com/yzfzzz/linux-monitor/tree/main/tool) | Ò»Ğ©ÓĞÓÃµÄĞ¡¹¤¾ß  |
+| [bin](https://github.com/yzfzzz/linux-monitor/tree/main/bin) | å¯æ‰§è¡Œæ–‡ä»¶        |
+| [display_monitor](https://github.com/yzfzzz/linux-monitor/tree/main/display_monitor) | å®¢æˆ·ç«¯            |
+| [docker](https://github.com/yzfzzz/linux-monitor/tree/main/docker) | ç¯å¢ƒé…ç½®          |
+| [mprpc](https://github.com/yzfzzz/linux-monitor/tree/main/mprpc) | è‡ªåˆ¶çš„rpcæ¡†æ¶     |
+| [proto](https://github.com/yzfzzz/linux-monitor/tree/main/proto) | æ•°æ®ä¼ è¾“æ ¼å¼      |
+| [rpc_manager](https://github.com/yzfzzz/linux-monitor/tree/main/rpc_manager) | rpcå®¢æˆ·ç«¯ã€æœåŠ¡ç«¯ |
+| [test/python_cpp_pipe](https://github.com/yzfzzz/linux-monitor/tree/main/test/python_cpp_pipe) | åŠŸèƒ½å¼€å‘æµ‹è¯•      |
+| [test_monitor](https://github.com/yzfzzz/linux-monitor/tree/main/test_monitor) | ç›‘æ§ç«¯            |
+| [tool](https://github.com/yzfzzz/linux-monitor/tree/main/tool) | ä¸€äº›æœ‰ç”¨çš„å°å·¥å…·  |
 
 
 
-## ÔõÃ´ÓÃ£¿
+## æ€ä¹ˆç”¨ï¼Ÿ
 
-?[²»ÍêÉÆ]
+âŒ[ä¸å®Œå–„]
 
-ÏÈÅäÖÃºÃdocker»·¾³£¬Éú³É¾µÏñ£¬¾µÏñÃûÓ¦Îª linux:mprpc_monitor
+å…ˆé…ç½®å¥½dockerç¯å¢ƒï¼Œç”Ÿæˆé•œåƒï¼Œé•œåƒååº”ä¸º linux:mprpc_monitor
 
-È»ºó£º
+ç„¶åï¼š
 
 ```shell
 ./docker/scripts/monitor_docker_run.sh
@@ -59,16 +59,16 @@
 ./docker/build/install/start.sh
 ```
 
-Ò»¼üÅäÖÃ»·¾³?
+ä¸€é”®é…ç½®ç¯å¢ƒğŸ‘†
 
-È»ºó£¬ÔËĞĞ·şÎñ¶ËºÍ¼à¿Ø¶Ë
+ç„¶åï¼Œè¿è¡ŒæœåŠ¡ç«¯å’Œç›‘æ§ç«¯
 
 ```shell
 cd bin
 ./server -i address.conf & ./run.sh 
 ```
 
-×îºó£¬ÔÚÖÕ¶ËÔËĞĞ¿Í»§¶Ë£¨ĞèÒªÍ¼ĞÎ»¯½çÃæ£©
+æœ€åï¼Œåœ¨ç»ˆç«¯è¿è¡Œå®¢æˆ·ç«¯ï¼ˆéœ€è¦å›¾å½¢åŒ–ç•Œé¢ï¼‰
 
 ```shell
 ./display -i address.conf
