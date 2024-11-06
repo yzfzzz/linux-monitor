@@ -42,8 +42,6 @@
 | [test/python_cpp_pipe](https://github.com/yzfzzz/linux-monitor/tree/main/test/python_cpp_pipe) | 功能开发测试      |
 | [test_monitor](https://github.com/yzfzzz/linux-monitor/tree/main/test_monitor) | 监控端            |
 | [tool](https://github.com/yzfzzz/linux-monitor/tree/main/tool) | 一些有用的小工具  |
-| [doc](https://github.com/yzfzzz/linux-monitor/tree/main/doc) | 项目文档/图片汇总  |
-
 
 
 
@@ -75,4 +73,3 @@ cd bin
 ```shell
 ./display -i address.conf
 ```
-
