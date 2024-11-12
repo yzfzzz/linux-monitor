@@ -43,6 +43,7 @@ void monitor::GpuMonitor::UpdateOnce(monitor::proto::MonitorInfo* monitor_info) 
         } else if (bytesRead == 0) {
             std::cout << "Accidentally disconnected!" << std::endl;
             attempt_count += 1;
+            // !这里代码好像有点小问题
             std::this_thread::sleep_for(std::chrono::seconds(2 * attempt_count));
         }
     }
