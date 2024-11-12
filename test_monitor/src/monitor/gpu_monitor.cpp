@@ -10,7 +10,6 @@
 #include "json.hpp"
 #include "monitor_info.pb.h"
 #include <string>
-using json = nlohmann::json;
 
 monitor::GpuMonitor::GpuMonitor(char* pipeName) {
     // 判断读管道是否存在，不存在则创建
@@ -32,6 +31,7 @@ monitor::GpuMonitor::GpuMonitor(char* pipeName) {
 }
 
 void monitor::GpuMonitor::UpdateOnce(monitor::proto::MonitorInfo* monitor_info) {
+    LOG(INFO) << "GpuMonitor::UpdateOnce";
     char raw_buffer[1024];
     int bytesRead = 0;
     int max_attempts = 3;
@@ -41,7 +41,7 @@ void monitor::GpuMonitor::UpdateOnce(monitor::proto::MonitorInfo* monitor_info) 
         if (bytesRead > 0) {
             break;
         } else if (bytesRead == 0) {
-            std::cout << "Accidentally disconnected!" << std::endl;
+            LOG(ERROR) << "GpuMonitor::UpdateOnce: bytesRead == 0"
             attempt_count += 1;
             // !这里代码好像有点小问题
             std::this_thread::sleep_for(std::chrono::seconds(2 * attempt_count));
@@ -49,6 +49,7 @@ void monitor::GpuMonitor::UpdateOnce(monitor::proto::MonitorInfo* monitor_info) 
     }
     if (attempt_count == max_attempts) {
         std::cout << "Error reading from pipe." << std::endl;
+        LOG(ERROR) << "Error reading from pipe";
         return;
     }
 
@@ -59,10 +60,8 @@ void monitor::GpuMonitor::UpdateOnce(monitor::proto::MonitorInfo* monitor_info) 
     std::copy(str.begin()+first_index, str.begin()+last_index+1, buffer);
     buffer[last_index-first_index+1] = '\0';
 
-
-    LOG(INFO) << "Json Buffer: " <<buffer;
     // 解析 JSON 数据
-    json data_list = json::parse(buffer);
+    nlohmann::json data_list = json::parse(buffer);
     for (auto data : data_list) {
         gpu_id = data["ID"];
         gpu_name = data["DeviceName"];
