@@ -10,6 +10,25 @@
 #include "rpcprovider.h"
 
 namespace monitor {
+
+class MidInfo {
+    public:
+    int gpu_num = 0;
+    std::string gpu_name = "";
+    int gpu_used_mem = -1;
+    int gpu_total_mem = -1;
+    int gpu_avg_util = -1;
+    float cpu_load_avg_1 = -1.0;
+    float cpu_load_avg_3 = -1.0;
+    float cpu_load_avg_15 = -1.0;
+    float mem_used = -1.0;
+    float mem_total = -1.0;
+    float net_send_rate = -1.0;
+    float net_rcv_rate = -1.0;
+    std::string accountnum = "";
+};
+
+
 class ServerManagerImpl : public monitor::proto::MonitorManager {
    public:
     ServerManagerImpl();
@@ -25,27 +44,11 @@ class ServerManagerImpl : public monitor::proto::MonitorManager {
                         ::monitor::proto::MonitorInfo* response,
                         ::google::protobuf::Closure* done);
 
-    void InsertOneInfo();
-    int SelectUserId();
+    bool InsertOneInfo(monitor::proto::MonitorInfo& monitor_infos_);
+    std::string SelectUserId(std::string accountNum);
 
-    struct MidInfo {
-        int gpu_num;
-        string gpu_name;
-        int gpu_used_mem;
-        int gpu_total_mem;
-        int gpu_avg_util;
-        float cpu_load_avg_1;
-        float cpu_load_avg_3;
-        float cpu_load_avg_15;
-        float mem_used;
-        float mem_total;
-        float net_send_rate;
-        float net_rcv_rate;
 
-        string ip_addr
-    };
-
-    MidInfo parseInfos(monitor::proto::MonitorInfo request);
+    MidInfo parseInfos(monitor::proto::MonitorInfo& monitor_infos_);
 
    private:
     monitor::proto::MonitorInfo monitor_infos_;
