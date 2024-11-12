@@ -89,6 +89,8 @@ message MonitorInfo {
 
     repeated GpuInfo gpu_info = 10;
 
+    string ip_addr = 12;
+
     ResultCode result = 9;
 }
 
