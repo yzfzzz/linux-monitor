@@ -37,12 +37,14 @@ int main(int argc, char** argv) {
 
     monitor::RpcClient rpc_client_(server_address);
     char* name = getenv("USER");
+    std::string accountnum = "12345678";
     LOG(INFO) << "name " << name;
     std::unique_ptr<std::thread> thread_ = nullptr;
     thread_ = std::make_unique<std::thread>([&]() {
         while (true) {
             monitor::proto::MonitorInfo monitor_info;
             monitor_info.set_name(std::string(name));
+            monitor_info.set_accountnum(accountnum);
             for (auto& runner : runners_) {
                 runner->UpdateOnce(&monitor_info);
             }
