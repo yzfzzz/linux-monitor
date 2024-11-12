@@ -7,3 +7,4 @@ cd /tmp
 curl https://bootstrap.pypa.io/pip/3.6/get-pip.py -o get-pip.py
 python get-pip.py
 pip install nvidia-ml-py3
+apt-get install libmysqlclient-dev
