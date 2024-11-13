@@ -8,6 +8,7 @@ import "cpu_stat.proto";
 import "cpu_softirq.proto";
 import "cpu_load.proto";
 import "gpu_info.proto";
+import "time.proto";
 
 // 定义下面选项, 表示生成service服务类和rpc方法描述, 默认不生成
 option cc_generic_services = true;
@@ -90,6 +91,8 @@ message MonitorInfo {
     repeated GpuInfo gpu_info = 10;
 
     string accountnum = 12;
+
+    Time time = 13;
 
     ResultCode result = 9;
 }

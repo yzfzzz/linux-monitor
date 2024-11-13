@@ -20,6 +20,7 @@ set(PROTO_FILES
     mem_info.proto
     net_info.proto
     gpu_info.proto
+    time.proto
 )
 
 # ÖÆ×÷¾²Ì¬¿â

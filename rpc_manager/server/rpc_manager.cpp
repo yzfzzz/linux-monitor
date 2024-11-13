@@ -1,9 +1,9 @@
 #include <iostream>
 #include <mutex>
-#include <iostream>
+
 #include "json.hpp"
-#include "rpc_manager.h"
 #include "log.h"
+#include "rpc_manager.h"
 using namespace std;
 mutex mtx;
 namespace monitor {
@@ -54,11 +54,11 @@ void ServerManagerImpl::GetMonitorInfo(
     mtx.unlock();
 }
 
-MidInfo ServerManagerImpl::parseInfos(monitor::proto::MonitorInfo& monitor_infos_) {
+MidInfo ServerManagerImpl::parseInfos(
+    monitor::proto::MonitorInfo& monitor_infos_) {
     MidInfo mifo;
     mifo.gpu_num = monitor_infos_.gpu_info_size();
-    if(monitor_infos_.gpu_info_size() > 0)
-    {
+    if (monitor_infos_.gpu_info_size() > 0) {
         mifo.gpu_name = monitor_infos_.gpu_info(0).gpu_name();
         mifo.gpu_used_mem = monitor_infos_.gpu_info(0).gpu_mem_used();
         mifo.gpu_total_mem = monitor_infos_.gpu_info(0).gpu_mem_total();
@@ -69,12 +69,13 @@ MidInfo ServerManagerImpl::parseInfos(monitor::proto::MonitorInfo& monitor_infos
     mifo.cpu_load_avg_15 = monitor_infos_.cpu_load().load_avg_15();
     mifo.mem_used = monitor_infos_.mem_info().used_percent();
     mifo.mem_total = monitor_infos_.mem_info().total();
-    if(monitor_infos_.net_info_size() > 0)
-    {
+    if (monitor_infos_.net_info_size() > 0) {
         mifo.net_send_rate = monitor_infos_.net_info(0).send_rate();
         mifo.net_rcv_rate = monitor_infos_.net_info(0).rcv_rate();
-            }
+    }
     mifo.accountnum = monitor_infos_.accountnum();
+    mifo.timeymd = monitor_infos_.time().timeymd();
+    mifo.timehms = monitor_infos_.time().timehms();
     LOG(INFO) << "Parse monitor_infos_...";
     return mifo;
 }
@@ -82,19 +83,41 @@ MidInfo ServerManagerImpl::parseInfos(monitor::proto::MonitorInfo& monitor_infos
 bool ServerManagerImpl::InsertOneInfo(
     monitor::proto::MonitorInfo& monitor_infos_) {
     std::shared_ptr<MysqlConn> conn_ptr = this->pool->getConnection();
-    std::string sql = "INSERT INTO "+std::string("table_20241111")+"(gpu_name, gpu_num, gpu_used_mem, gpu_total_mem, gpu_avg_util, cpu_load_avg_1, cpu_load_avg_3, cpu_load_avg_15, mem_used,mem_total , net_send_rate, net_rcv_rate, user_id) "+"VALUES(";
+
     MidInfo mifo = parseInfos(monitor_infos_);
-    std::string user_id = SelectUserId(mifo.accountnum);
-    if (user_id.empty()==true) {
+
+    std::string tableName = "table_" + mifo.timeymd;
+    bool table_exist = isTableExist(tableName, conn_ptr);
+    if (!table_exist) {
+        LOG(WARNING) << "Failed to select table!";
         return false;
     }
-    sql = sql+"'"+mifo.gpu_name+"'"+","+std::to_string(mifo.gpu_num)+","+std::to_string(mifo.gpu_used_mem)+","+std::to_string(mifo.gpu_total_mem)+","+
-            std::to_string(mifo.gpu_avg_util)+","+std::to_string(mifo.cpu_load_avg_1)+","+std::to_string(mifo.cpu_load_avg_3)+","+
-            std::to_string(mifo.cpu_load_avg_15)+","+std::to_string(mifo.mem_used)+","+std::to_string(mifo.mem_total)+","+std::to_string(mifo.net_send_rate)+","+
-            std::to_string(mifo.net_rcv_rate)+","+user_id+")";
-    OG(INFO) << sql;
-    if(conn_ptr->update(sql))
-    {
+
+    std::string sql =
+        "INSERT INTO " + tableName +
+        "(gpu_name, gpu_num, gpu_used_mem, gpu_total_mem, gpu_avg_util, " +
+        "cpu_load_avg_1, cpu_load_avg_3, cpu_load_avg_15, mem_used,mem_total "
+        ", " +
+        "net_send_rate, net_rcv_rate, user_id, time) " + "VALUES(";
+    LOG(INFO) << "InsertOneInfo SQL: " << sql;
+
+    std::string user_id = SelectUserId(mifo.accountnum);
+    if (user_id.empty() == true) {
+        return false;
+    }
+    sql = sql + "'" + mifo.gpu_name + "'" + "," + std::to_string(mifo.gpu_num) +
+          "," + std::to_string(mifo.gpu_used_mem) + "," +
+          std::to_string(mifo.gpu_total_mem) + "," +
+          std::to_string(mifo.gpu_avg_util) + "," +
+          std::to_string(mifo.cpu_load_avg_1) + "," +
+          std::to_string(mifo.cpu_load_avg_3) + "," +
+          std::to_string(mifo.cpu_load_avg_15) + "," +
+          std::to_string(mifo.mem_used) + "," + std::to_string(mifo.mem_total) +
+          "," + std::to_string(mifo.net_send_rate) + "," +
+          std::to_string(mifo.net_rcv_rate) + "," + user_id + "," + "'" +
+          mifo.timehms + "')";
+    LOG(INFO) << sql;
+    if (conn_ptr->update(sql)) {
         LOG(INFO) << "Succeed to insert one sql";
         return true;
     }
@@ -115,6 +138,34 @@ std::string ServerManagerImpl::SelectUserId(std::string accountNum) {
     }
     LOG(WARNING) << "Failed to request user_id!";
     return "";
+}
+
+bool ServerManagerImpl::isTableExist(std::string tableName,
+                                     std::shared_ptr<MysqlConn> conn_ptr) {
+    std::string sql =
+        "SELECT * FROM tableRegister tr WHERE table_name = '" + tableName + "'";
+    LOG(INFO) << "isTableExist select tableRegister SQL: " << sql;
+    if (conn_ptr->query(sql) == true) {
+        if (conn_ptr->next()) {
+            return true;
+        } else {
+            // 新建一个表
+            // 这里可能会有两个客户端同时建一张表的情况 => 互斥
+            std::unique_lock<std::mutex> locker(m_create_mutex);
+            std::string create_sql =
+                "CREATE TABLE " + tableName + " " + create_subsql;
+            std::string register_sql =
+                "INSERT INTO tableRegister (table_name) values('" + tableName +
+                "')";
+            LOG(INFO) << "isTableExist create table SQL: " << create_sql;
+            if (conn_ptr->update(create_sql) &&
+                conn_ptr->update(register_sql)) {
+                return true;
+            }
+            return false;
+        }
+    }
+    return false;
 }
 
 }  // namespace monitor

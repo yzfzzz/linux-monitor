@@ -1,8 +1,10 @@
 #pragma once
 #include <memory>
+#include <mutex>
 #include <string>
 #include <thread>
 #include <unordered_map>
+
 #include "ConnectionPool.h"
 #include "MysqlConn.h"
 #include "monitor_info.pb.h"
@@ -12,7 +14,7 @@
 namespace monitor {
 
 class MidInfo {
-    public:
+   public:
     int gpu_num = 0;
     std::string gpu_name = "";
     int gpu_used_mem = -1;
@@ -26,8 +28,9 @@ class MidInfo {
     float net_send_rate = -1.0;
     float net_rcv_rate = -1.0;
     std::string accountnum = "";
+    std::string timeymd = "1970-1-1";
+    std::string timehms = "00:00:00";
 };
-
 
 class ServerManagerImpl : public monitor::proto::MonitorManager {
    public:
@@ -46,12 +49,28 @@ class ServerManagerImpl : public monitor::proto::MonitorManager {
 
     bool InsertOneInfo(monitor::proto::MonitorInfo& monitor_infos_);
     std::string SelectUserId(std::string accountNum);
-
+    bool isTableExist(std::string tableName,
+                      std::shared_ptr<MysqlConn> conn_ptr);
 
     MidInfo parseInfos(monitor::proto::MonitorInfo& monitor_infos_);
 
    private:
+    std::mutex m_create_mutex;
     monitor::proto::MonitorInfo monitor_infos_;
     ConnectionPool* pool = ConnectionPool::getConnectPool();
+
+    std::string create_subsql =
+        std::string("(gpu_num int DEFAULT NULL,") +
+        "gpu_name varchar(100) DEFAULT NULL," +
+        "gpu_used_mem int DEFAULT NULL," + "gpu_total_mem int DEFAULT NULL," +
+        "gpu_avg_util int DEFAULT NULL," +
+        "cpu_load_avg_1 float DEFAULT NULL," +
+        "cpu_load_avg_3 float DEFAULT NULL," +
+        "cpu_load_avg_15 float DEFAULT NULL," + "mem_used float DEFAULT NULL," +
+        "mem_total float DEFAULT NULL," + "net_send_rate float DEFAULT NULL," +
+        "net_rcv_rate float DEFAULT NULL," + "user_id int NOT NULL," +
+        "time time NOT NULL" +
+        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=" +
+        "utf8mb4_0900_ai_ci COMMENT='create table according to date'";
 };
 }  // namespace monitor
