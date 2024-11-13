@@ -33,6 +33,7 @@ docker run -it -d \
 -e XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR \
 -v ${MONITOR_HOME_DIR}:/home/work \
 -v ${XDG_RUNTIME_DIR}:${XDG_RUNTIME_DIR} \
+-v /etc/localtime:/etc/localtime \
 --gpus all \
 --net host \
 --add-host=host.docker.internal:host-gateway  \
