@@ -4,6 +4,7 @@
 #include "mprpcapplication.h"
 #include "client/rpc_client.h"
 #include "monitor_widget.h"
+#include "history.h"
 
 int main(int argc, char** argv) {
     QApplication app(argc, argv);
@@ -23,12 +24,20 @@ int main(int argc, char** argv) {
     widget->show();
 
     std::unique_ptr<std::thread> thread_;
+    monitor::History history;
     thread_ = std::make_unique<std::thread>([&]() {
         while (true) {
-            monitor_info.Clear();
-            rpc_client.GetMonitorInfo(&monitor_info);
 
-            moitor_widget.UpdateData(monitor_info);
+            std::vector<monitor::MidInfo> history_infos = history.getHistoryInfo("12345678",10);
+            for(int i = 0; i < 10;i++)
+            {
+                std::cout << history_infos[i].gpu_name << " | " << history_infos[i].cpu_load_avg_15<< " | " << history_infos[i].timehms << std::endl;
+            }
+
+            // monitor_info.Clear();
+            // rpc_client.GetMonitorInfo(&monitor_info);
+
+            // moitor_widget.UpdateData(monitor_info);
             std::this_thread::sleep_for(std::chrono::seconds(2));
         }
     });
