@@ -31,6 +31,7 @@ docker run -it -d \
 -e DOCKER_GRP="${group}" \
 -e DOCKER_GRP_ID="${gid}" \
 -e XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR \
+-e LANG="C.UTF-8" \
 -v ${MONITOR_HOME_DIR}:/home/work \
 -v ${XDG_RUNTIME_DIR}:${XDG_RUNTIME_DIR} \
 --gpus all \
