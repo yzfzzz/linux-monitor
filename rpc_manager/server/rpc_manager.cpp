@@ -70,8 +70,14 @@ MidInfo ServerManagerImpl::parseInfos(
     mifo.mem_used = monitor_infos_.mem_info().used_percent();
     mifo.mem_total = monitor_infos_.mem_info().total();
     if (monitor_infos_.net_info_size() > 0) {
-        mifo.net_send_rate = monitor_infos_.net_info(0).send_rate();
-        mifo.net_rcv_rate = monitor_infos_.net_info(0).rcv_rate();
+        float send_sum = 0;
+        float rcv_sum = 0;
+        for (int i = 0; i < monitor_infos_.net_info_size(); i++) {
+            send_sum += monitor_infos_.net_info(i).send_rate();
+            rcv_sum += monitor_infos_.net_info(i).rcv_rate();
+        }
+        mifo.net_send_rate = send_sum / monitor_infos_.net_info_size();
+        mifo.net_rcv_rate = rcv_sum / monitor_infos_.net_info_size();
     }
     mifo.accountnum = monitor_infos_.accountnum();
     mifo.timeymd = monitor_infos_.time().timeymd();
@@ -149,8 +155,8 @@ bool ServerManagerImpl::isTableExist(std::string tableName,
         if (conn_ptr->next()) {
             return true;
         } else {
-            // ÐÂ½¨Ò»¸ö±í
-            // ÕâÀï¿ÉÄÜ»áÓÐÁ½¸ö¿Í»§¶ËÍ¬Ê±½¨Ò»ÕÅ±íµÄÇé¿ö => »¥³â
+            // æ–°å»ºä¸€ä¸ªè¡¨
+            // è¿™é‡Œå¯èƒ½ä¼šæœ‰ä¸¤ä¸ªå®¢æˆ·ç«¯åŒæ—¶å»ºä¸€å¼ è¡¨çš„æƒ…å†µ => äº’æ–¥
             std::unique_lock<std::mutex> locker(m_create_mutex);
             std::string create_sql =
                 "CREATE TABLE " + tableName + " " + create_subsql;
