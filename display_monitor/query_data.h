@@ -5,10 +5,12 @@
 #include "MysqlConn.h"
 #include "midinfo.h"
 namespace monitor {
-class History {
+class queryData {
    public:
 ConnectionPool* pool = ConnectionPool::getConnectPool();
-    std::vector<MidInfo> getHistoryInfo(std::string account_num, int count);
+    bool queryDataInfo(std::string account_num, int count);
     std::string SelectUserId(std::string accountNum);
+
+    std::vector<MidInfo> queryData_array;
 };
 }  // namespace monitor

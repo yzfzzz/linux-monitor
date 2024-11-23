@@ -1,18 +1,23 @@
 #include "get_time.h"
-#include "history.h"
+#include "query_data.h"
 #include "log.h"
+#include <iostream>
 namespace monitor {
-std::vector<MidInfo> History::getHistoryInfo(std::string account_num,
+bool queryData::queryDataInfo(std::string account_num,
                                              int count) {
     // sql = select * from table_20241119 WHERE user_id = 1 order by time desc
     // limit 10
     std::shared_ptr<MysqlConn> conn_ptr = this->pool->getConnection();
     get_curTime cur_time;
     MidInfo midinfo;
-    std::vector<MidInfo> history_array;
+    
     std::string table_name = "table_" + cur_time.get_year_mon_day();
     std::string select_count = std::to_string(count);
     std::string user_id = SelectUserId(account_num);
+    if(user_id == "")
+    {
+        return false;
+    }
     std::string sql = "select * from " + table_name +
                       " WHERE user_id = " + user_id +
                       " order by time desc limit " + select_count;
@@ -34,13 +39,14 @@ std::vector<MidInfo> History::getHistoryInfo(std::string account_num,
             midinfo.timeymd = cur_time.get_year_mon_day();
             midinfo.timehms = conn_ptr->value(13);
 
-            history_array.push_back(midinfo);
+            queryData_array.push_back(midinfo);
         }
     }
-    return history_array;
+    return true;
+    
 }
 
-std::string History::SelectUserId(std::string accountNum) {
+std::string queryData::SelectUserId(std::string accountNum) {
     std::shared_ptr<MysqlConn> conn_ptr = this->pool->getConnection();
     std::string sql = "SELECT id FROM `user` u WHERE accountnum =" + accountNum;
     std::string user_id;

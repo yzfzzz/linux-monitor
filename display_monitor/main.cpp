@@ -1,47 +1,36 @@
-
 #include <QApplication>
+#include <iostream>
+#include <memory>
 #include <thread>
-#include "mprpcapplication.h"
-#include "client/rpc_client.h"
-#include "monitor_widget.h"
-#include "history.h"
+#include <vector>
+#include "query_data.h"
+#include "widget.h"
+#include <mutex>
 
-int main(int argc, char** argv) {
-    QApplication app(argc, argv);
-    MprpcApplication::Init(argc, argv);
-
-    std::string server_address = "localhost:50051";
-
-    monitor::MonitorWidget moitor_widget;
-    monitor::RpcClient rpc_client(server_address);
-    monitor::proto::MonitorInfo monitor_info;
-
-    // get board name
-    rpc_client.GetMonitorInfo(&monitor_info);
-    std::string name = monitor_info.name();
-
-    QWidget* widget = moitor_widget.ShowAllMonitorWidget(name);
-    widget->show();
-
+int main(int argc, char *argv[]) {
+    QApplication a(argc, argv);
+    Widget w;
+    w.show();
     std::unique_ptr<std::thread> thread_;
-    monitor::History history;
+    bool flag = false;
     thread_ = std::make_unique<std::thread>([&]() {
         while (true) {
-
-            std::vector<monitor::MidInfo> history_infos = history.getHistoryInfo("12345678",10);
-            for(int i = 0; i < 10;i++)
+            int n = 1;
+            if(!flag)
             {
-                std::cout << history_infos[i].gpu_name << " | " << history_infos[i].cpu_load_avg_15<< " | " << history_infos[i].timehms << std::endl;
+                n = 30;
+                flag = true;
+            } 
+            monitor::queryData queryData;
+            if (queryData.queryDataInfo("12345678", n)) {
+                for (int i = 0; i < n; i++) {
+                    w.Update(queryData.queryData_array[i]);
+                }
             }
-
-            // monitor_info.Clear();
-            // rpc_client.GetMonitorInfo(&monitor_info);
-
-            // moitor_widget.UpdateData(monitor_info);
-            std::this_thread::sleep_for(std::chrono::seconds(2));
+            std::this_thread::sleep_for(std::chrono::seconds(3));
         }
     });
     thread_->detach();
 
-    return app.exec();
+    return a.exec();
 }

@@ -9,20 +9,21 @@ find_package(Qt5
 
 find_package(Threads REQUIRED)
 
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+
 set(SOURCES
     main.cpp
-    monitor_inter.cpp
-    cpu_softirq_model.cpp
-    cpu_load_model.cpp
-    monitor_widget.cpp
-    cpu_stat_model.cpp
-    mem_model.cpp
-    net_model.cpp
-    gpu_model.cpp
-    mem_piechart.cpp
-    cpu_load_barchart.cpp
-    cpu_stat_barchart.cpp
-    history.cpp
+    widget.cpp
+    net_chart.cpp
+    smooth_chart.cpp
+    water_progress.cpp
+    query_data.cpp
+    widget.ui
 )
 
 link_directories(${PROJECT_SOURCE_DIR}/build/rpc_manager/client 
@@ -35,23 +36,17 @@ add_executable(display ${SOURCES})
 set_target_properties(display PROPERTIES AUTOMOC TRUE)
 
 target_include_directories(display PUBLIC
-    ${PROJECT_SOURCE_DIR}/build/proto
-    ${PROJECT_SOURCE_DIR}/rpc_manager
-    ${PROJECT_SOURCE_DIR}/mprpc/src/include
     ${PROJECT_SOURCE_DIR}/tool
     ${PROJECT_SOURCE_DIR}/database/include
-    ${PROTOBUF_INCLUDE_DIRS}
 )
 
 target_link_libraries(display
     PUBLIC
-    client
     Qt5::Widgets
     Qt5::Core
     Qt5::Charts
     Threads::Threads
-    monitor_proto
-    mprpc
     database
+    glog
     # qwt-qt5
 )
