@@ -5,11 +5,11 @@
 #include <chrono>
 #include <fstream>
 #include <iostream>
+#include <string>
 #include <thread>
 #include "gpu_monitor.h"
 #include "json.hpp"
 #include "monitor_info.pb.h"
-#include <string>
 
 monitor::GpuMonitor::GpuMonitor(char* pipeName) {
     // 判断读管道是否存在，不存在则创建
@@ -30,8 +30,8 @@ monitor::GpuMonitor::GpuMonitor(char* pipeName) {
     }
 }
 
-void monitor::GpuMonitor::UpdateOnce(monitor::proto::MonitorInfo* monitor_info) {
-    LOG(INFO) << "GpuMonitor::UpdateOnce";
+void monitor::GpuMonitor::UpdateOnce(
+    monitor::proto::MonitorInfo* monitor_info) {
     char raw_buffer[1024];
     int bytesRead = 0;
     int max_attempts = 3;
@@ -41,15 +41,15 @@ void monitor::GpuMonitor::UpdateOnce(monitor::proto::MonitorInfo* monitor_info) 
         if (bytesRead > 0) {
             break;
         } else if (bytesRead == 0) {
-            LOG(ERROR) << "GpuMonitor::UpdateOnce: bytesRead == 0"
             attempt_count += 1;
             // !这里代码好像有点小问题
-            std::this_thread::sleep_for(std::chrono::seconds(2 * attempt_count));
+            std::this_thread::sleep_for(
+                std::chrono::seconds(2 * attempt_count));
         }
     }
     if (attempt_count == max_attempts) {
         std::cout << "Error reading from pipe." << std::endl;
-        LOG(ERROR) << "Error reading from pipe";
+
         return;
     }
 
@@ -57,11 +57,11 @@ void monitor::GpuMonitor::UpdateOnce(monitor::proto::MonitorInfo* monitor_info) 
     char buffer[1024];
     int first_index = str.find('[');
     int last_index = str.find(']');
-    std::copy(str.begin()+first_index, str.begin()+last_index+1, buffer);
-    buffer[last_index-first_index+1] = '\0';
+    std::copy(str.begin() + first_index, str.begin() + last_index + 1, buffer);
+    buffer[last_index - first_index + 1] = '\0';
 
     // 解析 JSON 数据
-    nlohmann::json data_list = json::parse(buffer);
+    nlohmann::json data_list = nlohmann::json::parse(buffer);
     for (auto data : data_list) {
         gpu_id = data["ID"];
         gpu_name = data["DeviceName"];
