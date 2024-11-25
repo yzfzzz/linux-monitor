@@ -1,11 +1,9 @@
-#include <QDateTime>
 #include <QHBoxLayout>
 #include "net_chart.h"
 
-
 net_chart::net_chart(QWidget *parent) : QWidget(parent) {
     maxSize = 30;  // 只存储最新的 30 个数据
-    maxX = 300;
+    maxX = 200;
     maxY = 200;
 
     splineSeries_send = new QSplineSeries();
@@ -25,7 +23,20 @@ net_chart::net_chart(QWidget *parent) : QWidget(parent) {
     chart->legend()->hide();
     chart->setTitle("流量收发情况");
     chart->createDefaultAxes();
-    chart->axisX()->setRange(0, 200);
+
+    axisX = new QDateTimeAxis();
+    axisX->setFormat("mm:ss");
+    axisX->setTickCount(5);
+    axisX->setLabelsAngle(45);
+
+    if (chart->axisX()) {
+        chart->removeAxis(chart->axisX());
+    }
+
+    chart->setAxisX(axisX);
+    splineSeries_send->attachAxis(axisX);
+    splineSeries_recv->attachAxis(axisX);
+
     chart->axisY()->setRange(0, maxY);
     chart->setBackgroundVisible(false);
 
@@ -47,10 +58,23 @@ net_chart::net_chart(QWidget *parent) : QWidget(parent) {
 
 net_chart::~net_chart() {}
 
+void net_chart::dataReceived(int value_send, int value_recv,
+                             std::string cur_time) {
+    std::cout << cur_time << std::endl;
+    QString timeStr = QString::fromStdString(cur_time);
 
-void net_chart::dataReceived(int value_send, int value_recv) {
-    data_send << value_send;
-    data_recv << value_recv;
+    QDateTime time = QDateTime::fromString(timeStr, "hh:mm:ss");
+
+    line_node send_node;
+    send_node.value = value_send;
+    send_node.time = time;
+
+    line_node recv_node;
+    recv_node.value = value_recv;
+    recv_node.time = time;
+
+    data_send << send_node;
+    data_recv << recv_node;
 
     // 数据个数超过了最大数量，则删除最先接收到的数据，实现曲线向前移动
     while (data_send.size() > maxSize) {
@@ -59,8 +83,9 @@ void net_chart::dataReceived(int value_send, int value_recv) {
     while (data_recv.size() > maxSize) {
         data_recv.removeFirst();
     }
+}
 
-    // 界面被隐藏后就没有必要绘制数据的曲线了
+void net_chart::drawChart() {
     if (isVisible()) {
         splineSeries_send->clear();
         splineSeries_recv->clear();
@@ -68,8 +93,12 @@ void net_chart::dataReceived(int value_send, int value_recv) {
         int less = maxSize - data_send.size();
 
         for (int i = 0; i < data_send.size(); ++i) {
-            splineSeries_send->append(less * dx + i * dx, data_send.at(i));
-            splineSeries_recv->append(less * dx + i * dx, data_recv.at(i));
+            std::cout << "["<< i << "]  "<< data_send.at(i).time.toString("hh:mm:ss").toStdString() << ":  "<< data_send.at(i).value << std::endl;
+            splineSeries_send->append(data_send.at(i).time.toMSecsSinceEpoch(),
+                                      data_send.at(i).value);
+            splineSeries_recv->append(data_recv.at(i).time.toMSecsSinceEpoch(),
+                                      data_recv.at(i).value);
         }
+        axisX->setRange(data_send.begin()->time, data_send.rbegin()->time);
     }
 }
