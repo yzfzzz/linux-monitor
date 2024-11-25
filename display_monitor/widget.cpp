@@ -5,7 +5,6 @@
 #include "ui_widget.h"
 #include "widget.h"
 
-
 Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget) {
     ui->setupUi(this);
 
@@ -24,7 +23,12 @@ Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget) {
     // ui->label_down_2->setText("6/16(GB)");
 }
 
-void Widget::Update(monitor::MidInfo midinfo) {
+void Widget::Update(std::vector<monitor::MidInfo> midinfo_array) {
+    if(midinfo_array.empty())
+    {
+        return;
+    }
+    monitor::MidInfo midinfo = midinfo_array[midinfo_array.size() - 1];
     std::string gpu_name = "显卡型号\n" + midinfo.gpu_name;
     ui->gpu_name->setText(QString::fromStdString(gpu_name));
     std::string gpu_num = "显卡数量\n" + std::to_string(midinfo.gpu_num);
@@ -79,11 +83,20 @@ void Widget::Update(monitor::MidInfo midinfo) {
         std::to_string(used_mem) + "/" + std::to_string(total_mem) + "(G)";
     ui->label_down_4->setText(QString::fromStdString(label_down_4_str));
 
-    // GPU使用情况
-    ui->schart_left->dataReceived(midinfo.gpu_avg_util);
+    for (int i = 0; i < midinfo_array.size(); i++) {
+        // GPU使用情况
+        ui->schart_left->dataReceived(midinfo_array[i].gpu_avg_util);
 
-    //网络收发
-    ui->schart_right->dataReceived((int)midinfo.net_send_rate, 50+(int)midinfo.net_rcv_rate);
+        //网络收发
+        std::cout << "[" << i << "]  " << midinfo_array[i].timehms << ":  "
+                  << midinfo_array[i].net_rcv_rate << std::endl;
+        ui->schart_right->dataReceived(midinfo_array[i].net_send_rate,
+                                       midinfo_array[i].net_rcv_rate,
+                                       midinfo_array[i].timehms);
+    }
+    std::cout << "-----------" << std::endl;
+    ui->schart_right->drawChart();
+    ui->schart_left->drawChart();
 }
 
 Widget::~Widget() { delete ui; }
