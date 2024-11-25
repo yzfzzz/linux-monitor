@@ -2,6 +2,7 @@
 #include "query_data.h"
 #include "log.h"
 #include <iostream>
+#include <algorithm>
 namespace monitor {
 bool queryData::queryDataInfo(std::string account_num,
                                              int count) {
@@ -10,6 +11,7 @@ bool queryData::queryDataInfo(std::string account_num,
     std::shared_ptr<MysqlConn> conn_ptr = this->pool->getConnection();
     get_curTime cur_time;
     MidInfo midinfo;
+    std::vector<MidInfo> temp_array;
     
     std::string table_name = "table_" + cur_time.get_year_mon_day();
     std::string select_count = std::to_string(count);
@@ -41,6 +43,7 @@ bool queryData::queryDataInfo(std::string account_num,
 
             queryData_array.push_back(midinfo);
         }
+        std::reverse(queryData_array.begin(),queryData_array.end());
     }
     return true;
     
