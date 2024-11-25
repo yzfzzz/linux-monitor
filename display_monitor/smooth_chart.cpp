@@ -1,14 +1,15 @@
-#include "smooth_chart.h"
 #include <QDateTime>
 #include <QHBoxLayout>
+#include "smooth_chart.h"
 
 smooth_chart::smooth_chart(QWidget *parent) : QWidget(parent) {
-    maxSize = 11; // 只存储最新的 31 个数据
+    maxSize = 30;  // 只存储最新的 30 个数据
     maxX = 300;
     maxY = 100;
 
     splineSeries = new QSplineSeries();
-    QPen linePen(QColor("#BB30E2"),2,Qt::SolidLine,Qt::RoundCap,Qt::RoundJoin);
+    QPen linePen(QColor("#BB30E2"), 2, Qt::SolidLine, Qt::RoundCap,
+                 Qt::RoundJoin);
     splineSeries->setPen(linePen);
 
     chart = new QChart();
@@ -37,8 +38,7 @@ smooth_chart::smooth_chart(QWidget *parent) : QWidget(parent) {
     setLayout(layout);
 }
 
-smooth_chart::~smooth_chart() {
-}
+smooth_chart::~smooth_chart() {}
 
 void smooth_chart::dataReceived(int value) {
     data << value;
@@ -47,15 +47,18 @@ void smooth_chart::dataReceived(int value) {
     while (data.size() > maxSize) {
         data.removeFirst();
     }
+}
 
+void smooth_chart::drawChart() {
     // 界面被隐藏后就没有必要绘制数据的曲线了
     if (isVisible()) {
         splineSeries->clear();
-        int dx = maxX / (maxSize-1);
+        int dx = maxX / (maxSize - 1);
         int less = maxSize - data.size();
 
         for (int i = 0; i < data.size(); ++i) {
-            splineSeries->append(less*dx+i*dx, data.at(i));
+            splineSeries->append(less * dx + i * dx, data.at(i));
         }
     }
 }
+

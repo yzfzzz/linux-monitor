@@ -22,6 +22,7 @@ public:
      * 接收到数据源发送来的数据，数据源可以下位机，采集卡，传感器等。
      */
     void dataReceived(int value);
+    void drawChart();
 
 private:
 

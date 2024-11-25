@@ -16,7 +16,7 @@ class Widget : public QWidget
 public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
-    void Update(monitor::MidInfo midinfo);
+    void Update(std::vector<monitor::MidInfo> midinfo_array);
 
 private:
     Ui::Widget *ui;
