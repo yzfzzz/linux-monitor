@@ -12,7 +12,7 @@
 #include "monitor_info.pb.h"
 
 monitor::GpuMonitor::GpuMonitor(char* pipeName) {
-    // ÅÐ¶Ï¶Á¹ÜµÀÊÇ·ñ´æÔÚ£¬²»´æÔÚÔò´´½¨
+    // ï¿½Ð¶Ï¶ï¿½ï¿½Üµï¿½ï¿½Ç·ï¿½ï¿½ï¿½Ú£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ò´´½ï¿½
     int ret = access(pipeName, F_OK);
     if (ret == -1) {
         printf("pipe isn't exit, create...\n");
@@ -22,7 +22,7 @@ monitor::GpuMonitor::GpuMonitor(char* pipeName) {
             exit(-1);
         }
     }
-    // ´ò¿ªÓÐÃû¹ÜµÀ½øÐÐ¶ÁÈ¡
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Üµï¿½ï¿½ï¿½ï¿½Ð¶ï¿½È¡
     this->fd = open(pipeName, O_RDONLY);
     if (fd == -1) {
         std::cerr << "Error opening pipe." << std::endl;
@@ -42,7 +42,7 @@ void monitor::GpuMonitor::UpdateOnce(
             break;
         } else if (bytesRead == 0) {
             attempt_count += 1;
-            // !ÕâÀï´úÂëºÃÏñÓÐµãÐ¡ÎÊÌâ
+            // !ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½Ð¡ï¿½ï¿½ï¿½ï¿½
             std::this_thread::sleep_for(
                 std::chrono::seconds(2 * attempt_count));
         }
@@ -56,11 +56,11 @@ void monitor::GpuMonitor::UpdateOnce(
     std::string str(raw_buffer);
     char buffer[1024];
     int first_index = str.find('[');
-    int last_index = str.find(']');
+    int last_index = str.find(']', first_index);
     std::copy(str.begin() + first_index, str.begin() + last_index + 1, buffer);
     buffer[last_index - first_index + 1] = '\0';
 
-    // ½âÎö JSON Êý¾Ý
+    // ï¿½ï¿½ï¿½ï¿½ JSON ï¿½ï¿½ï¿½ï¿½
     nlohmann::json data_list = nlohmann::json::parse(buffer);
     for (auto data : data_list) {
         gpu_id = data["ID"];
@@ -74,7 +74,7 @@ void monitor::GpuMonitor::UpdateOnce(
         fan_speed = data["FanSpeed"];
         power_stat = data["PowerStstus"];
 
-        // TODO:²éÒ»ÏÂÊÇadd»¹ÊÇmutable
+        // TODO:ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½addï¿½ï¿½ï¿½ï¿½mutable
         auto gpu_info_msg = monitor_info->add_gpu_info();
         gpu_info_msg->set_id(gpu_id);
         gpu_info_msg->set_gpu_name(gpu_name);
