@@ -1,6 +1,7 @@
 #include <iostream>
 #include <mutex>
 
+#include "get_time.h"
 #include "json.hpp"
 #include "log.h"
 #include "rpc_manager.h"
@@ -44,14 +45,41 @@ void ServerManagerImpl::SetMonitorInfo(
 
 void ServerManagerImpl::GetMonitorInfo(
     ::google::protobuf::RpcController* controller,
-    const ::google::protobuf::Empty* request,
-    ::monitor::proto::MonitorInfo* response,
+    const ::monitor::proto::QueryMessage* request,
+    ::monitor::proto::QueryResults* response,
     ::google::protobuf::Closure* done) {
     mtx.lock();
     LOG(INFO) << "RPC Call: ServerManagerImpl::GetMonitorInfo";
-    *response = monitor_infos_;
+    *response = queryDataInfo(request);
     done->Run();
     mtx.unlock();
+}
+
+::monitor::proto::QueryResults ServerManagerImpl::queryDataInfo(
+    const ::monitor::proto::QueryMessage* request
+    ) {
+    std::string sql = request->sql();
+    ::monitor::proto::QueryResults res_array;
+    std::shared_ptr<MysqlConn> conn_ptr = this->pool->getConnection();
+    if (conn_ptr->query(sql) == true) {
+        while (conn_ptr->next()) {
+            auto query_data_msg = res_array.add_query_data();
+            query_data_msg->set_gpu_num(std::stoi(conn_ptr->value(0)));
+            query_data_msg->set_gpu_name(conn_ptr->value(1));
+            query_data_msg->set_gpu_used_mem(std::stoi(conn_ptr->value(2)));
+            query_data_msg->set_gpu_total_mem(std::stoi(conn_ptr->value(3)));
+            query_data_msg->set_gpu_avg_util(std::stoi(conn_ptr->value(4)));
+            query_data_msg->set_cpu_load_avg_1(std::stof(conn_ptr->value(5)));
+            query_data_msg->set_cpu_load_avg_3(std::stof(conn_ptr->value(6)));
+            query_data_msg->set_cpu_load_avg_15(std::stof(conn_ptr->value(7)));
+            query_data_msg->set_mem_used(std::stof(conn_ptr->value(8)));
+            query_data_msg->set_mem_total(std::stof(conn_ptr->value(9)));
+            query_data_msg->set_net_send_rate(std::stof(conn_ptr->value(10)));
+            query_data_msg->set_net_rcv_rate(std::stof(conn_ptr->value(11)));
+            query_data_msg->set_timehms(conn_ptr->value(13));
+        }
+    }
+    return res_array;
 }
 
 MidInfo ServerManagerImpl::parseInfos(

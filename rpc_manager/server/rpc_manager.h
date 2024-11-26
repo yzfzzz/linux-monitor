@@ -7,10 +7,10 @@
 
 #include "ConnectionPool.h"
 #include "MysqlConn.h"
+#include "midinfo.h"
 #include "monitor_info.pb.h"
 #include "mprpcapplication.h"
 #include "rpcprovider.h"
-#include "midinfo.h"
 namespace monitor {
 
 class ServerManagerImpl : public monitor::proto::MonitorManager {
@@ -24,8 +24,8 @@ class ServerManagerImpl : public monitor::proto::MonitorManager {
                         ::google::protobuf::Closure* done);
 
     void GetMonitorInfo(::google::protobuf::RpcController* controller,
-                        const ::google::protobuf::Empty* request,
-                        ::monitor::proto::MonitorInfo* response,
+                        const ::monitor::proto::QueryMessage* request,
+                        ::monitor::proto::QueryResults* response,
                         ::google::protobuf::Closure* done);
 
     bool InsertOneInfo(monitor::proto::MonitorInfo& monitor_infos_);
@@ -34,6 +34,9 @@ class ServerManagerImpl : public monitor::proto::MonitorManager {
                       std::shared_ptr<MysqlConn> conn_ptr);
 
     MidInfo parseInfos(monitor::proto::MonitorInfo& monitor_infos_);
+
+    ::monitor::proto::QueryResults queryDataInfo(
+        const ::monitor::proto::QueryMessage* request);
 
    private:
     std::mutex m_create_mutex;
