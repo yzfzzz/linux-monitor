@@ -13,6 +13,7 @@
 #include <QSplineSeries>
 #include <string>
 #include <iostream>
+#include <QtCore/QPointF>
 using namespace QtCharts;
 
 class line_node {
@@ -37,8 +38,8 @@ class net_chart : public QWidget {
     int maxSize;  // data 最多存储 maxSize 个元素
     int maxX;
     int maxY;
-    QList<line_node> data_send;  // 存储业务数据的 list
-    QList<line_node> data_recv;
+    QList<QPointF> data_send;  // 存储业务数据的 list
+    QList<QPointF> data_recv;
 
     QChart *chart;
     QChartView *chartView;

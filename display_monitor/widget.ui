@@ -530,7 +530,7 @@ border-radius: 5px; /* 边框圆角 */
    </property>
    <property name="text">
     <string>GMPanel
-AI服务器性能监控面板
+GPU服务器管理面板
 作者: yzfzzz (github)</string>
    </property>
   </widget>

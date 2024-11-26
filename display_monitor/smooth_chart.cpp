@@ -4,7 +4,6 @@
 
 smooth_chart::smooth_chart(QWidget *parent) : QWidget(parent) {
     maxSize = 30;  // 只存储最新的 30 个数据
-    maxX = 300;
     maxY = 100;
 
     splineSeries = new QSplineSeries();
@@ -18,7 +17,18 @@ smooth_chart::smooth_chart(QWidget *parent) : QWidget(parent) {
     chart->legend()->hide();
     chart->setTitle("GPU平均使用率");
     chart->createDefaultAxes();
-    chart->axisX()->setRange(0, 300);
+
+    axisX = new QDateTimeAxis();
+    axisX->setFormat("mm:ss");
+    axisX->setTickCount(5);
+    
+    if (chart->axisX()) {
+        chart->removeAxis(chart->axisX());
+    }
+
+    chart->setAxisX(axisX);
+    splineSeries->attachAxis(axisX);
+
     chart->axisY()->setRange(0, maxY);
     chart->setBackgroundVisible(false);
 
@@ -40,8 +50,16 @@ smooth_chart::smooth_chart(QWidget *parent) : QWidget(parent) {
 
 smooth_chart::~smooth_chart() {}
 
-void smooth_chart::dataReceived(int value) {
-    data << value;
+void smooth_chart::dataReceived(int value, std::string cur_time) {
+    QString timeStr = QString::fromStdString(cur_time);
+
+    QDateTime time = QDateTime::fromString(timeStr, "hh:mm:ss");
+
+    gpu_line_node gpu_node;
+    gpu_node.value = value;
+    gpu_node.time = time;
+
+    data << gpu_node;
 
     // 数据个数超过了最大数量，则删除最先接收到的数据，实现曲线向前移动
     while (data.size() > maxSize) {
@@ -53,12 +71,11 @@ void smooth_chart::drawChart() {
     // 界面被隐藏后就没有必要绘制数据的曲线了
     if (isVisible()) {
         splineSeries->clear();
-        int dx = maxX / (maxSize - 1);
-        int less = maxSize - data.size();
 
         for (int i = 0; i < data.size(); ++i) {
-            splineSeries->append(less * dx + i * dx, data.at(i));
+            splineSeries->append(data.at(i).time.toMSecsSinceEpoch(),
+                                 data.at(i).value);
         }
+        axisX->setRange(data.begin()->time, data.rbegin()->time);
     }
 }
-

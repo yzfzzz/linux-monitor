@@ -38,15 +38,21 @@ set_target_properties(display PROPERTIES AUTOMOC TRUE)
 target_include_directories(display PUBLIC
     ${PROJECT_SOURCE_DIR}/tool
     ${PROJECT_SOURCE_DIR}/database/include
+    ${PROJECT_SOURCE_DIR}/build/proto
+    ${PROJECT_SOURCE_DIR}/rpc_manager
+    ${PROJECT_SOURCE_DIR}/mprpc/src/include
 )
 
 target_link_libraries(display
     PUBLIC
+    client
     Qt5::Widgets
     Qt5::Core
     Qt5::Charts
     Threads::Threads
     database
     glog
+    monitor_proto
+    mprpc
     # qwt-qt5
 )

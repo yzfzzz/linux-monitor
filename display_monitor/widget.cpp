@@ -24,8 +24,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget) {
 }
 
 void Widget::Update(std::vector<monitor::MidInfo> midinfo_array) {
-    if(midinfo_array.empty())
-    {
+    if (midinfo_array.empty()) {
         return;
     }
     monitor::MidInfo midinfo = midinfo_array[midinfo_array.size() - 1];
@@ -85,7 +84,8 @@ void Widget::Update(std::vector<monitor::MidInfo> midinfo_array) {
 
     for (int i = 0; i < midinfo_array.size(); i++) {
         // GPU使用情况
-        ui->schart_left->dataReceived(midinfo_array[i].gpu_avg_util);
+        ui->schart_left->dataReceived(midinfo_array[i].gpu_avg_util,
+                                      midinfo_array[i].timehms);
 
         //网络收发
         std::cout << "[" << i << "]  " << midinfo_array[i].timehms << ":  "
