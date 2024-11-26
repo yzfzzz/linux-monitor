@@ -1,12 +1,9 @@
 #include <iostream>
-#include <mutex>
-
 #include "get_time.h"
 #include "json.hpp"
 #include "log.h"
 #include "rpc_manager.h"
 using namespace std;
-mutex mtx;
 namespace monitor {
 
 ServerManagerImpl::ServerManagerImpl() {}
@@ -27,13 +24,11 @@ void ServerManagerImpl::SetMonitorInfo(
     ::google::protobuf::RpcController* controller,
     const ::monitor::proto::MonitorInfo* request,
     ::google::protobuf::Empty* response, ::google::protobuf::Closure* done) {
-    mtx.lock();
     LOG(INFO) << "RPC Call: ServerManagerImpl::SetMonitorInfo";
     monitor_infos_.Clear();
     monitor_infos_ = *request;
     InsertOneInfo(monitor_infos_);
     done->Run();
-    mtx.unlock();
 }
 
 // ::grpc::Status ServerManagerImpl::GetMonitorInfo(
@@ -48,11 +43,9 @@ void ServerManagerImpl::GetMonitorInfo(
     const ::monitor::proto::QueryMessage* request,
     ::monitor::proto::QueryResults* response,
     ::google::protobuf::Closure* done) {
-    mtx.lock();
     LOG(INFO) << "RPC Call: ServerManagerImpl::GetMonitorInfo";
     *response = queryDataInfo(request);
     done->Run();
-    mtx.unlock();
 }
 
 ::monitor::proto::QueryResults ServerManagerImpl::queryDataInfo(
