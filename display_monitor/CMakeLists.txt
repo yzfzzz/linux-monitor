@@ -23,6 +23,7 @@ set(SOURCES
     smooth_chart.cpp
     water_progress.cpp
     query_data.cpp
+    work_thread.cpp
     widget.ui
 )
 

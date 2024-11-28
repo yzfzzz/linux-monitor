@@ -27,6 +27,7 @@ bool queryData::queryDataInfo(std::string account_num, int count,
         return false;
     }
     MidInfo midinfo;
+    std::cout << "response.query_data_size: " << response.query_data_size() << std::endl;
     for (int i = 0; i < response.query_data_size(); i++) {
         midinfo.gpu_num = response.query_data(i).gpu_num();
         midinfo.gpu_name = response.query_data(i).gpu_name();

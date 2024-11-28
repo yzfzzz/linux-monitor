@@ -1,102 +1,70 @@
 #include <QDateTime>
+#include <QThread>
 #include <QString>
 #include <iostream>
 #include <string>
 #include "ui_widget.h"
 #include "widget.h"
+#include "work_thread.h"
 
-Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget) {
+Widget::Widget(int argc, char **argv,QWidget* parent) : QWidget(parent), ui(new Ui::Widget) {
     ui->setupUi(this);
+    ui->label_up_1->setText("显卡使用率");
+    ui->label_up_2->setText("显卡内存");
+    ui->label_up_3->setText("CPU使用率");
+    ui->label_up_4->setText("运行内存");
 
-    // ui->water1->setValue(70);
-    // ui->water2->setValue(90);
-    // ui->water3->setValue(20);
-    // ui->water4->setValue(50);
-
-    // ui->gpu_name->setText("显卡型号\nNVIDIA MX250");
-    // ui->gpu_num->setText("显卡数量\n6");
-
-    // ui->label_up_1->setText("CPU使用率");
-    // ui->label_down_1->setText("运行流畅");
-
-    // ui->label_up_2->setText("运行内存使用率");
-    // ui->label_down_2->setText("6/16(GB)");
+    QThread* sub = new QThread;
+    WorkThread* work_thread_ = new WorkThread;
+    work_thread_->moveToThread(sub);
+    connect(this, &Widget::starting, work_thread_, &WorkThread::run);
+    emit starting(argc, argv);
+    sub->start();
+    
+    connect(work_thread_, &WorkThread::send_label_down_str, this,
+            &Widget::recv_label_down_str);
+    connect(work_thread_, &WorkThread::send_label_down_qss, this,
+            &Widget::recv_label_down_qss);
+    connect(work_thread_, &WorkThread::send_water_value, this,
+            &Widget::recv_water_value);
+    connect(work_thread_, &WorkThread::send_gpu_infos, this,
+            &Widget::recv_gpu_infos);
+    connect(work_thread_, &WorkThread::send_net_data, this,
+            &Widget::recv_net_data);
+    connect(work_thread_, &WorkThread::send_gpu_list, this,
+            &Widget::recv_gpu_list);
 }
 
-void Widget::Update(std::vector<monitor::MidInfo> midinfo_array) {
-    if (midinfo_array.empty()) {
-        return;
-    }
-    monitor::MidInfo midinfo = midinfo_array[midinfo_array.size() - 1];
-    std::string gpu_name = "显卡型号\n" + midinfo.gpu_name;
-    ui->gpu_name->setText(QString::fromStdString(gpu_name));
-    std::string gpu_num = "显卡数量\n" + std::to_string(midinfo.gpu_num);
-    ui->gpu_num->setText(QString::fromStdString(gpu_num));
+void Widget::recv_label_down_str(QVector<QString> qstr_array) {
+    ui->label_down_1->setText(qstr_array[0]);
+    ui->label_down_2->setText(qstr_array[1]);
+    ui->label_down_3->setText(qstr_array[2]);
+    ui->label_down_4->setText(qstr_array[3]);
+}
 
-    // GPU使用率
-    ui->label_up_1->setText("显卡使用率");
-    ui->water1->setValue(midinfo.gpu_avg_util);
-    std::string label_down_1_str;
-    if (midinfo.gpu_avg_util > 70) {
-        label_down_1_str = "繁忙";
-        ui->label_down_1->setStyleSheet("QLabel{color:red;}");
-    } else {
-        label_down_1_str = "流畅";
-        ui->label_down_1->setStyleSheet("QLabel{color:green;}");
-    }
-    ui->label_down_1->setText(QString::fromStdString(label_down_1_str));
+void Widget::recv_label_down_qss(QVector<QString> qss_array) {
+    ui->label_down_1->setStyleSheet(qss_array[0]);
+    ui->label_down_3->setStyleSheet(qss_array[1]);
+}
 
-    // 显存使用情况
-    ui->label_up_2->setText("显卡内存");
-    std::cout << "gpu_used_mem: " << midinfo.gpu_used_mem << " | "
-              << "gpu_total_mem: " << midinfo.gpu_total_mem << " | "
-              << "res: "
-              << (int)(midinfo.gpu_used_mem * 100 / midinfo.gpu_total_mem)
-              << std::endl;
-    ui->water2->setValue(
-        (int)(midinfo.gpu_used_mem * 100 / midinfo.gpu_total_mem));
-    std::string label_down_2_str = std::to_string(midinfo.gpu_used_mem) + "/" +
-                                   std::to_string(midinfo.gpu_total_mem) +
-                                   "(M)";
-    ui->label_down_2->setText(QString::fromStdString(label_down_2_str));
+void Widget::recv_water_value(QVector<int> water_array) {
+    ui->water1->setValue(water_array[0]);
+    ui->water2->setValue(water_array[1]);
+    ui->water3->setValue(water_array[2]);
+    ui->water4->setValue(water_array[3]);
+}
 
-    // CPU
-    ui->label_up_3->setText("CPU使用率");
-    ui->water3->setValue(midinfo.cpu_load_avg_1 * 10);
-    std::string label_down_3_str;
-    if (midinfo.cpu_load_avg_3 * 10 > 70) {
-        label_down_3_str = "繁忙";
-        ui->label_down_3->setStyleSheet("QLabel{color:red;}");
-    } else {
-        label_down_3_str = "流畅";
-        ui->label_down_3->setStyleSheet("QLabel{color:green;}");
-    }
-    ui->label_down_3->setText(QString::fromStdString(label_down_3_str));
+void Widget::recv_gpu_infos(QVector<QString> gpu_infos_array) {
+    ui->gpu_name->setText(gpu_infos_array[0]);
+    ui->gpu_num->setText(gpu_infos_array[1]);
+}
 
-    // 运行内存
-    ui->label_up_4->setText("运行内存");
-    int total_mem = midinfo.mem_total;
-    int used_mem = midinfo.mem_used * midinfo.mem_total * 0.01;
-    ui->water4->setValue(midinfo.mem_used);
-    std::string label_down_4_str =
-        std::to_string(used_mem) + "/" + std::to_string(total_mem) + "(G)";
-    ui->label_down_4->setText(QString::fromStdString(label_down_4_str));
+void Widget::recv_net_data(QList<QPointF> send_list, QList<QPointF> recv_list) {
+    ui->schart_right->drawChart(send_list, recv_list);
+}
 
-    for (int i = 0; i < midinfo_array.size(); i++) {
-        // GPU使用情况
-        ui->schart_left->dataReceived(midinfo_array[i].gpu_avg_util,
-                                      midinfo_array[i].timehms);
-
-        //网络收发
-        std::cout << "[" << i << "]  " << midinfo_array[i].timehms << ":  "
-                  << midinfo_array[i].net_rcv_rate << std::endl;
-        ui->schart_right->dataReceived(midinfo_array[i].net_send_rate,
-                                       midinfo_array[i].net_rcv_rate,
-                                       midinfo_array[i].timehms);
-    }
-    std::cout << "-----------" << std::endl;
-    ui->schart_right->drawChart();
-    ui->schart_left->drawChart();
+void Widget::recv_gpu_list(QList<QPointF> gpu_list) {
+    ui->schart_left->drawChart(gpu_list);
 }
 
 Widget::~Widget() { delete ui; }

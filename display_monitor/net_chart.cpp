@@ -2,7 +2,6 @@
 #include "net_chart.h"
 
 net_chart::net_chart(QWidget *parent) : QWidget(parent) {
-    maxSize = 30;  // 只存储最新的 30 个数据
     maxY = 1200;
 
     splineSeries_send = new QSplineSeries();
@@ -60,44 +59,8 @@ net_chart::net_chart(QWidget *parent) : QWidget(parent) {
 
 net_chart::~net_chart() {}
 
-void net_chart::dataReceived(int value_send, int value_recv,
-                             std::string cur_time) {
-    std::cout << cur_time << std::endl;
-    QString timeStr = QString::fromStdString(cur_time);
-
-    QDateTime time = QDateTime::fromString(timeStr, "hh:mm:ss");
-
-    QPointF send_point(time.toMSecsSinceEpoch(), value_send);
-    QPointF recv_point(time.toMSecsSinceEpoch(), value_recv);
-
-    data_send << send_point;
-    data_recv << recv_point;
-
-    // 数据个数超过了最大数量，则删除最先接收到的数据，实现曲线向前移动
-    while (data_send.size() > maxSize) {
-        data_send.removeFirst();
-    }
-    while (data_recv.size() > maxSize) {
-        data_recv.removeFirst();
-    }
-}
-
-void net_chart::drawChart() {
+void net_chart::drawChart(QList<QPointF> data_send, QList<QPointF> data_recv) {
     if (isVisible()) {
-        // splineSeries_send->clear();
-        // splineSeries_recv->clear();
-
-        // for (int i = 0; i < data_send.size(); ++i) {
-        //     std::cout << "[" << i << "]  "
-        //               <<
-        //               data_send.at(i).time.toString("hh:mm:ss").toStdString()
-        //               << ":  " << data_send.at(i).value << std::endl;
-
-        //     splineSeries_send->append(data_send.at(i).time.toMSecsSinceEpoch(),
-        //                               data_send.at(i).value);
-        //     splineSeries_recv->append(data_recv.at(i).time.toMSecsSinceEpoch(),
-        //                               data_recv.at(i).value);
-        // }
         splineSeries_send->replace(data_send);
         splineSeries_recv->replace(data_recv);
         axisX->setRange(

@@ -31,15 +31,11 @@ class net_chart : public QWidget {
     /**
      * 接收到数据源发送来的数据，数据源可以下位机，采集卡，传感器等。
      */
-    void dataReceived(int value_send, int value_recv, std::string cur_time);
-    void drawChart();
+    void drawChart(QList<QPointF> data_send, QList<QPointF> data_recv);
 
    private:
-    int maxSize;  // data 最多存储 maxSize 个元素
     int maxX;
     int maxY;
-    QList<QPointF> data_send;  // 存储业务数据的 list
-    QList<QPointF> data_recv;
 
     QChart *chart;
     QChartView *chartView;

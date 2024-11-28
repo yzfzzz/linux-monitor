@@ -13,6 +13,7 @@ class queryData {
     bool queryDataInfo(std::string account_num, int count,
                        monitor::RpcClient& rpc_client);
 
+
     std::vector<MidInfo> queryData_array;
 };
 }  // namespace monitor
