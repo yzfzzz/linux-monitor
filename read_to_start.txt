@@ -1,0 +1,2 @@
+apt-get install libmysqlclient-dev
+g++ test.cpp -o test -lmysqlclient

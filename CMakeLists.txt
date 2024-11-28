@@ -9,6 +9,7 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
 add_subdirectory(proto)
 add_subdirectory(mprpc)
+add_subdirectory(database)
 add_subdirectory(rpc_manager/server)
 add_subdirectory(rpc_manager/client)
 add_subdirectory(test_monitor)
