@@ -6,23 +6,20 @@
 #include <string>
 #include <vector>
 using namespace std;
-namespace monitor
-{
+namespace monitor {
 
-    class ReadFile
-    {
+class ReadFile {
+   public:
+    // è¯¥æ„é€ å‡½æ•°æ˜¯æ˜¾å¼çš„ï¼Œè€Œééšå¼çš„
+    explicit ReadFile(const string& path) : ifs_(path) {}
+    // ææ„å‡½æ•°
+    ~ReadFile() { ifs_.close(); }
 
-    public:
-        // ¸Ã¹¹Ôìº¯ÊıÊÇÏÔÊ½µÄ£¬¶ø·ÇÒşÊ½µÄ
-        explicit ReadFile(const string &path) : m_ifs(path) {}
-        // Îö¹¹º¯Êı
-        ~ReadFile() { m_ifs.close(); }
+    bool readLine(vector<string>* arg);
 
-        bool ReadLine(vector<string>* arg);
-
-    private:
-        // ¶ÁÈ¡ÎÄ¼şÄÚÈİ£¬¿ÉÒÔ´ò¿ª²¢¶ÁÈ¡ÎÄ¼şÖĞµÄÊı¾İ
-        ifstream m_ifs;
-    };
-
+   private:
+    // è¯»å–æ–‡ä»¶å†…å®¹ï¼Œå¯ä»¥æ‰“å¼€å¹¶è¯»å–æ–‡ä»¶ä¸­çš„æ•°æ®
+    ifstream ifs_;
 };
+
+};  // namespace monitor

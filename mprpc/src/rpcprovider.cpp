@@ -1,28 +1,30 @@
-#include "rpcprovider.h"
 #include "mprpcapplication.h"
 #include "mprpclog.h"
 #include "rpcheader.pb.h"
+#include "rpcprovider.h"
 #include "zookeeperutil.h"
 /*
-service_name => serviceÃèÊö
-                        ==> service* ¼ÇÂ¼·şÎñ¶ÔÏó
-                        method_name => method·½·¨¶ÔÏó
+service_name => serviceæè¿°
+                        ==> service* è®°å½•æœåŠ¡å¯¹è±¡
+                        method_name => methodæ–¹æ³•å¯¹è±¡
 */
-// ´æ´¢ UserServiceÀà¡¢¶ÔÓ¦µÄº¯Êı, ·½±ãËæÊ±µ÷ÓÃ
+// å­˜å‚¨ UserServiceç±»ã€å¯¹åº”çš„å‡½æ•°, æ–¹ä¾¿éšæ—¶è°ƒç”¨
 void RpcProvider::NotifyService(google::protobuf::Service* service) {
     ServiceInfo service_info;
-    // »ñÈ¡·şÎñ¶ÔÏóµÄÃèÊöĞÅÏ¢
-    const google::protobuf::ServiceDescriptor* pserviceDesc = service->GetDescriptor();
-    // »ñÈ¡·şÎñµÄÃû×Ö
+    // è·å–æœåŠ¡å¯¹è±¡çš„æè¿°ä¿¡æ¯
+    const google::protobuf::ServiceDescriptor* pserviceDesc =
+        service->GetDescriptor();
+    // è·å–æœåŠ¡çš„åå­—
     std::string service_name = pserviceDesc->name();  // UserService
-    // »ñÈ¡·şÎñ¶ÔÏóserviceµÄ·½·¨ÊıÁ¿
+    // è·å–æœåŠ¡å¯¹è±¡serviceçš„æ–¹æ³•æ•°é‡
     int methodCnt = pserviceDesc->method_count();  // 2
 
     std::cout << "service_name: " << service_name << std::endl;
 
     for (int i = 0; i < methodCnt; i++) {
-        // »ñÈ¡ÁË·şÎñ¶ÔÏóÖ¸¶¨ÏÂ±êµÄ·şÎñ·½·¨µÄÃèÊö(³éÏóÃèÊö)
-        const google::protobuf::MethodDescriptor* pmethodDesc = pserviceDesc->method(i);
+        // è·å–äº†æœåŠ¡å¯¹è±¡æŒ‡å®šä¸‹æ ‡çš„æœåŠ¡æ–¹æ³•çš„æè¿°(æŠ½è±¡æè¿°)
+        const google::protobuf::MethodDescriptor* pmethodDesc =
+            pserviceDesc->method(i);
         std::string method_name = pmethodDesc->name();
         service_info.m_methodMap.insert({method_name, pmethodDesc});
         std::cout << "method_name: " << method_name << std::endl;
@@ -33,28 +35,34 @@ void RpcProvider::NotifyService(google::protobuf::Service* service) {
 }
 
 void RpcProvider::Run() {
-    std::string ip = MprpcApplication::GetInstance().GetConfig().Load("rpcserverip");
-    uint16_t port = atoi(MprpcApplication::GetInstance().GetConfig().Load("rpcserverip").c_str());
+    std::string ip =
+        MprpcApplication::GetInstance().GetConfig().Load("rpcserverip");
+    uint16_t port = atoi(MprpcApplication::GetInstance()
+                             .GetConfig()
+                             .Load("rpcserverip")
+                             .c_str());
     muduo::net::InetAddress address(ip, port);
 
     // ------------------------muduo------------------------------------
-    // Æô¶¯Tcp Server
-    // ´´½¨TcpServer¶ÔÏó
+    // å¯åŠ¨Tcp Server
+    // åˆ›å»ºTcpServerå¯¹è±¡
     muduo::net::TcpServer server(&m_eventLoop, address, "RpcProvider");
-    // °ó¶¨Á¬½Ó»Øµ÷ºÍÏûÏ¢»Øµ÷·½·¨, ·ÖÀëÁËÍøÂç´úÂëºÍÒµÎñ´úÂë
-    // ½«RpcProvider::OnConnection(conn)ÖĞµÄ²ÎÊıÉèÖÃÎªthis
+    // ç»‘å®šè¿æ¥å›è°ƒå’Œæ¶ˆæ¯å›è°ƒæ–¹æ³•, åˆ†ç¦»äº†ç½‘ç»œä»£ç å’Œä¸šåŠ¡ä»£ç 
+    // å°†RpcProvider::OnConnection(conn)ä¸­çš„å‚æ•°è®¾ç½®ä¸ºthis
     server.setConnectionCallback(
         std::bind(&RpcProvider::OnConnection, this, std::placeholders::_1));
 
-    server.setMessageCallback(std::bind(&RpcProvider::OnMessage, this, std::placeholders::_1,
-                                        std::placeholders::_2, std::placeholders::_3));
-    // ÉèÖÃmuduo¿âµÄÏß³ÌÊıÁ¿
+    server.setMessageCallback(
+        std::bind(&RpcProvider::OnMessage, this, std::placeholders::_1,
+                  std::placeholders::_2, std::placeholders::_3));
+    // è®¾ç½®muduoåº“çš„çº¿ç¨‹æ•°é‡
     server.setThreadNum(4);
 
-    // °Ñµ±Ç°rpc½ÚµãÉÏÒª·¢²¼µÄ·şÎñÈ«²¿×¢²áµ½zkÉÏÃæ, ÈÃrpc client¿ÉÒÔ´ÓzkÉÏ·¢ÏÖ·şÎñ
+    // æŠŠå½“å‰rpcèŠ‚ç‚¹ä¸Šè¦å‘å¸ƒçš„æœåŠ¡å…¨éƒ¨æ³¨å†Œåˆ°zkä¸Šé¢, è®©rpc
+    // clientå¯ä»¥ä»zkä¸Šå‘ç°æœåŠ¡
     ZkClient zkCli;
     zkCli.Start();
-    // service_nameÎªÓÀ¾ÃĞÔ½Úµã, methodÎªÁÙÊ±ĞÔ½Úµã
+    // service_nameä¸ºæ°¸ä¹…æ€§èŠ‚ç‚¹, methodä¸ºä¸´æ—¶æ€§èŠ‚ç‚¹
     for (auto& sp : m_serviceMap) {
         // /service_name    /UserServiceRpc
         std::string service_path = "/" + sp.first;
@@ -63,52 +71,54 @@ void RpcProvider::Run() {
             // /service_name/method_name    /UserServiceRpc/Login
             std::string method_path = service_path + "/" + mp.first;
             char method_path_data[128] = {0};
-            // ´æ´¢µ±Ç°Õâ¸örpcÖ÷»úµÄipºÍport
+            // å­˜å‚¨å½“å‰è¿™ä¸ªrpcä¸»æœºçš„ipå’Œport
             sprintf(method_path_data, "%s:%d", ip.c_str(), port);
-            zkCli.Create(method_path.c_str(), method_path_data, strlen(method_path_data),
-                         ZOO_EPHEMERAL);  // ZOO_EPHEMERAL±íÊ¾ÁÙÊ±ĞÔ½Úµã
+            zkCli.Create(method_path.c_str(), method_path_data,
+                         strlen(method_path_data),
+                         ZOO_EPHEMERAL);  // ZOO_EPHEMERALè¡¨ç¤ºä¸´æ—¶æ€§èŠ‚ç‚¹
         }
     }
 
-    // rpc·şÎñ¶Ë×¼±¸Æô¶¯, ´òÓ¡ĞÅÏ¢
-    std::cout << "RpcProvider start service at ip:" << ip << " port:" << port << std::endl;
+    // rpcæœåŠ¡ç«¯å‡†å¤‡å¯åŠ¨, æ‰“å°ä¿¡æ¯
+    std::cout << "RpcProvider start service at ip:" << ip << " port:" << port
+              << std::endl;
 
-    // Æô¶¯ÍøÂç·şÎñ
+    // å¯åŠ¨ç½‘ç»œæœåŠ¡
     server.start();
     m_eventLoop.loop();
 }
 
 /*
-ÔÚ¿ò¼ÜÄÚ²¿, RpcProviderºÍRpcConsumerĞ­ÉÌºÃÖ®¼äÍ¨ĞÅÓÃµÄprotobufÊı¾İÀàĞÍ
-service_name method_name args       ¶¨ÒåprotoµÄmessageÀàĞÍ£¬½øĞĞÊı¾İµÄĞòÁĞ»¯ºÍ·´ĞòÁĞ»¯
-Êı¾İ¸ñÊ½: header_size + header_str + args_str
+åœ¨æ¡†æ¶å†…éƒ¨, RpcProviderå’ŒRpcConsumeråå•†å¥½ä¹‹é—´é€šä¿¡ç”¨çš„protobufæ•°æ®ç±»å‹
+service_name method_name args å®šä¹‰protoçš„messageç±»å‹ï¼Œè¿›è¡Œæ•°æ®çš„åºåˆ—åŒ–å’Œååºåˆ—åŒ–
+æ•°æ®æ ¼å¼: header_size + header_str + args_str
 16UserServiceLoginzhang san123456
 
 */
 
-// ĞÂµÄsocketÁ¬½Ó»Øµ÷
+// æ–°çš„socketè¿æ¥å›è°ƒ
 void RpcProvider::OnConnection(const muduo::net::TcpConnectionPtr& conn) {
     if (!conn->connected()) {
-        // ºÍrpc clientµÄÁ¬½Ó¶Ï¿ªÁË
+        // å’Œrpc clientçš„è¿æ¥æ–­å¼€äº†
         conn->shutdown();
     }
 }
 
-// ÒÑ½¨Á¢Á¬½ÓÓÃ»§µÄ¶ÁĞ´ÊÂ¼ş»Øµ÷, Èç¹ûÔ¶³ÌÓĞÒ»¸örpc·şÎñµÄµ÷ÓÃÇëÇó, ÄÇÃ´OnMessage·½·¨»áÏìÓ¦ ==>
-// »ÆÉ«²¿·Ö
-void RpcProvider::OnMessage(const muduo::net::TcpConnectionPtr& conn, muduo::net::Buffer* buffer,
-                            muduo::Timestamp) {
-    // ÍøÂçÉÏ½ÓÊÕµÄÔ¶³Ìrpcµ÷ÓÃÇëÇóµÄ×Ö·ûÁ÷
+// å·²å»ºç«‹è¿æ¥ç”¨æˆ·çš„è¯»å†™äº‹ä»¶å›è°ƒ, å¦‚æœè¿œç¨‹æœ‰ä¸€ä¸ªrpcæœåŠ¡çš„è°ƒç”¨è¯·æ±‚,
+// é‚£ä¹ˆOnMessageæ–¹æ³•ä¼šå“åº” ==> é»„è‰²éƒ¨åˆ†
+void RpcProvider::OnMessage(const muduo::net::TcpConnectionPtr& conn,
+                            muduo::net::Buffer* buffer, muduo::Timestamp) {
+    // ç½‘ç»œä¸Šæ¥æ”¶çš„è¿œç¨‹rpcè°ƒç”¨è¯·æ±‚çš„å­—ç¬¦æµ
     std::string recv_buf = buffer->retrieveAllAsString();
 
-    // ´Ó×Ö·ûÁ÷ÖĞ¶ÁÈ¡Ç°4¸ö×Ö½ÚµÄÄÚÈİ, ½«Êı¾İ¿½±´µ½header_sizeµÄµØÖ·´¦
+    // ä»å­—ç¬¦æµä¸­è¯»å–å‰4ä¸ªå­—èŠ‚çš„å†…å®¹, å°†æ•°æ®æ‹·è´åˆ°header_sizeçš„åœ°å€å¤„
     uint32_t header_size = 0;
     recv_buf.copy((char*)&header_size, 4, 0);
 
-    // ¸ù¾İheader_size¶ÁÈ¡Êı¾İÍ·µÄÔ­Ê¼×Ö·ûÁ÷
+    // æ ¹æ®header_sizeè¯»å–æ•°æ®å¤´çš„åŸå§‹å­—ç¬¦æµ
     std::string rpc_header_str = recv_buf.substr(4, header_size);
 
-    // ·´ĞòÁĞ»¯Êı¾İ, µÃµ½rpcÇëÇóµÄÏêÏ¸ĞÅÏ¢
+    // ååºåˆ—åŒ–æ•°æ®, å¾—åˆ°rpcè¯·æ±‚çš„è¯¦ç»†ä¿¡æ¯
     mprpc::RpcHeader rpcHeader;
 
     std::string service_name;
@@ -116,18 +126,19 @@ void RpcProvider::OnMessage(const muduo::net::TcpConnectionPtr& conn, muduo::net
     uint32_t args_size;
 
     if (rpcHeader.ParseFromString(rpc_header_str)) {
-        // Êı¾İÍ··´ĞòÁĞ»¯³É¹¦
+        // æ•°æ®å¤´ååºåˆ—åŒ–æˆåŠŸ
         service_name = rpcHeader.service_name();
         method_name = rpcHeader.method_name();
         args_size = rpcHeader.args_size();
     } else {
-        // Êı¾İÍ··´ĞòÁĞ»¯Ê§°Ü
-        std::cout << "rpc_head_str: " << rpc_header_str << "parse error!" << std::endl;
+        // æ•°æ®å¤´ååºåˆ—åŒ–å¤±è´¥
+        std::cout << "rpc_head_str: " << rpc_header_str << "parse error!"
+                  << std::endl;
     }
-    // »ñÈ¡rpc·½·¨²ÎÊıµÄ×Ö½ÚÁ÷Êı¾İ
+    // è·å–rpcæ–¹æ³•å‚æ•°çš„å­—èŠ‚æµæ•°æ®
     std::string args_str = recv_buf.substr(4 + header_size, args_size);
 
-    // ´òÓ¡µ÷ÊÔĞÅÏ¢
+    // æ‰“å°è°ƒè¯•ä¿¡æ¯
     // std::cout << "=========================" << std::endl;
     // std::cout << "header_size: " << header_size << std::endl;
     // std::cout << "rpc_header_str: " << rpc_header_str << std::endl;
@@ -135,7 +146,7 @@ void RpcProvider::OnMessage(const muduo::net::TcpConnectionPtr& conn, muduo::net
     // std::cout << "method_name: " << method_name << std::endl;
     // std::cout << "args_str: " << args_str << std::endl;
 
-    // »ñÈ¡service¶ÔÏóºÍmethod¶ÔÏó
+    // è·å–serviceå¯¹è±¡å’Œmethodå¯¹è±¡
     auto it = m_serviceMap.find(service_name);
     if (it == m_serviceMap.end()) {
         std::cout << service_name << "is not exist!" << std::endl;
@@ -144,33 +155,40 @@ void RpcProvider::OnMessage(const muduo::net::TcpConnectionPtr& conn, muduo::net
 
     auto mit = it->second.m_methodMap.find(method_name);
     if (mit == it->second.m_methodMap.end()) {
-        std::cout << service_name << ": " << method_name << "is not exist!" << std::endl;
+        std::cout << service_name << ": " << method_name << "is not exist!"
+                  << std::endl;
         return;
     }
 
-    google::protobuf::Service* service = it->second.m_service;  // »ñÈ¡service¶ÔÏó new UserService
-    const google::protobuf::MethodDescriptor* method = mit->second;  // »ñÈ¡method¶ÔÏó Login
+    google::protobuf::Service* service =
+        it->second.m_service;  // è·å–serviceå¯¹è±¡ new UserService
+    const google::protobuf::MethodDescriptor* method =
+        mit->second;  // è·å–methodå¯¹è±¡ Login
 
-    // Éú³Érpc·½·¨µ÷ÓÃµÄÇëÇórequestºÍÏìÓ¦response²ÎÊı
-    google::protobuf::Message* request = service->GetRequestPrototype(method).New();
-    // ·´ĞòÁĞ»¯
+    // ç”Ÿæˆrpcæ–¹æ³•è°ƒç”¨çš„è¯·æ±‚requestå’Œå“åº”responseå‚æ•°
+    google::protobuf::Message* request =
+        service->GetRequestPrototype(method).New();
+    // ååºåˆ—åŒ–
     if (!request->ParseFromString(args_str)) {
         std::cout << "request  parse error! content: " << args_str << std::endl;
         return;
     }
 
-    google::protobuf::Message* response = service->GetResponsePrototype(method).New();
+    google::protobuf::Message* response =
+        service->GetResponsePrototype(method).New();
 
-    // ¸øÏÂÃæµÄmethod·½·¨µÄµ÷ÓÃ, °ó¶¨Ò»¸öClosureµÄ»Øµ÷º¯Êı
-    // µ÷ÓÃµÄÊÇcallback.hÎÄ¼şµÄ482ĞĞµÄº¯Êı
+    // ç»™ä¸‹é¢çš„methodæ–¹æ³•çš„è°ƒç”¨, ç»‘å®šä¸€ä¸ªClosureçš„å›è°ƒå‡½æ•°
+    // è°ƒç”¨çš„æ˜¯callback.hæ–‡ä»¶çš„482è¡Œçš„å‡½æ•°
     // inline Closure* NewCallback(Class* object,
-    //                              void (Class::*method)(Arg1, Arg2),Arg1 arg1, Arg2 arg2)
+    //                              void (Class::*method)(Arg1, Arg2),Arg1 arg1,
+    //                              Arg2 arg2)
     google::protobuf::Closure* done =
-        google::protobuf::NewCallback<RpcProvider, const muduo::net::TcpConnectionPtr&,
+        google::protobuf::NewCallback<RpcProvider,
+                                      const muduo::net::TcpConnectionPtr&,
                                       google::protobuf::Message*>(
             this, &RpcProvider::SendRpcResponse, conn, response);
 
-    // ÔÚ¿ò¼ÜÉÏ¸ù¾İÔ¶¶ËrpcÇëÇó, µ÷ÓÃµ±Ç°rpc½ÚµãÉÏ·¢²¼µÄ·½·¨
+    // åœ¨æ¡†æ¶ä¸Šæ ¹æ®è¿œç«¯rpcè¯·æ±‚, è°ƒç”¨å½“å‰rpcèŠ‚ç‚¹ä¸Šå‘å¸ƒçš„æ–¹æ³•
     // new UserService().Login(controller, request, response, done);
     service->CallMethod(method, nullptr, request, response, done);
 }
@@ -179,10 +197,10 @@ void RpcProvider::SendRpcResponse(const muduo::net::TcpConnectionPtr& conn,
                                   google::protobuf::Message* response) {
     std::string response_str;
     if (response->SerializeToString(&response_str)) {
-        // ĞòÁĞ»¯³É¹¦ºó, Í¨¹ıÍøÂç°Ñrpc·½·¨Ö´ĞĞµÄ½á¹û·¢ËÍ»ØrpcµÄµ÷ÓÃ·½
+        // åºåˆ—åŒ–æˆåŠŸå, é€šè¿‡ç½‘ç»œæŠŠrpcæ–¹æ³•æ‰§è¡Œçš„ç»“æœå‘é€å›rpcçš„è°ƒç”¨æ–¹
         conn->send(response_str);
     } else {
         std::cout << "serialize response_str error" << std::endl;
     }
-    conn->shutdown();  // Ä£ÄâhttpµÄ¶ÌÁ¬½Ó·şÎñ, ÓÉrpcproviderÖ÷¶¯¶Ï¿ªÁ¬½Ó
+    conn->shutdown();  // æ¨¡æ‹Ÿhttpçš„çŸ­è¿æ¥æœåŠ¡, ç”±rpcproviderä¸»åŠ¨æ–­å¼€è¿æ¥
 }

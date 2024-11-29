@@ -25,11 +25,11 @@ class NetMonitor : public MonitorInter {
 
    public:
     NetMonitor() {}
-    void UpdateOnce(monitor::proto::MonitorInfo* monitor_info);
-    void Stop() override {}
+    void updateOnce(monitor::proto::MonitorInfo* monitor_info);
+    void stop() override {}
 
    private:
-    unordered_map<string, struct NetInfo> m_net_info;
+    unordered_map<string, struct NetInfo> net_info_;
 };
 
 }  // namespace monitor

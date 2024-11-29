@@ -1,6 +1,7 @@
 #include <memory>
 #include <thread>
 #include <vector>
+#include <string>
 #include "mprpcapplication.h"
 #include "client/rpc_client.h"
 #include "cpu_load_monitor.h"
@@ -17,7 +18,7 @@
 #include "get_time.h"
 
 int main(int argc, char** argv) {
-    char* fifo_path = "py_cpp_pipe.fifo";
+    std::string fifo_path = "py_cpp_pipe.fifo";
     MprpcApplication::Init(argc, argv);
     google::InitGoogleLogging(argv[0]);
 
@@ -27,30 +28,30 @@ int main(int argc, char** argv) {
     runners_.emplace_back(new monitor::CpuStatMonitor());
     runners_.emplace_back(new monitor::MemMonitor());
     runners_.emplace_back(new monitor::NetMonitor());
-    runners_.emplace_back(new monitor::GpuMonitor(fifo_path));
+    runners_.emplace_back(new monitor::GpuMonitor(fifo_path.c_str()));
 
 
     std::string server_address = "localhost:50051";
 
     monitor::RpcClient rpc_client_(server_address);
     char* name = getenv("USER");
-    std::string accountnum = "12345678";
+    std::string account_num = "12345678";
     LOG(INFO) << "name " << name;
     std::unique_ptr<std::thread> thread_ = nullptr;
     thread_ = std::make_unique<std::thread>([&]() {
         while (true) {
             monitor::proto::MonitorInfo monitor_info;
-            monitor::get_curTime curTime;
+            monitor::GetCurTime cur_time;
             
             monitor_info.set_name(std::string(name));
-            monitor_info.set_accountnum(accountnum);
+            monitor_info.set_accountnum(account_num);
 
             auto curtime_msg = monitor_info.mutable_time();
-            curtime_msg->set_timeymd(curTime.get_year_mon_day());
-            curtime_msg->set_timehms(curTime.get_hour_min_sec());
+            curtime_msg->set_timeymd(cur_time.get_year_mon_day());
+            curtime_msg->set_timehms(cur_time.get_hour_min_sec());
 
             for (auto& runner : runners_) {
-                runner->UpdateOnce(&monitor_info);
+                runner->updateOnce(&monitor_info);
             }
 
             rpc_client_.SetMonitorInfo(monitor_info);

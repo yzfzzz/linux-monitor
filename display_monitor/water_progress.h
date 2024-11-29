@@ -1,3 +1,5 @@
+// 这个类参考了：https://github.com/KikyoShaw/QtWidgetsApplication
+// 因此不对water_progress.h/water_progress.cpp做修改
 #pragma once
 
 #include <QWidget>

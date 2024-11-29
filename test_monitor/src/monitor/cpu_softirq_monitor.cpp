@@ -6,11 +6,11 @@
 #include "utils/utils.h"
 
 namespace monitor {
-void CpuSoftIrqMonitor::UpdateOnce(monitor::proto::MonitorInfo* monitor_info) {
+void CpuSoftIrqMonitor::updateOnce(monitor::proto::MonitorInfo* monitor_info) {
     ReadFile softirqs_file(std::string("/proc/softirqs"));
     std::vector<std::string> one_softirq;
     std::vector<std::vector<std::string>> softirq;
-    while (softirqs_file.ReadLine(&one_softirq)) {
+    while (softirqs_file.readLine(&one_softirq)) {
         softirq.push_back(one_softirq);
         one_softirq.clear();
     }

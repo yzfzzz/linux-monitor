@@ -1,35 +1,30 @@
-#include "mprpcconfig.h"
 #include <iostream>
-//  ¸´ÔÓ½âÎö¼ÓÔØÅäÖÃÎÄ¼ş    
-void MprpcConfig::LoadConfigFile(const char* config_file)
-{
-    FILE *pf = fopen(config_file, "r");
-    if(pf == nullptr)
-    {
+#include "mprpcconfig.h"
+//  å¤æ‚è§£æåŠ è½½é…ç½®æ–‡ä»¶
+void MprpcConfig::LoadConfigFile(const char* config_file) {
+    FILE* pf = fopen(config_file, "r");
+    if (pf == nullptr) {
         std::cout << config_file << "is not exist" << std::endl;
         exit(EXIT_FAILURE);
     }
-    // 1.×¢ÊÍ 2.ÕıÈ·µÄÅäÖÃÏî 3.È¥µô¶àÓàµÄ¿Õ¸ñ
-    while (!feof(pf))
-    {
+    // 1.æ³¨é‡Š 2.æ­£ç¡®çš„é…ç½®é¡¹ 3.å»æ‰å¤šä½™çš„ç©ºæ ¼
+    while (!feof(pf)) {
         char buf[512] = {0};
         fgets(buf, 512, pf);
 
-        // È¥µô×Ö·û´®Ç°Ãæ¶àÓàµÄ¿Õ¸ñ
+        // å»æ‰å­—ç¬¦ä¸²å‰é¢å¤šä½™çš„ç©ºæ ¼
         std::string read_buf(buf);
 
-        // ÅĞ¶Ï#ºÅ×¢ÊÍ»òÕß¿ÕĞĞ
-        if(read_buf[0] == '#' || read_buf.empty())
-        {
+        // åˆ¤æ–­#å·æ³¨é‡Šæˆ–è€…ç©ºè¡Œ
+        if (read_buf[0] == '#' || read_buf.empty()) {
             continue;
         }
 
-        // ½âÎöÅäÖÃÏî
+        // è§£æé…ç½®é¡¹
         int idx = read_buf.find('=');
-        if(idx == -1)
-        {
-           // ÅäÖÃÏî²»ºÏ·¨
-           continue;
+        if (idx == -1) {
+            // é…ç½®é¡¹ä¸åˆæ³•
+            continue;
         }
 
         std::string value;
@@ -38,40 +33,33 @@ void MprpcConfig::LoadConfigFile(const char* config_file)
         key = read_buf.substr(0, idx);
         Trim(key);
         int endidx = read_buf.find('\n', idx);
-        value = read_buf.substr(idx+1, endidx-idx-1);
+        value = read_buf.substr(idx + 1, endidx - idx - 1);
         Trim(value);
-        m_configMap.insert(std::pair<std::string,std::string>(key,value));
-
+        m_configMap.insert(std::pair<std::string, std::string>(key, value));
     }
-    
 }
-// ²éÑ¯ÅäÖÃÏîĞÅÏ¢
-std::string MprpcConfig::Load(const std::string& key)
-{
+// æŸ¥è¯¢é…ç½®é¡¹ä¿¡æ¯
+std::string MprpcConfig::Load(const std::string& key) {
     auto it = m_configMap.find(key);
-    if(it == m_configMap.end())
-    {
+    if (it == m_configMap.end()) {
         return "";
     }
     return it->second;
 }
 
-// È¥µô×Ö·û´®Ç°ºóµÄ¿Õ¸ñ
-void MprpcConfig::Trim(std::string& src_buf)
-{
-    // ÕÒµ½µÚÒ»¸ö²»Îª¿Õ¸ñµÄË÷Òı
+// å»æ‰å­—ç¬¦ä¸²å‰åçš„ç©ºæ ¼
+void MprpcConfig::Trim(std::string& src_buf) {
+    // æ‰¾åˆ°ç¬¬ä¸€ä¸ªä¸ä¸ºç©ºæ ¼çš„ç´¢å¼•
     int idx = src_buf.find_first_not_of(' ');
-    if(idx != -1)
-    {
-        // ËµÃ÷×Ö·û´®Ç°ÃæÓĞ¿Õ¸ñ
-        src_buf = src_buf.substr(idx, src_buf.size()-idx);
+    if (idx != -1) {
+        // è¯´æ˜å­—ç¬¦ä¸²å‰é¢æœ‰ç©ºæ ¼
+        src_buf = src_buf.substr(idx, src_buf.size() - idx);
     }
 
-    // ÕÒµ½×îºóÒ»¸ö²»Îª¿Õ¸ñµÄË÷Òı
+    // æ‰¾åˆ°æœ€åä¸€ä¸ªä¸ä¸ºç©ºæ ¼çš„ç´¢å¼•
     idx = src_buf.find_last_not_of(' ');
-    if(idx != -1)
-    {
-        // ËµÃ÷×Ö·û´®ºóÃæÓĞ¿Õ¸ñ
-        src_buf = src_buf.substr(0, idx+1);
+    if (idx != -1) {
+        // è¯´æ˜å­—ç¬¦ä¸²åé¢æœ‰ç©ºæ ¼
+        src_buf = src_buf.substr(0, idx + 1);
     }
 }

@@ -5,7 +5,7 @@
 
 // cmake lib: boost_date_time
 namespace monitor {
-class get_curTime{
+class GetCurTime{
 public:
     std::string get_year_mon_day()
     {
@@ -30,9 +30,9 @@ public:
 
     std::string get_hour_min_sec()
     {
-        // 获取当前时间
+        // 锟斤拷取锟斤拷前时锟斤拷
         boost::posix_time::ptime current_time = boost::posix_time::second_clock::local_time();
-        // 获取小时、分钟和秒
+        // 锟斤拷取小时锟斤拷锟斤拷锟接猴拷锟斤拷
         int hours = current_time.time_of_day().hours();
         int minutes = current_time.time_of_day().minutes();
         int seconds = current_time.time_of_day().seconds();

@@ -25,11 +25,11 @@ class CpuStatMonitor : public MonitorInter {
     };
 
     CpuStatMonitor() {}
-    void UpdateOnce(monitor::proto::MonitorInfo* monitor_info);
-    void Stop() override {}
+    void updateOnce(monitor::proto::MonitorInfo* monitor_info);
+    void stop() override {}
 
    private:
-    unordered_map<string, struct CpuStat> m_cpu_stat_map;
+    unordered_map<string, struct CpuStat> cpu_stat_map_;
 };
 
 };  // namespace monitor

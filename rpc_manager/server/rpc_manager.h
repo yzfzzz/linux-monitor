@@ -4,12 +4,11 @@
 #include <string>
 #include <thread>
 #include <unordered_map>
-
-#include "ConnectionPool.h"
-#include "MysqlConn.h"
+#include "connection_pool.h"
 #include "midinfo.h"
 #include "monitor_info.pb.h"
 #include "mprpcapplication.h"
+#include "mysql_conn.h"
 #include "rpcprovider.h"
 namespace monitor {
 
@@ -27,9 +26,10 @@ class ServerManagerImpl : public monitor::proto::MonitorManager {
                         const ::monitor::proto::QueryMessage* request,
                         ::monitor::proto::QueryResults* response,
                         ::google::protobuf::Closure* done);
-
-    bool InsertOneInfo(monitor::proto::MonitorInfo& monitor_infos_);
-    std::string SelectUserId(std::string accountNum);
+    // 插入一条数据
+    bool insertOneInfo(monitor::proto::MonitorInfo& monitor_infos_);
+    // 根据账号名查询用户id
+    std::string selectUserId(std::string accountNum);
     bool isTableExist(std::string tableName,
                       std::shared_ptr<MysqlConn> conn_ptr);
 
@@ -39,11 +39,11 @@ class ServerManagerImpl : public monitor::proto::MonitorManager {
         const ::monitor::proto::QueryMessage* request);
 
    private:
-    std::mutex m_create_mutex;
+    std::mutex create_mutex_;
     monitor::proto::MonitorInfo monitor_infos_;
     ConnectionPool* pool = ConnectionPool::getConnectPool();
 
-    std::string create_subsql =
+    std::string create_subsql_ =
         std::string("(gpu_num int DEFAULT NULL,") +
         "gpu_name varchar(100) DEFAULT NULL," +
         "gpu_used_mem int DEFAULT NULL," + "gpu_total_mem int DEFAULT NULL," +

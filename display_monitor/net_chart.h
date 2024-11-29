@@ -1,48 +1,36 @@
-#ifndef net_chart_H
-#define net_chart_H
-
-#include <QList>
-#include <QWidget>
-
-#include <QAreaSeries>
+#pragma once
 #include <QChart>
 #include <QChartView>
 #include <QDateTime>
 #include <QDateTimeAxis>
-#include <QScatterSeries>
+#include <QHBoxLayout>
+#include <QList>
+#include <QPointF>
 #include <QSplineSeries>
-#include <string>
+#include <QWidget>
 #include <iostream>
-#include <QtCore/QPointF>
+#include <string>
+
 using namespace QtCharts;
 
-class line_node {
-   public:
-    float value;
-    QDateTime time;
-};
-
-class net_chart : public QWidget {
+class NetChart : public QWidget {
     Q_OBJECT
 
    public:
-    explicit net_chart(QWidget *parent = 0);
-    ~net_chart();
-    /**
-     * 接收到数据源发送来的数据，数据源可以下位机，采集卡，传感器等。
-     */
+    explicit NetChart(QWidget *parent = 0);
+    ~NetChart();
+
+    // 接收到数据源发送来的数据，
     void drawChart(QList<QPointF> data_send, QList<QPointF> data_recv);
 
    private:
-    int maxX;
-    int maxY;
+    int max_x_;
+    int max_y_;
 
-    QChart *chart;
-    QChartView *chartView;
-    QSplineSeries *splineSeries_send;
-    QSplineSeries *splineSeries_recv;
+    QChart *chart_;
+    QChartView *chart_view_;
+    QSplineSeries *spline_series_send_;
+    QSplineSeries *spline_series_recv_;
 
-    QDateTimeAxis *axisX;
+    QDateTimeAxis *axis_x_;
 };
-
-#endif  // net_chart_H

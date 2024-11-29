@@ -1,7 +1,6 @@
 #include "cpu_stat_monitor.h"
 
 #include "monitor_info.pb.h"
-#include "monitor_info.pb.h"
 #include "utils/read_file.h"
 /*
 cpu  2479210 1053 3027543 406505867 1316138 0 20917 0 0 0
@@ -25,12 +24,12 @@ procs_blocked 0
 softirq 411065353 1 148652601 0 10741064 1028511 0 16 150044884 0 100598276
 */
 
-// CPU性能
-void monitor::CpuStatMonitor::UpdateOnce(
+// CPU鎬ц兘
+void monitor::CpuStatMonitor::updateOnce(
     monitor::proto::MonitorInfo* monitor_info) {
     ReadFile cpu_stat_file(string("/proc/stat"));
     vector<string> cpu_stat_list;
-    while (cpu_stat_file.ReadLine(&cpu_stat_list)) {
+    while (cpu_stat_file.readLine(&cpu_stat_list)) {
         if (cpu_stat_list[0].find("cpu") != string::npos) {
             struct CpuStat cpu_stat;
             cpu_stat.cpu_name = cpu_stat_list[0];
@@ -45,11 +44,11 @@ void monitor::CpuStatMonitor::UpdateOnce(
             cpu_stat.guest = stof(cpu_stat_list[9]);
             cpu_stat.guest_nice = stof(cpu_stat_list[10]);
 
-            auto it = m_cpu_stat_map.find(cpu_stat.cpu_name);
-            if (it != m_cpu_stat_map.end()) {
+            auto it = cpu_stat_map_.find(cpu_stat.cpu_name);
+            if (it != cpu_stat_map_.end()) {
                 struct CpuStat old = it->second;
                 auto cpu_stat_msg = monitor_info->add_cpu_stat();
-                // ??? 性能计算
+                // ??? 鎬ц兘璁＄畻
                 float new_cpu_total_time = cpu_stat.user + cpu_stat.system +
                                            cpu_stat.idle + cpu_stat.nice +
                                            cpu_stat.io_wait + cpu_stat.irq +
@@ -88,7 +87,7 @@ void monitor::CpuStatMonitor::UpdateOnce(
                     (cpu_stat.soft_irq - old.soft_irq) /
                     (new_cpu_total_time - old_cpu_total_time) * 100.00;
 
-                // 保存为proto格式
+                // 淇濆瓨涓簆roto鏍煎紡
                 cpu_stat_msg->set_cpu_name(cpu_stat.cpu_name);
                 cpu_stat_msg->set_cpu_percent(cpu_percent);
                 cpu_stat_msg->set_usr_percent(cpu_user_percent);
@@ -99,7 +98,7 @@ void monitor::CpuStatMonitor::UpdateOnce(
                 cpu_stat_msg->set_irq_percent(cpu_irq_percent);
                 cpu_stat_msg->set_soft_irq_percent(cpu_soft_irq_percent);
             }
-            m_cpu_stat_map[cpu_stat.cpu_name] = cpu_stat;
+            cpu_stat_map_[cpu_stat.cpu_name] = cpu_stat;
         }
         cpu_stat_list.clear();
     }

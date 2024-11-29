@@ -17,19 +17,19 @@ class Widget : public QWidget {
     Q_OBJECT
 
    public:
-    Widget(int argc, char **argv,QWidget *parent = nullptr);
+    Widget(int argc, char **argv, QWidget *parent = nullptr);
     ~Widget();
-    void Update(std::vector<monitor::MidInfo> &midinfo_array);
+    void update(std::vector<monitor::MidInfo> &midinfo_array);
 
    public:
-    void recv_label_down_str(QVector<QString> qstr_array);
-    void recv_label_down_qss(QVector<QString> qss_array);
-    void recv_water_value(QVector<int> water_array);
-    void recv_gpu_infos(QVector<QString> gpu_infos_array);
-    void recv_net_data(QList<QPointF> send_list, QList<QPointF> recv_list);
-    void recv_gpu_list(QList<QPointF> gpu_list);
-    signals:
-    void starting(int argc, char **argv);
+    void recvLabelDownStr(QVector<QString> qstr_array);
+    void recvLabelDownQss(QVector<QString> qss_array);
+    void recvWaterValue(QVector<int> water_array);
+    void recvGpuInfos(QVector<QString> gpu_infos_array);
+    void recvNetList(QList<QPointF> send_list, QList<QPointF> recv_list);
+    void recvGpuList(QList<QPointF> gpu_list);
+   signals:
+    void set_workthread_arg(int argc, char **argv);
 
    private:
     Ui::Widget *ui;

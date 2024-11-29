@@ -1,24 +1,22 @@
 #pragma once
-
 #include <string>
 #include "monitor_inter.h"
 
 namespace monitor {
 
-// ¶àÌ¬
 class CpuLoadMonitor : public MonitorInter {
    public:
     CpuLoadMonitor() {}
-    // ÖØĞ´Ğéº¯Êı
-    void UpdateOnce(monitor::proto::MonitorInfo* monitor_info);
-    // override£ºÕâÊÇ C++11
-    // ÒıÈëµÄÒ»¸ö¹Ø¼ü×Ö£¬ÓÃÓÚÃ÷È·Ö¸³öÕâ¸ö³ÉÔ±º¯ÊıÊÇ»ùÀàÖĞÄ³¸öĞéº¯ÊıµÄÖØĞ´
-    void Stop() override {}
+    // é‡å†™è™šå‡½æ•°
+    void updateOnce(monitor::proto::MonitorInfo* monitor_info);
+    // overrideï¼šè¿™æ˜¯ C++11
+    // å¼•å…¥çš„ä¸€ä¸ªå…³é”®å­—ï¼Œç”¨äºæ˜ç¡®æŒ‡å‡ºè¿™ä¸ªæˆå‘˜å‡½æ•°æ˜¯åŸºç±»ä¸­æŸä¸ªè™šå‡½æ•°çš„é‡å†™
+    void stop() override {}
 
    private:
-    float m_load_avg_1;
-    float m_load_avg_3;
-    float m_load_avg_15;
+    float load_avg_1_;
+    float load_avg_3_;
+    float load_avg_15_;
 };
 
 };  // namespace monitor

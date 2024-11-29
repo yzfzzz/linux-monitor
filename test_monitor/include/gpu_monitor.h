@@ -1,27 +1,27 @@
 #pragma once
 #include <string>
 #include <unordered_map>
-#include "monitor_inter.h"
 #include "log.h"
-// TODO: ½«pyÎÄ¼þµÄmem²¿·ÖÖµÓÅ»¯Ò»ÏÂ
+#include "monitor_inter.h"
+// TODO: å°†pyæ–‡ä»¶çš„meméƒ¨åˆ†å€¼ä¼˜åŒ–ä¸€ä¸‹
 namespace monitor {
 class GpuMonitor : public MonitorInter {
    public:
-    GpuMonitor(char* pipeName);
-    void UpdateOnce(monitor::proto::MonitorInfo* monitor_info);
-    void Stop() override {}
+    GpuMonitor(const char* pipeName);
+    void updateOnce(monitor::proto::MonitorInfo* monitor_info);
+    void stop() override {}
 
    private:
-    std::string gpu_id;
-    std::string gpu_name;
-    int gpu_mem_total;
-    int gpu_mem_free;
-    int gpu_mem_used;
-    int gpu_mem_utilize;
-    int gpu_utilize;
-    int temperture;
-    int fan_speed;
-    int power_stat;
-    int fd;
+    std::string gpu_id_;
+    std::string gpu_name_;
+    int gpu_mem_total_;
+    int gpu_mem_free_;
+    int gpu_mem_used_;
+    int gpu_mem_utilize_;
+    int gpu_utilize_;
+    int temperture_;
+    int fan_speed_;
+    int power_stat_;
+    int fd_;
 };
 }  // namespace monitor

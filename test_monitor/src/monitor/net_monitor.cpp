@@ -2,13 +2,12 @@
 #include "utils/read_file.h"
 #include "utils/utils.h"
 
-void monitor::NetMonitor::UpdateOnce(
+void monitor::NetMonitor::updateOnce(
     monitor::proto::MonitorInfo *monitor_info) {
     ReadFile net_file(std::string("/proc/net/dev"));
     vector<string> net_datas;
-    while (net_file.ReadLine(&net_datas)) {
+    while (net_file.readLine(&net_datas)) {
         string name = net_datas[0];
-        // 是eth0:、docker0:、lo:这三个就进入while循环中
         if (name.find(':') == name.size() - 1 && net_datas.size() >= 10) {
             struct NetInfo net_info;
             name.pop_back();
@@ -23,8 +22,8 @@ void monitor::NetMonitor::UpdateOnce(
             net_info.drop_out = stoll(net_datas[12]);
             net_info.timepoint = boost::chrono::steady_clock::now();
 
-            auto iter = m_net_info.find(name);
-            if (iter != m_net_info.end()) {
+            auto iter = net_info_.find(name);
+            if (iter != net_info_.end()) {
                 struct NetInfo old = move(iter->second);
                 double period =
                     Utils::SteadyTimeSecond(net_info.timepoint, old.timepoint);
@@ -39,7 +38,7 @@ void monitor::NetMonitor::UpdateOnce(
                 one_net_msg->set_rcv_packets_rate(
                     (net_info.rcv_packets - old.rcv_packets) / period);
             }
-            m_net_info[name] = net_info;
+            net_info_[name] = net_info;
         }
         net_datas.clear();
     }

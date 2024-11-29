@@ -11,7 +11,8 @@ class RpcClient {
     ~RpcClient();
 
     void SetMonitorInfo(const monitor::proto::MonitorInfo& monitor_info);
-    void GetMonitorInfo(monitor::proto::QueryMessage& request, monitor::proto::QueryResults& response);
+    void GetMonitorInfo(monitor::proto::QueryMessage& request,
+                        monitor::proto::QueryResults& response);
 
    public:
     std::unique_ptr<monitor::proto::MonitorManager_Stub> stub_ptr_;

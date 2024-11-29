@@ -1,22 +1,23 @@
-#include "zookeeperutil.h"
 #include <semaphore.h>
 #include <iostream>
 #include "mprpcapplication.h"
+#include "zookeeperutil.h"
 
 ZkClient::ZkClient() : m_zhandle(nullptr) {}
 
 ZkClient::~ZkClient() {
     if (m_zhandle != nullptr) {
-        // ¹Ø±Õ¾ä±ú, ÊÍ·Å×ÊÔ´
+        // å…³é—­å¥æŸ„, é‡Šæ”¾èµ„æº
         zookeeper_close(m_zhandle);
     }
 }
 
-// È«¾ÖµÄwatcher¹Û²ìÆ÷  zkserver¸øzkclientµÄÍ¨Öª
-void global_watcher(zhandle_t* zh, int type, int state, const char* path, void* watcherCtx) {
-    // »Øµ÷µÄÏûÏ¢ÀàĞÍÊÇºÍ»á»°Ïà¹ØµÄÏûÏ¢ÀàĞÍ
+// å…¨å±€çš„watcherè§‚å¯Ÿå™¨  zkserverç»™zkclientçš„é€šçŸ¥
+void global_watcher(zhandle_t* zh, int type, int state, const char* path,
+                    void* watcherCtx) {
+    // å›è°ƒçš„æ¶ˆæ¯ç±»å‹æ˜¯å’Œä¼šè¯ç›¸å…³çš„æ¶ˆæ¯ç±»å‹
     if (type == ZOO_SESSION_EVENT) {
-        // zkclientºÍzkserverÁ¬½Ó³É¹¦
+        // zkclientå’Œzkserverè¿æ¥æˆåŠŸ
         if (state == ZOO_CONNECTED_STATE) {
             sem_t* sem = (sem_t*)zoo_get_context(zh);
             sem_post(sem);
@@ -25,22 +26,25 @@ void global_watcher(zhandle_t* zh, int type, int state, const char* path, void* 
 }
 
 void ZkClient::Start() {
-    std::string host = MprpcApplication::GetInstance().GetConfig().Load("zookeeperip");
-    std::string port = MprpcApplication::GetInstance().GetConfig().Load("zookeeperport");
+    std::string host =
+        MprpcApplication::GetInstance().GetConfig().Load("zookeeperip");
+    std::string port =
+        MprpcApplication::GetInstance().GetConfig().Load("zookeeperport");
     std::string connstr = host + ":" + port;
     /*
-    zookeeper_mt: ¶àÏß³Ì°æ±¾
-    zookeeperµÄapi¿Í»§¶ËÌá¹©ÁËÈı¸öÏß³Ì
-    apiµ÷ÓÃÏß³Ì
-    ÍøÂçI/OÏß³Ì pthread_create poll
-    watcher»Øµ÷Ïß³Ì
+    zookeeper_mt: å¤šçº¿ç¨‹ç‰ˆæœ¬
+    zookeeperçš„apiå®¢æˆ·ç«¯æä¾›äº†ä¸‰ä¸ªçº¿ç¨‹
+    apiè°ƒç”¨çº¿ç¨‹
+    ç½‘ç»œI/Oçº¿ç¨‹ pthread_create poll
+    watcherå›è°ƒçº¿ç¨‹
     */
-    m_zhandle = zookeeper_init(connstr.c_str(),global_watcher , 30000, nullptr, nullptr, 0);
+    m_zhandle = zookeeper_init(connstr.c_str(), global_watcher, 30000, nullptr,
+                               nullptr, 0);
     if (m_zhandle == nullptr) {
         std::cout << "zookeeper_init error!" << std::endl;
         exit(EXIT_FAILURE);
     }
-    // ´ËÊ±´´½¨¾ä±ú³É¹¦ÁË
+    // æ­¤æ—¶åˆ›å»ºå¥æŸ„æˆåŠŸäº†
 
     sem_t sem;
     sem_init(&sem, 0, 0);
@@ -50,17 +54,18 @@ void ZkClient::Start() {
     std::cout << "zookeeper_init success!" << std::endl;
 }
 
-void ZkClient::Create(const char* path, const char* data, int datalen, int state) {
+void ZkClient::Create(const char* path, const char* data, int datalen,
+                      int state) {
     char path_buffer[128];
     int bufferlen = sizeof(path_buffer);
     int flag;
-    // ÏÈÅĞ¶Ïpath±íÊ¾µÄznode½ÚµãÊÇ·ñ´æÔÚ, Èç¹û´æÔÚ, ¾Í²»ÖØ¸´´´½¨ÁË
+    // å…ˆåˆ¤æ–­pathè¡¨ç¤ºçš„znodeèŠ‚ç‚¹æ˜¯å¦å­˜åœ¨, å¦‚æœå­˜åœ¨, å°±ä¸é‡å¤åˆ›å»ºäº†
     flag = zoo_exists(m_zhandle, path, 0, nullptr);
-    // ½Úµã²»´æÔÚ
+    // èŠ‚ç‚¹ä¸å­˜åœ¨
     if (ZNONODE == flag) {
-        // ´´½¨Ö¸¶¨µÄpathµÄznode½Úµã
-        flag = zoo_create(m_zhandle, path, data, datalen, &ZOO_OPEN_ACL_UNSAFE, state, path_buffer,
-                          bufferlen);
+        // åˆ›å»ºæŒ‡å®šçš„pathçš„znodeèŠ‚ç‚¹
+        flag = zoo_create(m_zhandle, path, data, datalen, &ZOO_OPEN_ACL_UNSAFE,
+                          state, path_buffer, bufferlen);
         if (flag == ZOK) {
             std::cout << "znode create success... path:" << path << std::endl;
         } else {

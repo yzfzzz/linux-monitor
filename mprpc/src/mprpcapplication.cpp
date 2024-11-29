@@ -1,11 +1,13 @@
-#include "mprpcapplication.h"
 #include <unistd.h>
 #include <iostream>
 #include <string>
+#include "mprpcapplication.h"
 
 MprpcConfig MprpcApplication::m_config;
 
-void ShowArgsHelp() { std::cout << "format: command -i <configfile>" << std::endl; }
+void ShowArgsHelp() {
+    std::cout << "format: command -i <configfile>" << std::endl;
+}
 
 void MprpcApplication::Init(int argc, char** argv) {
     if (argc < 2) {
@@ -15,7 +17,7 @@ void MprpcApplication::Init(int argc, char** argv) {
 
     char c = 0;
     std::string config_file;
-    // ÊäÈë: ./a.out -i xxxxxx
+    // è¾“å…¥: ./a.out -i xxxxxx
     while ((c = getopt(argc, argv, "i:")) != -1) {
         switch (c) {
             case 'i':
@@ -31,7 +33,7 @@ void MprpcApplication::Init(int argc, char** argv) {
                 break;
         }
     }
-    // ¿ªÊ¼¼ÓÔØÅäÖÃÎÄ¼þÁË
+    // å¼€å§‹åŠ è½½é…ç½®æ–‡ä»¶äº†
     /* config
     rpcserver_ip
     rpcserver_port
@@ -40,9 +42,11 @@ void MprpcApplication::Init(int argc, char** argv) {
     */
     m_config.LoadConfigFile(config_file.c_str());
     std::cout << "rpcserverip = " << m_config.Load("rpcserverip") << std::endl;
-    std::cout << "rpcserverport = " << m_config.Load("rpcserverport") << std::endl;
+    std::cout << "rpcserverport = " << m_config.Load("rpcserverport")
+              << std::endl;
     std::cout << "zookeeperip = " << m_config.Load("zookeeperip") << std::endl;
-    std::cout << "zookeeperport = " << m_config.Load("zookeeperport") << std::endl;
+    std::cout << "zookeeperport = " << m_config.Load("zookeeperport")
+              << std::endl;
 }
 
 MprpcConfig& MprpcApplication::GetConfig() { return m_config; }

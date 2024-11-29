@@ -390,7 +390,7 @@ background-image:url(:/backimg.png);}</string>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="smooth_chart" name="schart_left" native="true">
+     <widget class="GPUChart" name="schart_left" native="true">
       <property name="font">
        <font>
         <family>阿里巴巴普惠体 R</family>
@@ -402,7 +402,7 @@ background-image:url(:/backimg.png);}</string>
      </widget>
     </item>
     <item>
-     <widget class="net_chart" name="schart_right" native="true">
+     <widget class="NetChart" name="schart_right" native="true">
       <property name="font">
        <font>
         <family>阿里巴巴普惠体 R</family>
@@ -550,13 +550,13 @@ GPU服务器管理面板
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>smooth_chart</class>
+   <class>GPUChart</class>
    <extends>QWidget</extends>
-   <header>smooth_chart.h</header>
+   <header>gpu_chart.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>net_chart</class>
+   <class>NetChart</class>
    <extends>QWidget</extends>
    <header>net_chart.h</header>
    <container>1</container>

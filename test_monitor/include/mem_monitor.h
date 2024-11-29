@@ -32,7 +32,7 @@ class MemMonitor : public MonitorInter {
     };
 
     MemMonitor() {}
-    void UpdateOnce(monitor::proto::MonitorInfo* monitor_info);
-    void Stop() override {}
+    void updateOnce(monitor::proto::MonitorInfo* monitor_info);
+    void stop() override {}
 };
 }  // namespace monitor

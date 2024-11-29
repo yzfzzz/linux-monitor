@@ -28,8 +28,8 @@ class CpuSoftIrqMonitor : public MonitorInter {
 
    public:
     CpuSoftIrqMonitor() {}
-    void UpdateOnce(monitor::proto::MonitorInfo *monitor_info);
-    void Stop() override {}
+    void updateOnce(monitor::proto::MonitorInfo *monitor_info);
+    void stop() override {}
 
    private:
     std::unordered_map<std::string, struct SoftIrq> cpu_softirqs_;

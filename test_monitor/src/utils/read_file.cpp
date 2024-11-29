@@ -1,18 +1,17 @@
 #include <utils/read_file.h>
 // ifstream -> string -> istringstream
-// ¶ÁÈ¡ÎÄ¼şÖĞµÄÒ»ĞĞÎÄ±¾£¬½«Æä·Ö¸î³Éµ¥´Ê£¬²¢½«ÕâĞ©µ¥´Ê´æ´¢ÔÚargÖĞ
-bool monitor::ReadFile::ReadLine(vector<string>* arg) {
+// è¯»å–æ–‡ä»¶ä¸­çš„ä¸€è¡Œæ–‡æœ¬ï¼Œå°†å…¶åˆ†å‰²æˆå•è¯ï¼Œå¹¶å°†è¿™äº›å•è¯å­˜å‚¨åœ¨argä¸­
+bool monitor::ReadFile::readLine(vector<string>* arg) {
     string line;
-    /*
-    m_ifs £º±íÊ¾Ò»¸öÊäÈëÁ÷£¬ÀıÈç cin¡£
-    line £ºstringÀàĞÍµÄÒıÓÃ£¬ÓÃÀ´´æ´¢ÊäÈëÁ÷ÖĞµÄÁ÷ĞÅÏ¢¡£
-    */
-    getline(m_ifs, line);
-    // eof()º¯ÊıÀ´ÅĞ¶ÏÎÄ¼şÊÇ·ñÎª¿Õ»òÕßÊÇ·ñ¶Áµ½ÎÄ¼ş½áÎ²
-    if (m_ifs.eof() || line.empty()) {
+    // ifs_ ï¼šè¡¨ç¤ºä¸€ä¸ªè¾“å…¥æµï¼Œä¾‹å¦‚ cinã€‚
+    // line ï¼šstringç±»å‹çš„å¼•ç”¨ï¼Œç”¨æ¥å­˜å‚¨è¾“å…¥æµä¸­çš„æµä¿¡æ¯ã€‚
+
+    getline(ifs_, line);
+    // eof()å‡½æ•°æ¥åˆ¤æ–­æ–‡ä»¶æ˜¯å¦ä¸ºç©ºæˆ–è€…æ˜¯å¦è¯»åˆ°æ–‡ä»¶ç»“å°¾
+    if (ifs_.eof() || line.empty()) {
         return false;
     }
-    // !
+
     istringstream line_ss(line);
     while (!line_ss.eof()) {
         string word;

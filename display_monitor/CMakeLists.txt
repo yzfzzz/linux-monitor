@@ -20,7 +20,7 @@ set(SOURCES
     main.cpp
     widget.cpp
     net_chart.cpp
-    smooth_chart.cpp
+    gpu_chart.cpp
     water_progress.cpp
     query_data.cpp
     work_thread.cpp

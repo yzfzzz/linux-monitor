@@ -1,19 +1,19 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "rpc_manager.h"
 #include "log.h"
+#include "rpc_manager.h"
 
 int main(int argv, char** argc) {
     std::string log_path = "./logs";
     monitor::SetupLogging(log_path);
-    // 调用框架的初始化操作
+    // 璋冪敤妗嗘灦鐨勫垵濮嬪寲鎿嶄綔
     MprpcApplication::Init(argv, argc);
 
     RpcProvider provider;
     provider.NotifyService(new monitor::ServerManagerImpl());
 
-    // 启动一个rpc服务发布节点, Run以后进程进入阻塞状态，等待远程的rpc调用请求
+    // 鍚姩涓�涓猺pc鏈嶅姟鍙戝竷鑺傜偣, Run浠ュ悗杩涚▼杩涘叆闃诲鐘舵�侊紝绛夊緟杩滅▼鐨剅pc璋冪敤璇锋眰
     provider.Run();
 
     return 0;

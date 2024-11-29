@@ -1,69 +1,68 @@
-#include <QHBoxLayout>
 #include "net_chart.h"
 
-net_chart::net_chart(QWidget *parent) : QWidget(parent) {
-    maxY = 1200;
+NetChart::NetChart(QWidget *parent) : QWidget(parent) {
+    max_y_ = 1200;
 
-    splineSeries_send = new QSplineSeries();
-    QPen linePen_send(QColor("#05D0D7"), 2, Qt::SolidLine, Qt::RoundCap,
-                      Qt::RoundJoin);
-    splineSeries_send->setPen(linePen_send);
+    spline_series_send_ = new QSplineSeries();
+    QPen line_pen_send(QColor("#05D0D7"), 2, Qt::SolidLine, Qt::RoundCap,
+                       Qt::RoundJoin);
+    spline_series_send_->setPen(line_pen_send);
 
-    splineSeries_recv = new QSplineSeries();
-    QPen linePen_recv(QColor("#DB901E"), 2, Qt::SolidLine, Qt::RoundCap,
-                      Qt::RoundJoin);
-    splineSeries_recv->setPen(linePen_recv);
+    spline_series_recv_ = new QSplineSeries();
+    QPen line_pen_recv(QColor("#DB901E"), 2, Qt::SolidLine, Qt::RoundCap,
+                       Qt::RoundJoin);
+    spline_series_recv_->setPen(line_pen_recv);
 
-    splineSeries_send->setName("上传");
-    splineSeries_recv->setName("下载");
+    spline_series_send_->setName("上传");
+    spline_series_recv_->setName("下载");
 
-    chart = new QChart();
-    chart->addSeries(splineSeries_send);
-    chart->addSeries(splineSeries_recv);
+    chart_ = new QChart();
+    chart_->addSeries(spline_series_send_);
+    chart_->addSeries(spline_series_recv_);
 
-    chart->legend()->hide();
-    chart->setTitle("流量收发情况");
-    chart->createDefaultAxes();
+    chart_->legend()->hide();
+    chart_->setTitle("流量收发情况");
+    chart_->createDefaultAxes();
 
-    axisX = new QDateTimeAxis();
-    axisX->setFormat("mm:ss");
-    axisX->setTickCount(5);
+    axis_x_ = new QDateTimeAxis();
+    axis_x_->setFormat("mm:ss");
+    axis_x_->setTickCount(5);
 
-    if (chart->axisX()) {
-        chart->removeAxis(chart->axisX());
+    if (chart_->axisX()) {
+        chart_->removeAxis(chart_->axisX());
     }
 
-    chart->setAxisX(axisX);
-    splineSeries_send->attachAxis(axisX);
-    splineSeries_recv->attachAxis(axisX);
+    chart_->setAxisX(axis_x_);
+    spline_series_send_->attachAxis(axis_x_);
+    spline_series_recv_->attachAxis(axis_x_);
 
-    chart->axisY()->setRange(0, maxY);
-    // chart->setBackgroundVisible(false);
+    chart_->axisY()->setRange(0, max_y_);
 
-    if (chart->axisX()) {
-        chart->axisX()->setGridLineVisible(false);  // 隐藏X轴网格线
+    // 隐藏网格线
+    if (chart_->axisX()) {
+        chart_->axisX()->setGridLineVisible(false);
     }
-    if (chart->axisY()) {
-        chart->axisY()->setGridLineVisible(false);  // 隐藏Y轴网格线
+    if (chart_->axisY()) {
+        chart_->axisY()->setGridLineVisible(false);
     }
-    chart->legend()->setVisible(true);
+    chart_->legend()->setVisible(true);
 
-    chartView = new QChartView(chart);
-    chartView->setRenderHint(QPainter::Antialiasing);
+    chart_view_ = new QChartView(chart_);
+    chart_view_->setRenderHint(QPainter::Antialiasing);
 
     QHBoxLayout *layout = new QHBoxLayout();
     layout->setContentsMargins(0, 0, 0, 0);
-    layout->addWidget(chartView);
+    layout->addWidget(chart_view_);
     setLayout(layout);
 }
 
-net_chart::~net_chart() {}
+NetChart::~NetChart() {}
 
-void net_chart::drawChart(QList<QPointF> data_send, QList<QPointF> data_recv) {
+void NetChart::drawChart(QList<QPointF> data_send, QList<QPointF> data_recv) {
     if (isVisible()) {
-        splineSeries_send->replace(data_send);
-        splineSeries_recv->replace(data_recv);
-        axisX->setRange(
+        spline_series_send_->replace(data_send);
+        spline_series_recv_->replace(data_recv);
+        axis_x_->setRange(
             QDateTime::fromMSecsSinceEpoch(data_send.begin()->x()),
             QDateTime::fromMSecsSinceEpoch(data_send.rbegin()->x()));
     }
