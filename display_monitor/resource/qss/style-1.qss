@@ -66,7 +66,7 @@ QLineEdit{
 /*label-login*/
 #label_title
 {
-    color:#e83737;
+    border-image:url(:/resource/pic/logo.png);
 
 }
 /*图标-账户*/
@@ -85,6 +85,7 @@ QLineEdit{
 {
 border-image:url(:/resource/pic/notice.png);
 }
+
 
 
 

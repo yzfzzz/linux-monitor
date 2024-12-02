@@ -1,10 +1,22 @@
 #include <QDebug>
+#include <QFile>
 #include <QString>
 #include "login.h"
 #include "ui_login.h"
 
+
 Login::Login(QWidget *parent) : QWidget(parent), ui(new Ui::Login) {
     ui->setupUi(this);
+    QFile file(":/resource/pic/README.html");
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream in(&file);
+        in.setCodec("UTF-8");
+        QString htmlContent = in.readAll();
+        qDebug() << htmlContent;
+        file.close();
+        // 将读取的HTML内容设置到QTextBrowser中
+        ui->textBrowser->setHtml(htmlContent);
+    }
     std::string server_address = "localhost:50051";
     rpc_client_ptr = new monitor::RpcClient(server_address);
 }
@@ -17,7 +29,6 @@ void Login::on_btn_login_clicked() {
     std::string pwd = ui->lineE_pwd->text().toStdString();
     bool isChecked = ui->btn_register->isChecked();
     if (isChecked) {
-
         qDebug() << "复选框已被勾选";
         // 注册
         if (user_name.empty() && (!pwd.empty())) {
@@ -27,7 +38,7 @@ void Login::on_btn_login_clicked() {
             request.set_pwd(pwd);
             rpc_client_ptr->LoginRegister(request, response);
             std::string response_str = response.response_str();
-            std::cout << response_str  << std::endl;
+            std::cout << response_str << std::endl;
             QString notice = QString::fromStdString(response_str);
             ui->label_notice_text->setText(notice);
             // 跳转
@@ -39,7 +50,6 @@ void Login::on_btn_login_clicked() {
             ui->label_notice_text->setText(notice);
         }
     } else {
-
         qDebug() << "复选框未被勾选";
         if (user_name.empty()) {
             QString notice = "请输入你的账号";
@@ -55,7 +65,7 @@ void Login::on_btn_login_clicked() {
             request.set_pwd(pwd);
             rpc_client_ptr->LoginRegister(request, response);
             std::string response_str = response.response_str();
-            std::cout << response_str  << std::endl;
+            std::cout << response_str << std::endl;
             QString notice;
             if (response_str == "login successful") {
                 notice = QString::fromStdString(response_str);

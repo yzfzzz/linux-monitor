@@ -3,5 +3,8 @@
         <file>resource/pic/notice.png</file>
         <file>resource/pic/pwd.png</file>
         <file>resource/pic/user_name.png</file>
+        <file>resource/pic/README.html</file>
+        <file>resource/pic/logo.png</file>
+        <file>resource/pic/logo.ico</file>
     </qresource>
 </RCC>
