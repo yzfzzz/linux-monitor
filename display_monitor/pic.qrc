@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resource/pic/notice.png</file>
+        <file>resource/pic/pwd.png</file>
+        <file>resource/pic/user_name.png</file>
+    </qresource>
+</RCC>

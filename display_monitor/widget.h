@@ -3,8 +3,13 @@
 
 #include <QString>
 #include <QWidget>
+#include <memory>
 #include <mutex>
+#include <thread>
+#include <vector>
+#include "client/rpc_client.h"
 #include "midinfo.h"
+#include "query_data.h"
 #include "water_progress.h"
 
 QT_BEGIN_NAMESPACE
@@ -17,7 +22,7 @@ class Widget : public QWidget {
     Q_OBJECT
 
    public:
-    Widget(int argc, char **argv, QWidget *parent = nullptr);
+    Widget(int argc, char **argv, std::string account_num, QWidget *parent = nullptr);
     ~Widget();
     void update(std::vector<monitor::MidInfo> &midinfo_array);
 
@@ -28,8 +33,9 @@ class Widget : public QWidget {
     void recvGpuInfos(QVector<QString> gpu_infos_array);
     void recvNetList(QList<QPointF> send_list, QList<QPointF> recv_list);
     void recvGpuList(QList<QPointF> gpu_list);
+
    signals:
-    void set_workthread_arg(int argc, char **argv);
+    void set_workthread_arg(int argc, char **argv, std::string account_num);
 
    private:
     Ui::Widget *ui;

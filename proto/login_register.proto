@@ -1,0 +1,9 @@
+syntax = "proto3";
+package monitor.proto;
+
+message UserMessage {
+    string account_num = 1;
+    string pwd = 2;
+}
+
+message UserResponseMessage { string response_str = 1; }

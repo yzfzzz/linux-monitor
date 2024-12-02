@@ -1,4 +1,6 @@
 #pragma once
+#include <cstdlib>
+#include <ctime>
 #include <memory>
 #include <mutex>
 #include <string>
@@ -57,4 +59,24 @@ class ServerManagerImpl : public monitor::proto::MonitorManager {
         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=" +
         "utf8mb4_0900_ai_ci COMMENT='create table according to date'";
 };
+
+class UserManagerImpl : public monitor::proto::UserManager {
+   public:
+    UserManagerImpl();
+    virtual ~UserManagerImpl();
+
+    void LoginRegister(::google::protobuf::RpcController* controller,
+                       const ::monitor::proto::UserMessage* request,
+                       ::monitor::proto::UserResponseMessage* response,
+                       ::google::protobuf::Closure* done);
+    std::string verifyLoginInformation();
+    std::string registerNewUser();
+    std::string generateRandomSixNumber();
+
+   private:
+    std::string account_num_;
+    std::string pwd_;
+    ConnectionPool* pool = ConnectionPool::getConnectPool();
+};
+
 }  // namespace monitor

@@ -7,19 +7,25 @@
 #include "widget.h"
 #include "work_thread.h"
 
-Widget::Widget(int argc, char** argv, QWidget* parent)
+Widget::Widget(int argc, char** argv, std::string account_num, QWidget* parent)
     : QWidget(parent), ui(new Ui::Widget) {
     ui->setupUi(this);
     ui->label_up_1->setText("显卡使用率");
     ui->label_up_2->setText("显卡内存");
     ui->label_up_3->setText("CPU使用率");
     ui->label_up_4->setText("运行内存");
+    ui->gpu_name->setText("暂无监控的服务器\n请检查监控端连接");
+    ui->gpu_num->setText("暂无监控的服务器\n请检查监控端连接");
+    ui->label_down_1->setText("???");
+    ui->label_down_2->setText("???");
+    ui->label_down_3->setText("???");
+    ui->label_down_4->setText("???");
 
     QThread* sub_thread = new QThread;
     WorkThread* work_thread = new WorkThread;
     work_thread->moveToThread(sub_thread);
     connect(this, &Widget::set_workthread_arg, work_thread, &WorkThread::run);
-    emit set_workthread_arg(argc, argv);
+    emit set_workthread_arg(argc, argv, account_num);
     sub_thread->start();
 
     connect(work_thread, &WorkThread::sendLabelDownStr, this,

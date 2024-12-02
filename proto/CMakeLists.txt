@@ -1,12 +1,3 @@
-# �ҵ�ȫ�ֻ����е�grpc������
-#[[
-ָ��ʹ�� config ģʽ������ protobuf �⡣�� config ģʽ�£�CMake ��������Ϊ <package_name>-config.cmake 
-�� config.cmake ���ļ������� protobuf ����˵������ protobuf-config.cmake �ļ�������Щ�ļ�ͨ���ɿ�İ�װ
-�������ɣ������˿��ͷ�ļ�·�������ļ�·������Ϣ
-]]
-
-# Ϊʲô set(CMAKE_CXX_STANDARD 17) ?
-
 find_package(protobuf CONFIG REQUIRED)
 # find_package(gRPC CONFIG REQUIRED)
 # find_package(c-ares CONFIG)
@@ -22,6 +13,7 @@ set(PROTO_FILES
     gpu_info.proto
     time.proto
     query.proto
+    login_register.proto
 )
 
 # ������̬��

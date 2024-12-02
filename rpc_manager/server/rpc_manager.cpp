@@ -7,42 +7,26 @@ namespace monitor {
 
 ServerManagerImpl::ServerManagerImpl() {}
 ServerManagerImpl::~ServerManagerImpl() {}
-
-// ::grpc::Status ServerManagerImpl::SetMonitorInfo(
-//     ::grpc::ServerContext* context,
-//     const ::monitor::proto::MonitorInfo* request,
-//     ::google::protobuf::Empty* response) {
-//     monitor_infos_.Clear();
-//     monitor_infos_ = *request;
-
-//     cout << "jinru" << request->soft_irq_size() << endl;
-//     return grpc::Status::OK;
-// }
+UserManagerImpl ::UserManagerImpl() {}
+UserManagerImpl ::~UserManagerImpl() {}
 
 void ServerManagerImpl::SetMonitorInfo(
     ::google::protobuf::RpcController* controller,
     const ::monitor::proto::MonitorInfo* request,
     ::google::protobuf::Empty* response, ::google::protobuf::Closure* done) {
-    LOG(INFO) << "RPC Call: ServerManagerImpl::SetMonitorInfo";
+    // LOG(INFO) << "RPC Call: ServerManagerImpl::SetMonitorInfo";
     monitor_infos_.Clear();
     monitor_infos_ = *request;
     insertOneInfo(monitor_infos_);
     done->Run();
 }
 
-// ::grpc::Status ServerManagerImpl::GetMonitorInfo(
-//     ::grpc::ServerContext* context, const ::google::protobuf::Empty* request,
-//     ::monitor::proto::MonitorInfo* response) {
-//     *response = monitor_infos_;
-//     return grpc::Status::OK;
-// }
-
 void ServerManagerImpl::GetMonitorInfo(
     ::google::protobuf::RpcController* controller,
     const ::monitor::proto::QueryMessage* request,
     ::monitor::proto::QueryResults* response,
     ::google::protobuf::Closure* done) {
-    LOG(INFO) << "RPC Call: ServerManagerImpl::GetMonitorInfo";
+    // LOG(INFO) << "RPC Call: ServerManagerImpl::GetMonitorInfo";
     *response = queryDataInfo(request);
     done->Run();
 }
@@ -101,7 +85,7 @@ MidInfo ServerManagerImpl::parseInfos(
     mid_info.accountnum = monitor_infos_.accountnum();
     mid_info.timeymd = monitor_infos_.time().timeymd();
     mid_info.timehms = monitor_infos_.time().timehms();
-    LOG(INFO) << "Parse monitor_infos_...";
+    // LOG(INFO) << "Parse monitor_infos_...";
     return mid_info;
 }
 
@@ -113,7 +97,7 @@ bool ServerManagerImpl::insertOneInfo(
 
     std::string table_name = "table_" + mid_info.timeymd;
     if (!isTableExist(table_name, conn_ptr)) {
-        LOG(WARNING) << "Failed to select table!";
+        // LOG(WARNING) << "Failed to select table!";
         return false;
     }
 
@@ -122,7 +106,7 @@ bool ServerManagerImpl::insertOneInfo(
         "(gpu_name, gpu_num, gpu_used_mem, gpu_total_mem, gpu_avg_util, " +
         "cpu_load_avg_1, cpu_load_avg_3, cpu_load_avg_15, mem_used,mem_total," +
         "net_send_rate, net_rcv_rate, user_id, time) " + "VALUES(";
-    LOG(INFO) << "InsertOneInfo SQL: " << sql;
+    // LOG(INFO) << "InsertOneInfo SQL: " << sql;
 
     std::string user_id = selectUserId(mid_info.accountnum);
     if (user_id.empty() == true) {
@@ -141,12 +125,12 @@ bool ServerManagerImpl::insertOneInfo(
           std::to_string(mid_info.net_send_rate) + "," +
           std::to_string(mid_info.net_rcv_rate) + "," + user_id + "," + "'" +
           mid_info.timehms + "')";
-    LOG(INFO) << sql;
+    // LOG(INFO) << sql;
     if (conn_ptr->update(sql)) {
-        LOG(INFO) << "Succeed to insert one sql";
+        // LOG(INFO) << "Succeed to insert one sql";
         return true;
     }
-    LOG(WARNING) << "Failed to insert one sql";
+    // LOG(WARNING) << "Failed to insert one sql";
     return false;
 }
 
@@ -158,10 +142,10 @@ std::string ServerManagerImpl::selectUserId(std::string accountNum) {
         while (conn_ptr->next()) {
             user_id = conn_ptr->value(0);
         }
-        LOG(INFO) << "Succeed to select user_id";
+        // LOG(INFO) << "Succeed to select user_id";
         return user_id;
     }
-    LOG(WARNING) << "Failed to request user_id!";
+    // LOG(WARNING) << "Failed to request user_id!";
     return "";
 }
 
@@ -169,7 +153,7 @@ bool ServerManagerImpl::isTableExist(std::string table_name,
                                      std::shared_ptr<MysqlConn> conn_ptr) {
     std::string sql = "SELECT * FROM tableRegister tr WHERE table_name = '" +
                       table_name + "'";
-    LOG(INFO) << "isTableExist select tableRegister SQL: " << sql;
+    // LOG(INFO) << "isTableExist select tableRegister SQL: " << sql;
     if (conn_ptr->query(sql) == true) {
         if (conn_ptr->next()) {
             return true;
@@ -182,7 +166,8 @@ bool ServerManagerImpl::isTableExist(std::string table_name,
             std::string register_sql =
                 "INSERT INTO tableRegister (table_name) values('" + table_name +
                 "')";
-            LOG(INFO) << "isTableExist create table SQL: " << create_table_sql;
+            // LOG(INFO) << "isTableExist create table SQL: " <<
+            // create_table_sql;
             if (conn_ptr->update(create_table_sql) &&
                 conn_ptr->update(register_sql)) {
                 return true;
@@ -191,6 +176,85 @@ bool ServerManagerImpl::isTableExist(std::string table_name,
         }
     }
     return false;
+}
+
+void UserManagerImpl::LoginRegister(
+    ::google::protobuf::RpcController* controller,
+    const ::monitor::proto::UserMessage* request,
+    ::monitor::proto::UserResponseMessage* response,
+    ::google::protobuf::Closure* done) {
+    LOG(INFO) << "RPC Call: UserManagerImpl::LoginRegister";
+    account_num_ = request->account_num();
+    pwd_ = request->pwd();
+    if (account_num_.empty()) {
+        response->set_response_str(registerNewUser());
+    } else {
+        response->set_response_str(verifyLoginInformation());
+    }
+    account_num_.clear();
+    pwd_.clear();
+    done->Run();
+}
+
+std::string UserManagerImpl::verifyLoginInformation() {
+    std::string response;
+    std::string select_account_sql =
+        "SELECT password FROM `user` u WHERE accountnum = ";
+    select_account_sql += account_num_;
+    std::shared_ptr<MysqlConn> conn_ptr = this->pool->getConnection();
+    std::string pwd;
+    if (conn_ptr->query(select_account_sql) == true) {
+        while (conn_ptr->next()) {
+            pwd = conn_ptr->value(0);
+        }
+        if (pwd.empty()) {
+            response = "account num error!";
+        } else if (pwd == pwd_) {
+            response = "login successful";
+        } else {
+            response = "pwd error!";
+        }
+    }
+    return response;
+}
+
+std::string UserManagerImpl::registerNewUser() {
+    std::string user_num_same_account;
+    std::string response = "";
+    std::string sql = "SELECT count(*) FROM  `user` u WHERE accountnum = ";
+    std::shared_ptr<MysqlConn> conn_ptr = this->pool->getConnection();
+    while (response.empty()) {
+        std::string gen_number = generateRandomSixNumber();
+        sql += gen_number;
+        if (conn_ptr->query(sql) == true) {
+            while (conn_ptr->next()) {
+                user_num_same_account = conn_ptr->value(0);
+            }
+            if (std::stoi(user_num_same_account) == 0) {
+                // INSERT INTO `user` (password,accountnum) values("88888888m","1933720");
+                sql = "INSERT INTO `user` (password,accountnum) values('"+pwd_+"','"+gen_number+"')";
+                if (conn_ptr->query(sql)) {
+                    response = "register successful, account:" + gen_number +
+                               ", automatically jump after 10s";
+                }
+            }
+        }
+    }
+    return response;
+}
+
+std::string UserManagerImpl::generateRandomSixNumber() {
+    std::string result;
+    // 用当前时间作为随机数种子
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
+    for (int i = 0; i < 6; ++i) {
+        // 生成0-6的随机数
+        int random_number = std::rand() % 10;
+        result += std::to_string(random_number);
+    }
+
+    return result;
 }
 
 }  // namespace monitor

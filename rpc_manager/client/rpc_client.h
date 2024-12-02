@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include "login_register.pb.h"
 #include "monitor_info.pb.h"
 #include "mprpcapplication.h"
 
@@ -14,8 +15,12 @@ class RpcClient {
     void GetMonitorInfo(monitor::proto::QueryMessage& request,
                         monitor::proto::QueryResults& response);
 
+    void LoginRegister(monitor::proto::UserMessage& request,
+                       monitor::proto::UserResponseMessage& response);
+
    public:
     std::unique_ptr<monitor::proto::MonitorManager_Stub> stub_ptr_;
+    std::unique_ptr<monitor::proto::UserManager_Stub> user_stub_ptr_;
 };
 
 }  // namespace monitor

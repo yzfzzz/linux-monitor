@@ -1,20 +1,28 @@
 #include <QApplication>
 #include <iostream>
-#include <memory>
-#include <thread>
-#include <vector>
-#include "client/rpc_client.h"
+#include <QFile>
+#include <QTextStream>
+#include "start.h"
 #include "mprpcapplication.h"
-#include "query_data.h"
-#include "widget.h"
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
+    MprpcApplication::Init(argc, argv);
     qRegisterMetaType<QVector<QString>>("QVector<QString>");
     qRegisterMetaType<QVector<int>>("QVector<int>");
     qRegisterMetaType<QList<QPointF>>("QList<QPointF>");
     qRegisterMetaType<char **>("char**");
-    Widget widget(argc, argv);
-    widget.show();
+    qRegisterMetaType<std::string>("std::string");
+
+    QFile file(":/resource/qss/style-1.qss"); /*QSS文件所在的路径*/
+    file.open(QFile::ReadOnly);
+    QTextStream filetext(&file);
+    QString stylesheet = filetext.readAll();
+    app.setStyleSheet(stylesheet);
+    file.close();
+
+    Start s(argc, argv);
+    s.show();
+
     return app.exec();
 }

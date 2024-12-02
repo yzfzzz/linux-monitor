@@ -10,6 +10,7 @@ import "cpu_load.proto";
 import "gpu_info.proto";
 import "time.proto";
 import "query.proto";
+import "login_register.proto";
 
 // ��������ѡ��, ��ʾ����service�������rpc��������, Ĭ�ϲ�����
 option cc_generic_services = true;
@@ -102,4 +103,8 @@ service MonitorManager {
     rpc SetMonitorInfo(MonitorInfo) returns(google.protobuf.Empty) {}
 
     rpc GetMonitorInfo(QueryMessage) returns(QueryResults) {}
+}
+
+service UserManager{
+    rpc LoginRegister(UserMessage) returns(UserResponseMessage) {}
 }

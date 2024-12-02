@@ -14,10 +14,12 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
+qt5_add_resources(display_resources pic.qrc qss.qrc)
 
 set(SOURCES
     main.cpp
+    login.cpp
+    start.cpp
     widget.cpp
     net_chart.cpp
     gpu_chart.cpp
@@ -25,6 +27,9 @@ set(SOURCES
     query_data.cpp
     work_thread.cpp
     widget.ui
+    login.ui
+    start.ui
+    ${display_resources}
 )
 
 link_directories(${PROJECT_SOURCE_DIR}/build/rpc_manager/client 
