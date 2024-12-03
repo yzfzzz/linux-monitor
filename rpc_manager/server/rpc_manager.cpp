@@ -14,7 +14,7 @@ void ServerManagerImpl::SetMonitorInfo(
     ::google::protobuf::RpcController* controller,
     const ::monitor::proto::MonitorInfo* request,
     ::google::protobuf::Empty* response, ::google::protobuf::Closure* done) {
-    // LOG(INFO) << "RPC Call: ServerManagerImpl::SetMonitorInfo";
+    LOG(INFO) << "RPC Call: ServerManagerImpl::SetMonitorInfo";
     monitor_infos_.Clear();
     monitor_infos_ = *request;
     insertOneInfo(monitor_infos_);
@@ -83,6 +83,7 @@ MidInfo ServerManagerImpl::parseInfos(
         mid_info.net_rcv_rate = rcv_sum / monitor_infos_.net_info_size();
     }
     mid_info.accountnum = monitor_infos_.accountnum();
+    mid_info.machine_name = monitor_infos_.machine_name();
     mid_info.timeymd = monitor_infos_.time().timeymd();
     mid_info.timehms = monitor_infos_.time().timehms();
     // LOG(INFO) << "Parse monitor_infos_...";
@@ -91,6 +92,7 @@ MidInfo ServerManagerImpl::parseInfos(
 
 bool ServerManagerImpl::insertOneInfo(
     monitor::proto::MonitorInfo& monitor_infos_) {
+    LOG(INFO) << "Run: ServerManagerImpl::insertOneInfo";
     std::shared_ptr<MysqlConn> conn_ptr = this->pool->getConnection();
 
     MidInfo mid_info = parseInfos(monitor_infos_);
@@ -105,10 +107,12 @@ bool ServerManagerImpl::insertOneInfo(
         "INSERT INTO " + table_name +
         "(gpu_name, gpu_num, gpu_used_mem, gpu_total_mem, gpu_avg_util, " +
         "cpu_load_avg_1, cpu_load_avg_3, cpu_load_avg_15, mem_used,mem_total," +
-        "net_send_rate, net_rcv_rate, user_id, time) " + "VALUES(";
-    // LOG(INFO) << "InsertOneInfo SQL: " << sql;
+        "net_send_rate, net_rcv_rate, user_id, time, machine_name) " +
+        "VALUES(";
+    LOG(INFO) << "InsertOneInfo SQL: " << sql;
 
     std::string user_id = selectUserId(mid_info.accountnum);
+    isMachineExist(user_id, mid_info.machine_name);
     if (user_id.empty() == true) {
         return false;
     }
@@ -124,7 +128,7 @@ bool ServerManagerImpl::insertOneInfo(
           std::to_string(mid_info.mem_total) + "," +
           std::to_string(mid_info.net_send_rate) + "," +
           std::to_string(mid_info.net_rcv_rate) + "," + user_id + "," + "'" +
-          mid_info.timehms + "')";
+          mid_info.timehms + "'" + ",'" + mid_info.machine_name + "')";
     // LOG(INFO) << sql;
     if (conn_ptr->update(sql)) {
         // LOG(INFO) << "Succeed to insert one sql";
@@ -149,6 +153,27 @@ std::string ServerManagerImpl::selectUserId(std::string accountNum) {
     return "";
 }
 
+bool ServerManagerImpl::isMachineExist(std::string user_id,
+                                       std::string machine_name) {
+    std::shared_ptr<MysqlConn> conn_ptr = this->pool->getConnection();
+    std::string sql =
+        "SELECT COUNT(*) FROM `machine` m WHERE user_id =" + user_id +
+        " and machine_name='" + machine_name + "'";
+    LOG(INFO) << "isMachineExist select SQL: " << sql;
+    int machine_count = 0;
+    if (conn_ptr->query(sql) == true) {
+        while (conn_ptr->next()) {
+            machine_count = std::stoi(conn_ptr->value(0));
+        }
+    }
+    if (machine_count == 0) {
+        sql = "INSERT INTO machine (user_id,machine_name) values(" + user_id +
+              ",'" + machine_name + "')";
+        LOG(INFO) << "isMachineExist insert SQL: " << sql;
+        conn_ptr->update(sql);
+    }
+}
+
 bool ServerManagerImpl::isTableExist(std::string table_name,
                                      std::shared_ptr<MysqlConn> conn_ptr) {
     std::string sql = "SELECT * FROM tableRegister tr WHERE table_name = '" +
@@ -166,8 +191,7 @@ bool ServerManagerImpl::isTableExist(std::string table_name,
             std::string register_sql =
                 "INSERT INTO tableRegister (table_name) values('" + table_name +
                 "')";
-            // LOG(INFO) << "isTableExist create table SQL: " <<
-            // create_table_sql;
+            LOG(INFO) << "isTableExist create table SQL: " << create_table_sql;
             if (conn_ptr->update(create_table_sql) &&
                 conn_ptr->update(register_sql)) {
                 return true;
@@ -191,6 +215,7 @@ void UserManagerImpl::LoginRegister(
     } else {
         response->set_response_str(verifyLoginInformation());
     }
+    queryUserMachineName(response);
     account_num_.clear();
     pwd_.clear();
     done->Run();
@@ -218,6 +243,27 @@ std::string UserManagerImpl::verifyLoginInformation() {
     return response;
 }
 
+void UserManagerImpl::queryUserMachineName(
+    ::monitor::proto::UserResponseMessage* response) {
+    std::shared_ptr<MysqlConn> conn_ptr = this->pool->getConnection();
+    std::string sql = "";
+    sql = sql + "SELECT machine_name FROM `machine` m WHERE user_id = " +
+          "(SELECT id "+
+          "FROM `user` u WHERE accountnum = '" +
+          account_num_ + "')";
+    LOG(INFO) << "queryUserMachineName: "<< sql;
+    std::vector<std::string> machine_name_array;
+    if (conn_ptr->query(sql) == true) {
+        while (conn_ptr->next()) {
+            machine_name_array.push_back(conn_ptr->value(0));
+        }
+    }
+    for (int i = 0; i < machine_name_array.size(); i++) {
+        auto machine_name_msg = response->add_machine_name_array();
+        *machine_name_msg = machine_name_array[i];
+    }
+}
+
 std::string UserManagerImpl::registerNewUser() {
     std::string user_num_same_account;
     std::string response = "";
@@ -231,8 +277,10 @@ std::string UserManagerImpl::registerNewUser() {
                 user_num_same_account = conn_ptr->value(0);
             }
             if (std::stoi(user_num_same_account) == 0) {
-                // INSERT INTO `user` (password,accountnum) values("88888888m","1933720");
-                sql = "INSERT INTO `user` (password,accountnum) values('"+pwd_+"','"+gen_number+"')";
+                // INSERT INTO `user` (password,accountnum)
+                // values("88888888m","1933720");
+                sql = "INSERT INTO `user` (password,accountnum) values('" +
+                      pwd_ + "','" + gen_number + "')";
                 if (conn_ptr->query(sql)) {
                     response = "register successful, account:" + gen_number +
                                ", automatically jump after 10s";

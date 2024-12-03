@@ -96,6 +96,8 @@ message MonitorInfo {
 
     Time time = 13;
 
+    string machine_name = 14;
+
     ResultCode result = 9;
 }
 

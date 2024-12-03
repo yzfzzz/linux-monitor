@@ -4,7 +4,6 @@
 #include "login.h"
 #include "ui_login.h"
 
-
 Login::Login(QWidget *parent) : QWidget(parent), ui(new Ui::Login) {
     ui->setupUi(this);
     QFile file(":/resource/pic/README.html");
@@ -65,11 +64,17 @@ void Login::on_btn_login_clicked() {
             request.set_pwd(pwd);
             rpc_client_ptr->LoginRegister(request, response);
             std::string response_str = response.response_str();
+            std::vector<std::string> machine_name_array;
+            for (int i = 0; i < response.machine_name_array_size(); i++) {
+                std::string machine_name = *response.mutable_machine_name_array(i);
+                machine_name_array.push_back(machine_name);
+                std::cout << "login machine name: " << machine_name << std::endl;
+            }
             std::cout << response_str << std::endl;
             QString notice;
             if (response_str == "login successful") {
                 notice = QString::fromStdString(response_str);
-                emit loginJump(user_name);
+                emit loginJump(user_name, machine_name_array);
             } else {
                 notice = QString::fromStdString(response_str);
             }

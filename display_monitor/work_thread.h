@@ -16,7 +16,7 @@ class WorkThread : public QObject {
    public:
     explicit WorkThread(QObject* parent = nullptr);
 
-    void run(int argc, char** argv, std::string account_num);
+    void run(int argc, char** argv, std::string account_num,std::string machine_name);
 
    signals:
     void sendLabelDownStr(QVector<QString> qstr_array);

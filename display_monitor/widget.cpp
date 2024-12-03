@@ -7,7 +7,8 @@
 #include "widget.h"
 #include "work_thread.h"
 
-Widget::Widget(int argc, char** argv, std::string account_num, QWidget* parent)
+Widget::Widget(int argc, char** argv, std::string account_num,
+               std::string machine_name, QWidget* parent)
     : QWidget(parent), ui(new Ui::Widget) {
     ui->setupUi(this);
     ui->label_up_1->setText("显卡使用率");
@@ -25,7 +26,7 @@ Widget::Widget(int argc, char** argv, std::string account_num, QWidget* parent)
     WorkThread* work_thread = new WorkThread;
     work_thread->moveToThread(sub_thread);
     connect(this, &Widget::set_workthread_arg, work_thread, &WorkThread::run);
-    emit set_workthread_arg(argc, argv, account_num);
+    emit set_workthread_arg(argc, argv, account_num, machine_name);
     sub_thread->start();
 
     connect(work_thread, &WorkThread::sendLabelDownStr, this,

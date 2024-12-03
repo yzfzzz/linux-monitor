@@ -22,7 +22,7 @@ class Widget : public QWidget {
     Q_OBJECT
 
    public:
-    Widget(int argc, char **argv, std::string account_num, QWidget *parent = nullptr);
+    Widget(int argc, char **argv, std::string account_num, std::string machine_name,QWidget *parent = nullptr);
     ~Widget();
     void update(std::vector<monitor::MidInfo> &midinfo_array);
 
@@ -35,7 +35,7 @@ class Widget : public QWidget {
     void recvGpuList(QList<QPointF> gpu_list);
 
    signals:
-    void set_workthread_arg(int argc, char **argv, std::string account_num);
+    void set_workthread_arg(int argc, char **argv, std::string account_num, std::string machine_name);
 
    private:
     Ui::Widget *ui;

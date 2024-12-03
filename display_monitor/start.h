@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include <widget.h>
+#include <unordered_map>
+#include <string>
 
 namespace Ui {
 class start;
@@ -14,7 +16,7 @@ class Start : public QWidget {
    public:
     explicit Start(int argc,char** argv,QWidget *parent = nullptr);
     ~Start();
-    Widget* monitor_w;
+    std::unordered_map<std::string, Widget*> monitor_map;
 
    private:
     Ui::start *ui;

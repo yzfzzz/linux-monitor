@@ -6,4 +6,7 @@ message UserMessage {
     string pwd = 2;
 }
 
-message UserResponseMessage { string response_str = 1; }
+message UserResponseMessage {
+    string response_str = 1;
+    repeated string machine_name_array = 2;
+}

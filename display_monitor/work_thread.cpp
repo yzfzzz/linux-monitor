@@ -2,19 +2,21 @@
 
 WorkThread::WorkThread(QObject* parent) : QObject(parent) { max_size_ = 30; }
 
-void WorkThread::run(int argc, char** argv, std::string account_num) {
+void WorkThread::run(int argc, char** argv, std::string account_num,
+                     std::string machine_name) {
     std::string server_address = "localhost:50051";
     monitor::RpcClient rpc_client(server_address);
 
     monitor::QueryData query_data;
-    if (query_data.queryDataInfo(account_num, 30, rpc_client)) {
+    if (query_data.queryDataInfo(account_num, machine_name, 30, rpc_client)) {
         updateData(query_data.query_result_array_);
         std::cout << "queryData init succeed!" << std::endl;
     }
     while (true) {
         int n = 1;
         query_data.query_result_array_.clear();
-        if (query_data.queryDataInfo(account_num, n, rpc_client)) {
+        if (query_data.queryDataInfo(account_num, machine_name, n,
+                                     rpc_client)) {
             updateData(query_data.query_result_array_);
         }
         sleep(3);

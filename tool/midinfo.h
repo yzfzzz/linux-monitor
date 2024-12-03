@@ -19,5 +19,6 @@ class MidInfo {
     std::string accountnum = "";
     std::string timeymd = "1970-1-1";
     std::string timehms = "00:00:00";
+    std::string machine_name = "unkown";
 };
 }  // namespace monitor

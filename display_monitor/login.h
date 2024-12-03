@@ -2,6 +2,7 @@
 #define LOGIN_H
 
 #include <QWidget>
+#include <vector>
 #include "client/rpc_client.h"
 #include "mprpcapplication.h"
 
@@ -21,7 +22,7 @@ class Login : public QWidget {
     monitor::RpcClient* rpc_client_ptr;
 
    signals:
-   void loginJump(std::string account_num);
+   void loginJump(std::string account_num, std::vector<std::string> machine_name_array);
 
    private slots:
     void on_btn_login_clicked();

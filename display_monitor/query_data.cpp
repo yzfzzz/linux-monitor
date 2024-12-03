@@ -4,8 +4,8 @@
 #include "log.h"
 #include "query_data.h"
 namespace monitor {
-bool QueryData::queryDataInfo(std::string account_num, int count,
-                              monitor::RpcClient& rpc_client) {
+bool QueryData::queryDataInfo(std::string account_num, std::string machine_name,
+                              int count, monitor::RpcClient& rpc_client) {
     GetCurTime cur_time;
     // sql:
     // select * from table_20241126 t WHERE user_id = (SELECT id FROM `user` u
@@ -15,8 +15,11 @@ bool QueryData::queryDataInfo(std::string account_num, int count,
 
     std::string sql =
         "select * from " + table_name + " WHERE user_id = " +
-        "(SELECT id FROM `user` u WHERE accountnum = " + account_num + ")" +
+        "(SELECT id FROM `user` u WHERE accountnum = " + account_num +
+        " and machine_name = '" + machine_name + "')" +
         " order by time desc limit " + select_count;
+
+    std::cout << "queryDataInfo sql: " << sql << std::endl;
 
     ::monitor::proto::QueryMessage query_message;
     query_message.set_sql(sql);
