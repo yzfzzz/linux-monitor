@@ -19,7 +19,12 @@ void global_watcher(zhandle_t* zh, int type, int state, const char* path,
     if (type == ZOO_SESSION_EVENT) {
         // zkclient和zkserver连接成功
         if (state == ZOO_CONNECTED_STATE) {
-            sem_t* sem = (sem_t*)zoo_get_context(zh);
+            // !这里执行完zoo_get_context函数，sem可能是一个空指针
+            sem_t* sem = nullptr;
+            while(sem == nullptr)
+            {
+                sem = (sem_t*)zoo_get_context(zh);
+            }
             sem_post(sem);
         }
     }
