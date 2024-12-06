@@ -2,24 +2,31 @@
 #include <string>
 #include <thread>
 #include <vector>
+#include <fstream>
 #include "client/rpc_client.h"
 #include "cpu_load_monitor.h"
 #include "cpu_softirq_monitor.h"
 #include "cpu_stat_monitor.h"
+#include "get_time.h"
 #include "gpu_monitor.h"
+#include "json.hpp"
+#include "log.h"
 #include "mem_monitor.h"
+#include "monitor_info.pb.h"
 #include "monitor_inter.h"
 #include "mprpcapplication.h"
 #include "net_monitor.h"
-#include "get_time.h"
-#include "log.h"
-#include "monitor_info.pb.h"
 
 int main(int argc, char** argv) {
-    std::string fifo_path = "py_cpp_pipe.fifo";
-    std::string server_address = "localhost:50051";
-    std::string account_num = "12345678";
-    std::string machine_name = "xiaoxin_mx350";
+    std::ifstream config_file("./utils/monitor_config.json");
+    nlohmann::json config_json_data;
+    config_file >> config_json_data;
+    config_file.close();
+
+    std::string fifo_path = config_json_data["fifo_path"];
+    std::string server_address = config_json_data["server_address"];
+    std::string account_num = config_json_data["account_num"];
+    std::string machine_name = config_json_data["machine_name"];
     MprpcApplication::Init(argc, argv);
     google::InitGoogleLogging(argv[0]);
 

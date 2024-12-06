@@ -5,7 +5,7 @@ import os
 import time
 from pynvml import *
 
-pipe_path = "py_cpp_pipe.fifo"
+pipe_path = "/home/work/bin/utils/py_cpp_pipe.fifo"
 nvmlInit()
 
 if not os.path.exists(pipe_path):
