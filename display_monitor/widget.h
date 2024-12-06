@@ -1,6 +1,7 @@
 #ifndef WIDGET_H
 #define WIDGET_H
 
+#include <QComboBox>
 #include <QString>
 #include <QWidget>
 #include <memory>
@@ -12,6 +13,7 @@
 #include "query_data.h"
 #include "water_progress.h"
 
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class Widget;
@@ -22,7 +24,9 @@ class Widget : public QWidget {
     Q_OBJECT
 
    public:
-    Widget(int argc, char **argv, std::string account_num, std::string machine_name,QWidget *parent = nullptr);
+    Widget(int argc, char **argv, std::string account_num,
+           std::vector<std::string> machine_name_array, int index,
+           QWidget *parent = nullptr);
     ~Widget();
     void update(std::vector<monitor::MidInfo> &midinfo_array);
 
@@ -33,9 +37,11 @@ class Widget : public QWidget {
     void recvGpuInfos(QVector<QString> gpu_infos_array);
     void recvNetList(QList<QPointF> send_list, QList<QPointF> recv_list);
     void recvGpuList(QList<QPointF> gpu_list);
+    QComboBox *machine_comboBox;
 
    signals:
-    void set_workthread_arg(int argc, char **argv, std::string account_num, std::string machine_name);
+    void set_workthread_arg(int argc, char **argv, std::string account_num,
+                            std::string machine_name);
 
    private:
     Ui::Widget *ui;

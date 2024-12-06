@@ -1,6 +1,9 @@
+#include <QCommandLinkButton>
 #include <QDateTime>
+#include <QDesktopServices>
 #include <QString>
 #include <QThread>
+#include <QUrl>
 #include <iostream>
 #include <string>
 #include "ui_widget.h"
@@ -8,7 +11,8 @@
 #include "work_thread.h"
 
 Widget::Widget(int argc, char** argv, std::string account_num,
-               std::string machine_name, QWidget* parent)
+               std::vector<std::string> machine_name_array, int index,
+               QWidget* parent)
     : QWidget(parent), ui(new Ui::Widget) {
     ui->setupUi(this);
     ui->label_up_1->setText("显卡使用率");
@@ -22,11 +26,22 @@ Widget::Widget(int argc, char** argv, std::string account_num,
     ui->label_down_3->setText("???");
     ui->label_down_4->setText("???");
 
+    QString user_name = QString::fromStdString("用户" + account_num);
+    ui->label_user->setText(user_name);
+    machine_comboBox = ui->machine_comboBox;
+
+    QStringList qstringlist;
+    for (std::string str : machine_name_array) {
+        qstringlist.append(QString::fromStdString(str));
+    }
+
+    ui->machine_comboBox->addItems(qstringlist);
+
     QThread* sub_thread = new QThread;
     WorkThread* work_thread = new WorkThread;
     work_thread->moveToThread(sub_thread);
     connect(this, &Widget::set_workthread_arg, work_thread, &WorkThread::run);
-    emit set_workthread_arg(argc, argv, account_num, machine_name);
+    emit set_workthread_arg(argc, argv, account_num, machine_name_array[index]);
     sub_thread->start();
 
     connect(work_thread, &WorkThread::sendLabelDownStr, this,

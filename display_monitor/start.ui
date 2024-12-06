@@ -18,8 +18,8 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>0</width>
-    <height>0</height>
+    <width>860</width>
+    <height>640</height>
    </size>
   </property>
   <property name="maximumSize">
@@ -27,6 +27,11 @@
     <width>860</width>
     <height>640</height>
    </size>
+  </property>
+  <property name="font">
+   <font>
+    <family>Ubuntu Mono</family>
+   </font>
   </property>
   <property name="focusPolicy">
    <enum>Qt::NoFocus</enum>

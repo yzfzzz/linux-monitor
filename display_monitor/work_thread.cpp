@@ -37,12 +37,12 @@ void WorkThread::updateData(std::vector<monitor::MidInfo>& midinfo_array) {
 
     // GPU使用率
     water_value_1_ = midinfo.gpu_avg_util;
-    if (midinfo.gpu_avg_util > 70) {
+    if (water_value_1_ > 70) {
         label_down_1_qt_str_ = "繁忙";
         label_down_1_qss_ = "QLabel{color:red;}";
-    } else if (midinfo.gpu_avg_util > 30 && midinfo.gpu_avg_util <= 70) {
+    } else if (water_value_1_ > 30 && water_value_1_ <= 70) {
         label_down_1_qt_str_ = "良好";
-        label_down_1_qss_ = "QLabel{color:yellow;}";
+        label_down_1_qss_ = "QLabel{color:#E4B703;}";
     } else {
         label_down_1_qt_str_ = "流畅";
         label_down_1_qss_ = "QLabel{color:green;}";
@@ -57,13 +57,12 @@ void WorkThread::updateData(std::vector<monitor::MidInfo>& midinfo_array) {
 
     // CPU
     water_value_3_ = midinfo.cpu_load_avg_1 * 10;
-    if (midinfo.cpu_load_avg_3 * 10 > 70) {
+    if (water_value_3_ > 70) {
         label_down_3_qt_str_ = "繁忙";
         label_down_3_qss_ = "QLabel{color:red;}";
-    } else if (midinfo.cpu_load_avg_3 * 10 > 30 &&
-               midinfo.cpu_load_avg_3 * 10 <= 30) {
+    } else if (water_value_3_ > 30 && water_value_3_ <= 70) {
         label_down_3_qt_str_ = "良好";
-        label_down_3_qss_ = "QLabel{color:yellow;}";
+        label_down_3_qss_ = "QLabel{color:#E4B703;}";
     } else {
         label_down_3_qt_str_ = "流畅";
         label_down_3_qss_ = "QLabel{color:green;}";
