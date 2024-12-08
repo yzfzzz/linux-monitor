@@ -57,8 +57,8 @@ class ServerManagerImpl : public monitor::proto::MonitorManager {
         "mem_total float DEFAULT NULL," + "net_send_rate float DEFAULT NULL," +
         "net_rcv_rate float DEFAULT NULL," + "user_id int NOT NULL," +
         "time time NOT NULL," + "machine_name varchar(100) DEFAULT NULL" +
-        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=" +
-        "utf8mb4_0900_ai_ci COMMENT='create table according to date'";
+        ") ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=" +
+        "utf8_general_ci COMMENT='create table according to date'";
 };
 
 class UserManagerImpl : public monitor::proto::UserManager {

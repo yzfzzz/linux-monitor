@@ -109,7 +109,6 @@ bool ServerManagerImpl::insertOneInfo(
         "cpu_load_avg_1, cpu_load_avg_3, cpu_load_avg_15, mem_used,mem_total," +
         "net_send_rate, net_rcv_rate, user_id, time, machine_name) " +
         "VALUES(";
-    LOG(INFO) << "InsertOneInfo SQL: " << sql;
 
     std::string user_id = selectUserId(mid_info.accountnum);
     isMachineExist(user_id, mid_info.machine_name);
@@ -129,7 +128,7 @@ bool ServerManagerImpl::insertOneInfo(
           std::to_string(mid_info.net_send_rate) + "," +
           std::to_string(mid_info.net_rcv_rate) + "," + user_id + "," + "'" +
           mid_info.timehms + "'" + ",'" + mid_info.machine_name + "')";
-    // LOG(INFO) << sql;
+    LOG(INFO) << "InsertOneInfo SQL: " << sql;
     if (conn_ptr->update(sql)) {
         // LOG(INFO) << "Succeed to insert one sql";
         return true;
@@ -141,6 +140,7 @@ bool ServerManagerImpl::insertOneInfo(
 std::string ServerManagerImpl::selectUserId(std::string accountNum) {
     std::shared_ptr<MysqlConn> conn_ptr = this->pool->getConnection();
     std::string sql = "SELECT id FROM `user` u WHERE accountnum =" + accountNum;
+    LOG(INFO) << "selectUserId select SQL: " << sql;
     std::string user_id;
     if (conn_ptr->query(sql) == true) {
         while (conn_ptr->next()) {
@@ -248,10 +248,9 @@ void UserManagerImpl::queryUserMachineName(
     std::shared_ptr<MysqlConn> conn_ptr = this->pool->getConnection();
     std::string sql = "";
     sql = sql + "SELECT machine_name FROM `machine` m WHERE user_id = " +
-          "(SELECT id "+
-          "FROM `user` u WHERE accountnum = '" +
-          account_num_ + "')";
-    LOG(INFO) << "queryUserMachineName: "<< sql;
+          "(SELECT id " + "FROM `user` u WHERE accountnum = '" + account_num_ +
+          "')";
+    LOG(INFO) << "queryUserMachineName: " << sql;
     std::vector<std::string> machine_name_array;
     if (conn_ptr->query(sql) == true) {
         while (conn_ptr->next()) {
