@@ -10,35 +10,38 @@
 #include <unordered_map>
 #include "google/protobuf/service.h"
 
-// ¿ò¼ÜÌá¹©µÄ×¨ÃÅ·şÎñ·¢²¼rpc·şÎñµÄÍøÂç¶ÔÏóÀà
+// æ¡†æ¶æä¾›çš„ä¸“é—¨æœåŠ¡å‘å¸ƒrpcæœåŠ¡çš„ç½‘ç»œå¯¹è±¡ç±»
 class RpcProvider {
    public:
-    // ÕâÀïÊÇ¿ò¼Ü¸øÍâ²¿Ê¹ÓÃµÄ, ¿ÉÒÔ·¢²¼rpc·½·¨µÄº¯Êı½Ó¿Ú
+    // è¿™é‡Œæ˜¯æ¡†æ¶ç»™å¤–éƒ¨ä½¿ç”¨çš„, å¯ä»¥å‘å¸ƒrpcæ–¹æ³•çš„å‡½æ•°æ¥å£
     // google::protobuf::Service ==> UserServiceRpc ==> UserService
     void NotifyService(google::protobuf::Service* service);
 
-    // Æô¶¯rpc·şÎñ½Úµã£¬¿ªÊ¼Ô¶³Ìµ÷ÓÃ
+    // å¯åŠ¨rpcæœåŠ¡èŠ‚ç‚¹ï¼Œå¼€å§‹è¿œç¨‹è°ƒç”¨
     void Run();
 
    private:
-    // ×éºÏEventLoop
+    // ç»„åˆEventLoop
     muduo::net::EventLoop m_eventLoop;
 
-    // service·şÎñÀàĞÍĞÅÏ¢
+    // serviceæœåŠ¡ç±»å‹ä¿¡æ¯
     struct ServiceInfo {
-        google::protobuf::Service* m_service;  // ±£´æ·şÎñ¶ÔÏó
-        std::unordered_map<std::string, const google::protobuf::MethodDescriptor*>
-            m_methodMap;  // ±£´æ·şÎñ·½·¨
+        google::protobuf::Service* m_service;  // ä¿å­˜æœåŠ¡å¯¹è±¡
+        std::unordered_map<std::string,
+                           const google::protobuf::MethodDescriptor*>
+            m_methodMap;  // ä¿å­˜æœåŠ¡æ–¹æ³•
     };
-    // ´æ´¢×¢²á³É¹¦µÄ·şÎñ¶ÔÏóºÍÆä·şÎñ·½·¨µÄËùÓĞĞÅÏ¢
+    // å­˜å‚¨æ³¨å†ŒæˆåŠŸçš„æœåŠ¡å¯¹è±¡å’Œå…¶æœåŠ¡æ–¹æ³•çš„æ‰€æœ‰ä¿¡æ¯
     std::unordered_map<std::string, ServiceInfo> m_serviceMap;
 
-    // ĞÂµÄsocketÁ¬½Ó»Øµ÷
+    // æ–°çš„socketè¿æ¥å›è°ƒ
     void OnConnection(const muduo::net::TcpConnectionPtr& conn);
 
-    // ·¢ÏÖ»º³åÇø¿É¶ÁĞ´, ÔòÖ´ĞĞ¸Ã»Øµ÷º¯Êı
-    void OnMessage(const muduo::net::TcpConnectionPtr& conn, muduo::net::Buffer* buffer, muduo::Timestamp);
+    // å‘ç°ç¼“å†²åŒºå¯è¯»å†™, åˆ™æ‰§è¡Œè¯¥å›è°ƒå‡½æ•°
+    void OnMessage(const muduo::net::TcpConnectionPtr& conn,
+                   muduo::net::Buffer* buffer, muduo::Timestamp);
 
-    // ClosureµÄ»Øµ÷²Ù×÷, ÓÃÓÚĞòÁĞ»¯rpcµÄÏìÓ¦ºÍÍøÂç·¢ËÍ
-    void SendRpcResponse(const muduo::net::TcpConnectionPtr& conn, google::protobuf::Message*);
+    // Closureçš„å›è°ƒæ“ä½œ, ç”¨äºåºåˆ—åŒ–rpcçš„å“åº”å’Œç½‘ç»œå‘é€
+    void SendRpcResponse(const muduo::net::TcpConnectionPtr& conn,
+                         google::protobuf::Message*);
 };

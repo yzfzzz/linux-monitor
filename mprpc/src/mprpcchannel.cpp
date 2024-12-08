@@ -8,9 +8,8 @@
 #include "mprpcchannel.h"
 #include "rpcheader.pb.h"
 #include "zookeeperutil.h"
-/*
-���ݸ�ʽ: header_size + service_name method_name args_size + args
-*/
+
+// 数据格式: header_size + service_name method_name args_size + args
 void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
                               google::protobuf::RpcController* controller,
                               const google::protobuf::Message* request,
@@ -20,10 +19,10 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     std::string service_name = sd->name();
     std::string method_name = method->name();
 
-    // ��ȡ���������л��ַ������� args_size
+    // 获取参数的序列化字符串长度 args_size
     std::string args_str;
     int args_size = 0;
-    // ���л�
+
     if (request->SerializeToString(&args_str)) {
         args_size = args_str.size();
     } else {
@@ -32,7 +31,7 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
         return;
     }
 
-    // ����rpc������header
+    // 定义rpc的请求header
     mprpc::RpcHeader rpcHeader;
     rpcHeader.set_service_name(service_name);
     rpcHeader.set_method_name(method_name);
@@ -47,15 +46,16 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
         controller->SetFailed("seriallize response error!");
         return;
     }
-    // ��֯�����͵�rpc�����ַ���
-    // ???header_size�����ƴ洢
+    // 组织待发送的rpc请求字符串
+    // ???header_size二进制存储
     std::string send_rpc_str;
-    // ��ʾ RPC ͷ����С�� uint32_t ���ͱ��� header_size �Զ�������ʽ�洢��һ���ַ�����
+    // 表示 RPC 头部大小的 uint32_t 类型变量 header_size
+    // 以二进制形式存储到一个字符串中
     send_rpc_str.insert(0, std::string((char*)&header_size, 4));
     send_rpc_str += rpc_header_str;
     send_rpc_str += args_str;
 
-    // ��ӡ������Ϣ
+    // 打印调试信息
     // std::cout << "=========================" << std::endl;
     // std::cout << "header_size: " << header_size << std::endl;
     // std::cout << "rpc_header_str: " << rpc_header_str << std::endl;
@@ -63,7 +63,7 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     // std::cout << "method_name: " << method_name << std::endl;
     // std::cout << "args_str: " << args_str << std::endl;
 
-    // ʹ��tcp���
+    // 使用tcp编程
     int clientfd = socket(AF_INET, SOCK_STREAM, 0);
     if (clientfd == -1) {
         std::cout << "error:" << errno << std::endl;
@@ -95,15 +95,19 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
         return;
     }
     std::string ip = host_data.substr(0, idx);
+
+    if (MprpcApplication::GetInstance().GetConfig().Load("NAT_mode") == "yes") {
+        ip = MprpcApplication::GetInstance().GetConfig().Load("rpcserverip");
+    }
+
     uint16_t port =
         atoi(host_data.substr(idx + 1, host_data.size() - idx).c_str());
-
     struct sockaddr_in server_addr;
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(port);
     server_addr.sin_addr.s_addr = inet_addr(ip.c_str());
 
-    // ����rpc����˿�
+    // 连接rpc服务端口
     if (connect(clientfd, (struct sockaddr*)&server_addr,
                 sizeof(server_addr)) == -1) {
         std::cout << "connect error! error:" << errno << std::endl;
@@ -114,7 +118,7 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
         return;
     }
 
-    // ����rpc����
+    // 发送rpc请求
     if (send(clientfd, send_rpc_str.c_str(), send_rpc_str.size(), 0) == -1) {
         std::cout << "send error! errno:" << errno << std::endl;
         char errtxt[512] = {0};
@@ -124,8 +128,8 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
         return;
     }
 
-    // ?����Ҫ�����ȴ���
-    // ����rpc�������Ӧֵ
+    // ?不需要阻塞等待吗
+    // 接收rpc请求的响应值
     char recv_buf[4096] = {};
     int recv_size = 0;
     if ((recv_size = recv(clientfd, recv_buf, 4096, 0)) == -1) {
@@ -137,7 +141,7 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
         return;
     }
 
-    // �����л�rpc���õ���Ӧ����
+    // 反序列化rpc调用的响应数据
     if (!response->ParseFromArray(recv_buf, recv_size)) {
         std::cout << "parse error! response str: " << recv_buf << std::endl;
         char errtxt[512] = {0};
