@@ -1,6 +1,5 @@
 # GMPanel：GPU服务器管理面板
 ![logo](./doc/img/logo.jpg)
-**演示**：[(https://www.bilibili.com/video/BV1iqqNYCEv8](https://www.bilibili.com/video/BV1iqqNYCEv8)
 ## 🎉项目意义
 课题组是做深度学习的，现有3台服务器10几张显卡，但由于管理不善，经常意外关机等。因此，需要一套监控系统，同时监控多台服务器的cpu/gpu信息，帮助定位问题，减少宕机
 
